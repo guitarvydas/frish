@@ -1,0 +1,18 @@
+pretransmogrifier {
+  code = item+
+  item =
+    | applySyntactic<Pattern> -- pattern
+    | any -- other
+  Pattern =
+    | "deftemp" "i" "⇐" "%toint" "(" "word" ")" -- replaceassignment
+    | "if" #exprCh+ "{" "pass" "}" "else" "{" #bodyCh+ "}" -- invertpass
+    | "defsynonym" "i" "≡" "%toint" "(" "word" ")" line? "%push" "(" "i" ")" -- foldmacrouse
+    
+  exprCh = ~"{" any
+  bodyCh =
+    | "{" bodyCh+ "}" -- recursive
+    | ~"}" item     -- flat
+
+  line = "⎩" (~"⎩" ~"⎭" any)* "⎭"
+  space += line  
+}

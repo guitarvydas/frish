@@ -1,0 +1,23 @@
+% rewrite pydecode {
+  text [chars+] = ‛«chars»’ 
+  char_unicodestring [s] = ‛«s»’
+  char_comment [lb cs* rb] = ‛#⎨pynlcomments ‛«cs»’⎬’
+  char_errormessage [lb cs* rb] = ‛ >>> «cs» <<< ’
+  char_line [lb cs* rb] = ‛#line «cs»’
+  char_other [c] = ‛«c»’
+
+  historical_edge_case_ulb [c] = ‛’
+  historical_edge_case_encodedulb [c] = ‛_L’
+  historical_edge_case_urb [c] = ‛’
+  historical_edge_case_encodedurb [c] = ‛R_’
+  historical_edge_case_space [c] = ‛_’
+  historical_edge_case_tab [c] = ‛	’
+  historical_edge_case_newline [c] = ‛
+’
+  historical_edge_case_paramark [c] = ‛¶’
+
+  unicode_string [lq cs* rq] = ‛«lq»«cs»«rq»’
+  ustringchar_nested [lq cs* rq] = ‛«lq»«cs»«rq»’
+  ustringchar_other [c] = ‛«c»’
+
+}

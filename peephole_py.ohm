@@ -1,0 +1,27 @@
+pythontransmogrifier {
+  code = item+
+  item =
+    | applySyntactic<Pattern> -- pattern
+    | any -- other
+  Pattern =
+    | "i" "=" "int" "(" "word" ")" line? "Stack.append" "(" "i" ")" -- foldlocal
+    | "A" "=" "Stack.pop" "(" ")" line?
+      "B" "=" "Stack.pop" "(" ")" line?
+      "Stack.append" "(" "A" ")" line?
+      "Stack.append" "(" "B" ")" line?     -- swap
+    | "(" "not" "(" "not" #exprCh+ ")" ")" -- notnot
+    | "subrs" "=" "{" "}" #line Inits      -- dictinit
+
+  Inits = "subrs" "[" #str "]" "=" #ident #eol Inits?
+  str (str) = "\"" (~"\"" any)* "\""
+
+  exprCh (exprCh) =
+    | "(" exprCh+ ")" -- recursive
+    | ~")" item        -- flat
+
+  eol (eol) = spaces line*
+    
+  ident (ident) = spaces (letter | "_") (letter | digit | "_")*
+  
+  line = spaces "⎩" (~"⎩" ~"⎭" any)* "⎭"
+}

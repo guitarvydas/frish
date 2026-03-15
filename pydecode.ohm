@@ -1,0 +1,27 @@
+pydecode {
+  text = char+
+  char =
+    | unicode_string  -- unicodestring
+    | "⌈" (~"⌈" ~"⌉" any)* "⌉"  -- comment
+    | "⎝" (~"⎝" ~"⎠" any)* "⎠"  -- errormessage
+    | "⎩" (~"⎩" ~"⎭" any)* "⎭"  -- line
+    | historical_edge_case      -- edgecase
+    | any                       -- other
+
+  historical_edge_case =
+    | "❲"                       -- ulb
+    | "%E2%9D%B2"               -- encodedulb
+    | "❳"                       -- urb
+    | "%E2%9D%B3"               -- encodedurb
+    | "%20"                     -- space
+    | "%09"                     -- tab
+    | "%0A"                     -- newline
+    | "¶"                       -- paramark
+
+  unicode_string = "“" ustringchar* "”"
+  ustringchar =
+    | "“" ustringchar* "”" -- nested
+    | ~"“" ~"”" any -- other
+}
+
+

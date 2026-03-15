@@ -1,0 +1,19 @@
+% rewrite pythontransmogrifier {
+  code [item+] = ‛«item»’
+  item_pattern [p] = ‛«p»’
+  item_other [c] = ‛«c»’
+  Pattern_foldlocal [i eq _int lp1 word rp1 line? append lp2 i2 rp2] = ‛\nStack.append (int (word))«line»\n’
+  Pattern_swap [_1 _2 _3 _4 _5 l1? _7 _8 _9 _10 _11 l2? _13 _14 _15 _16 l3? _18 _19 _20 _21 l4?] = ‛\nx = Stack [-1]\nStack [-1] = Stack [-2]\nStack [-2] = x «l1»’
+  Pattern_notnot [ _lb1 _not1 _lb2 _not2 e+ _rb2 _rb1] = ‛(«e»)’
+  Pattern_dictinit [ _subrs _eq _lb _rb line inits] = ‛\n«_subrs» = ⤷{ «line»\n «inits» ⤶\n}\n’
+  Inits [_subrs _lb s _rb _eq id eol more?] = ‛\n«s» : «id»,«more»’
+  str [_lq cs* _rq] = ‛«_lq»«cs»«_rq»’
+  exprCh_recursive [_lb e+ _rb] = ‛«_lb»«e»«rb»’
+  exprCh_flat [c] = ‛«c»’
+
+  eol [ws line*] = ‛«ws»«line»’
+  ident [ws c cs*] = ‛«c»«cs»’
+  line[ws _lb cs* _rb] = ‛«ws»«_lb»«cs»«_rb»’
+  spaces [cs*] = ‛’
+}
+

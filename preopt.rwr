@@ -1,0 +1,11 @@
+% rewrite pretransmogrifier {
+  code [item+] = ‛«item»’
+  item_pattern [p] = ‛«p»’
+  item_other [c] = ‛«c»’
+  Pattern_replaceassignment [_1 _2 _assign _4 _5 _6 _7] = ‛\ndefsynonym i ≡ %toint (word)⎨xcontinue⎬’
+  Pattern_invertpass [_if e+ _lb _pass _rb _else _lb2 b+ _rb2] = ‛\nif (not «e») { «b» }⎨xcontinue⎬’
+  Pattern_foldmacrouse [_defsyn _i _eq _toint _lpar _word _rpar line? _push _lpar2 _i2 _rpar3] = ‛\n%push (%toint (word))⎨xcontinue⎬’
+  exprCh [c] = ‛«c»’
+  bodyCh_recursive [_lb cs+ _rb] = ‛«_lb»«cs»«_rb»’
+  bodyCh_flat [c] =‛«c»’
+}

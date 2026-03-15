@@ -1,0 +1,286 @@
+frish {
+
+  Main = TopLevel+
+  TopLevel =
+    | Defvar -- defvar
+    | Defsynonym -- defsynonym
+    | Defsubr -- defsubr
+    | Defimmediatesubr -- defimmediatesubr
+    | Deffunction -- deffunction
+    | Defobj -- defobj
+    | Builtin -- builtin
+    | Call -- call
+    | comment line? -- comment
+    | line -- line
+
+   Defvar = "defvar" Lval "⇐" Exp line?
+   Defsubr = "defsubr" ident string StatementBlock line?
+   Defimmediatesubr = "defimmediatesubr" ident string StatementBlock line?
+   Deffunction = "deffunction" ident Formals StatementBlock line?
+   Defobj = "defobj" ident ObjFormals? line? "{" line? InitStatement+ "}" line?
+
+   StatementBlock = line? "{" line? Rec_Statement line? "}" line?
+
+   Rec_Statement = line? R_Statement line?
+   R_Statement =
+     | comment Rec_Statement? -- comment
+     | Builtin Rec_Statement? -- builtin
+     | Deftemp -- deftemp
+     | Deftemps  -- deftemps
+     | Defsynonym -- defsynonym     
+     | IfStatement  -- if
+     | "pass" Rec_Statement? -- pass
+     | "return" ReturnExp -- return
+     | ForStatement -- for
+     | WhileStatement  -- while
+     | Synonym -- synonym
+     | Assignment -- assignment
+     | "@@" Lval Rec_Statement? -- callindirect
+     | Call -- call
+     | spaces #comment? line Rec_Statement? -- line
+   CommaIdent = Comma ident
+
+   Call = "@" Lval Rec_Statement?
+
+   Builtin = BuiltinPhrase line?
+   BuiltinPhrase =
+     | "%popchar" -- popchar
+     | "%pop" -- pop
+     | "%push" "(" Exp ")" -- push
+     | "%stop" -- stop
+     | "%scanfor" "(" ident ")" -- scanfor
+     | "%assoc" "(" ident "," string "," Subraddress ")" -- assoc
+     | "%eol" -- eol
+     | "%print" "(" Exp ")" -- print
+     | "%printAsCharacter" "(" Exp ")" -- printAsCharacter
+     | "%empty-input" -- emptyinput
+     | "%empty-string?" "(" Exp ")" -- emptystring
+     | "%quit" -- quit
+     | "%stack" -- stack
+     | "%freshdict" -- freshdict
+     | "%digits?" "(" Exp ")" -- isdigits
+     | "%toint" "(" Exp ")" -- toint
+     | "%tofloat" "(" Exp ")" -- tofloat
+     | "%isInteger" "(" Exp ")" -- isInteger
+     | "%isinteger" "(" Exp ")" -- isintegerLC
+     | "%isFloat" "(" Exp ")" -- isFloat
+     | "%isfloat" "(" Exp ")" -- isfloatLC
+     | "%input" -- input
+     | "%debuginput" -- debuginput
+     | "%clearS" -- clearS
+     | "%clearR" -- clearR
+     | "%pushNone" -- pushNone
+     
+     | "%rpop" -- rpop
+     | "%rpush" "(" Exp ")" -- rpush
+     | "%rtop" -- rtop
+     | "%rsecond" -- rsecond
+     | "%rthird" -- rthird
+
+     | "%toboolean" "(" Exp ")" -- toboolean
+
+     | ("λ" | "%funcall") Primary Actuals -- funcall
+
+     | "%incompilingstate" -- incompilingstate
+     | "%setCompilingState" -- setcompilingstate
+     | "%setNotCompilingState" -- setnotcompilingstate
+     | "%immediate" -- immediate
+
+     | "%RAMnext" -- ramnext
+     | "%ram+" "(" Exp ")" -- ramappend
+     
+     | "%returnFalse" -- returnFalse
+
+     | "%" #ident Args? -- unrecognized
+
+   Args = "(" StuffInsideParentheses* ")"
+
+   Deftemp = "deftemp" Lval "⇐" Exp Rec_Statement?
+   Deftemps = "deftemps" LvalComma+ "⇐" Exp Rec_Statement?
+   Defsynonym = "defsynonym" Defsyn
+   Defsyn =
+     | Lval errorMessage "≡" Exp Rec_Statement? -- illegal
+     | ident "≡" Exp Rec_Statement? -- legal
+
+   InitStatement = "•" ident "⇐" Exp (comment | line)*
+
+   IfStatement = "if" Exp StatementBlock ElifStatement* ElseStatement? Rec_Statement?
+   ElifStatement = "elif" Exp StatementBlock
+   ElseStatement = "else" StatementBlock
+
+   ForStatement = "for" ident "in" Exp StatementBlock Rec_Statement?
+   WhileStatement = "while" Exp StatementBlock Rec_Statement?
+
+   Synonym = Lval "≡" Exp Rec_Statement?
+
+   Assignment = 
+     | "[" LvalComma+ "]" "⇐" Exp Rec_Statement? -- multiple
+     | Lval "⇐" Exp Rec_Statement? -- single
+
+   LvalComma = Lval Comma?
+
+    ReturnExp =
+      | "[" ExpComma+ "]" Rec_Statement? -- multiple
+      | Exp Rec_Statement? -- single
+
+    ExpComma = Exp Comma?
+    
+    Exp =  BooleanAndOrIn
+
+    BooleanAndOrIn =
+      | BooleanAndOrIn andOrIn BooleanExp -- andOrIn
+      | BooleanExp -- default
+      
+    BooleanExp =
+      | BooleanExp boolNeq BooleanNot -- boolopneq
+      | BooleanExp boolOp BooleanNot -- boolop
+      | BooleanNot -- basic
+
+    BooleanNot =
+      | "not" BooleanExp -- not
+      | AddExp -- basic
+
+    AddExp =
+      | AddExp "+" MulExp  -- plus
+      | AddExp "-" MulExp  -- minus
+      | MulExp -- basic
+
+    MulExp =
+      | MulExp "*" ExpExp  -- times
+      | MulExp "/" ExpExp  -- divide
+      | ExpExp -- basic
+
+    ExpExp =
+      | Primary "^" ExpExp  -- power
+      | Primary -- basic
+
+    Primary =
+      | PrimaryIndexed -- plain
+
+    PrimaryIndexed =
+      | PrimaryIndexed "/" ident -- lookupident
+      | PrimaryIndexed "/" PrimaryIndexed -- lookup
+      | PrimaryIndexed "." ident -- fieldident
+      | PrimaryIndexed "." PrimaryIndexed -- field
+      | PrimaryIndexed "[" Exp "]" -- index
+      | PrimaryIndexed "[" digit+ ":" "]" -- nthslice
+      | Atom -- atom
+
+    Atom =
+      | Builtin -- builtin
+      | Call -- call
+      | "[" "]" -- emptylistconst
+      | "{" "}" -- emptydict
+      | "(" Exp ")" -- paren
+      | "[" line? PrimaryComma+ line? "]" -- listconst
+      | "{" line? PairComma+ line? "}" -- dict
+      | phi -- phi
+      | "⊤" -- true
+      | "⊥" -- false
+      | Subraddress -- subraddress
+      | "range" "(" Exp ")" -- range
+      | string -- string
+      | number -- number
+      | ident -- ident
+
+
+    Subraddress =  "↪︎" ident
+
+    PrimaryComma = Primary Comma? line?
+    PairComma = Pair Comma?
+
+    StuffInsideParentheses =
+      | "(" StuffInsideParentheses* ")" -- rec
+      | ~"(" ~")" any -- default
+    
+    Lval = Exp
+
+    Formals (Formals) =
+      | "(" ")" -- noformals
+      | "(" FormalComma* ")" -- withformals
+    ObjFormals = Formals
+
+    Formal = 
+       | ident -- plain
+       
+    FormalComma = Formal Comma?
+    
+    Actuals = 
+      | "(" ")" -- noactuals
+      | "(" ActualComma* ")" line? -- actuals
+
+   Actual = Exp
+   ActualComma = comment? Actual Comma? line?
+
+    number =
+      | digit* "." digit+  -- fract
+      | digit+             -- whole
+
+    Pair = string ":" Exp Comma?
+  
+
+  andOrIn =
+    | "and" -- and
+    | "or" -- or
+    | "in" -- in
+    | "&" -- bitwiseand
+
+  boolOp = (boolEq | boolNeq | "<=" | ">=" | ">" | "<")
+  boolEq = "="
+  boolNeq = "!="
+
+  string = unicodestring | asciistring
+  asciistring = "\"" astringchar* "\""
+  astringchar = ~"\"" any
+  unicodestring = "“" stringchar* "”"
+  stringchar = 
+    | "“" stringchar* "”" -- rec
+    | ~"“" ~"”" any -- other
+
+    keyword = (
+        "defsynonym"
+      | "deftemp"
+      | "defobj"
+      | "defvar"
+      | "defsubr"
+      | "deffunction"
+      | "pass"
+      | "return"
+      | "if"
+      | "elif"
+      | "else"
+      | "and"
+      | "or"
+      | "in"
+      | "not"
+      | "range"
+      | "while"
+      | "as"
+      | "pair"
+      | "@"
+      | phi
+      ) ~idchar
+      
+  phi = ("ϕ" | "%CF%95")
+
+  ident  = ~keyword idchar+
+  idchar =
+    | "❲" idchar+ "❳" -- rec
+    | ~"❲" ~"❳" idch -- other
+
+  idch = letter | digit | "_" | "-"
+
+  comment = "⌈" commentchar* "⌉"
+  commentchar = 
+    | "⌈" commentchar* "⌉" -- rec
+    | ~"⌈" ~"⌉" any -- other
+
+  errorMessage = "⎝" errorchar* "⎠"
+  errorchar =  
+    | "⎝" errorchar* "⎠" -- rec
+    | ~"⎝" ~"⎠" any -- other
+
+  line = "⎩" (~"⎩" ~"⎭" any)* "⎭"
+
+  Comma = line? "," line?
+}
