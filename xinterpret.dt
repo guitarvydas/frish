@@ -1,0 +1,48 @@
+[ found?
+    |yes:
+        
+        [ %incompilingstate?
+            |yes:
+                
+                [ foundimmediate?
+                    |yes:
+                        λexec(item)
+                    |no:
+                        λcompileword(item)
+                ]
+        |no:
+            λexec(item)
+    ]
+|no:
+    
+    [ %incompilingstate?
+        |yes:
+            
+            [ %isinteger(item)?
+                |yes:
+                    λcompileinteger(item)
+                |no:
+                    
+                    [ %isfloat(item)?
+                        |yes:
+                            λcompilefloat(item)
+                        |no:
+                            @returnFalse
+                    ]
+        ]
+|no:
+    
+    [ %isinteger(item)?
+        |yes:
+            λpushasinteger(item)
+        |no:
+            
+            [ %isfloat(item)?
+                |yes:
+                    λpushasfloat(item)
+                |no:
+                    @returnFalse
+            ]
+]
+]
+]
