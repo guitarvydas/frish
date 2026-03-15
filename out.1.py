@@ -235,12 +235,9 @@ code("j",0,  xj)
 def xswap ():
     global State                                       #line 146
     # ( a b -- b a)                                    #line 147
-
-    B = State.S.pop ()                                 #line 148
-
-    A = State.S.pop ()                                 #line 149
-    State.S.push ( B)                                  #line 150
-    State.S.push ( A)                                  #line 151#line 152
+    x = Stack [-1]
+    Stack [-1] = Stack [-2]
+    Stack [-2] = x                                     #line 148#line 152
 code("swap",0,  xswap)
 
 def xsub ():

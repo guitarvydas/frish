@@ -4,13 +4,10 @@ pythontransmogrifier {
     | applySyntactic<Pattern> -- pattern
     | any -- other
   Pattern =
-    | "i" "=" "int" "(" "word" ")" line? "Stack.append" "(" "i" ")" -- foldlocal
-    | "A" "=" "Stack.pop" "(" ")" line?
-      "B" "=" "Stack.pop" "(" ")" line?
-      "Stack.append" "(" "A" ")" line?
-      "Stack.append" "(" "B" ")" line?     -- swap
-    | "(" "not" "(" "not" #exprCh+ ")" ")" -- notnot
-    | "subrs" "=" "{" "}" #line Inits      -- dictinit
+    | "B" "=" "State.S.pop" "(" ")" line?
+      "A" "=" "State.S.pop" "(" ")" line?
+      "State.S.push" "(" "B" ")" line?
+      "State.S.push" "(" "A" ")" line?     -- swap
 
   Inits = "subrs" "[" #str "]" "=" #ident #eol Inits?
   str (str) = "\"" (~"\"" any)* "\""
