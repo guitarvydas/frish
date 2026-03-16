@@ -12,11 +12,5 @@ m4 forthish.frish.m4 | tr -d '\r' > forthish.frish
 
 # transmogrify `forthish.frish` into `forthish.py`
 ${PBP}/das2json frish.drawio
-#python main.py forthish.frish main frish.drawio.json | ${PBP}/splitoutputs
-python main.py test.frish main frish.drawio.json | ${PBP}/splitoutputs
-
-for i in temp.*.nanodsl*
-do
-    mv $i hold-"$i"
-done
+python main.py forthish.frish main frish.drawio.json | ${PBP}/splitoutputs
 	 

@@ -1,4 +1,4 @@
-fs.writeFileSync('/tmp/@pbplog.md', new Date().toISOString() + '\n');
+//fs.writeFileSync('/tmp/@pbplog.md', new Date().toISOString() + '\n');
 
 let linenumber = 0;
 function getlineinc () {
@@ -13,19 +13,19 @@ function pynlcomments (s) {
 let macros = {};
 
 function resetmacros () {
-    fs.appendFileSync('/tmp/@pbplog.md', `resetlog` + '\n');    
+    //fs.appendFileSync('/tmp/@pbplog.md', `resetlog` + '\n');    
     macros = {};
 }   
  
 function memomacro (name, s) {
-    fs.appendFileSync('/tmp/@pbplog.md', `memomacro ${name} == /${s}/` + '\n');    
+    //fs.appendFileSync('/tmp/@pbplog.md', `memomacro ${name} == /${s}/` + '\n');    
     macros [name] = s;
     return "";
 }
 
 function macrolookup (name) {
     let s = macros [name];
-    fs.appendFileSync('/tmp/@pbplog.md', `macrolookup ${name} -> /${s}/` + '\n');    
+    //fs.appendFileSync('/tmp/@pbplog.md', `macrolookup ${name} -> /${s}/` + '\n');    
     if (s !== undefined) {
 	return s;
     } else {
