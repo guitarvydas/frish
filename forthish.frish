@@ -251,7 +251,7 @@ defsubr x0branch "0branch" {
 
 ⌈ IF, ELSE and THEN are "immediate" words - they should only be used inside of ":" (colon compiler) ⌉
 
-⌈ see diagram compiling-IF-THEN.drawio.png` ⌉
+⌈ see diagram compiling-IF-THEN.drawio.png ⌉
 defsubr xif "if" { 
     %immediate ⌈ This instruction appears only inside subroutine sequences, ( f -- ) compile if test and branchFalse ⌉ 
     ⌈ Step. 1: generate conditional branch to yet-unknown target1 ⌉ 
@@ -264,7 +264,7 @@ defsubr xif "if" {
     ⌈ THEN or ELSE will do the fixup of target1 ⌉ 
 } 
 
-⌈ see diagram `compiling-IF-ELSE-THEN.drawio.png` ⌉
+⌈ see diagram compiling-IF-ELSE-THEN.drawio.png ⌉
 defimmediatesubr xelse "else" {
     ⌈ Step. 1: fixup target1 from IF-true, retrieving memo from R-stack ⌉
     deftemp target1 ⇐ %rpop
@@ -278,7 +278,7 @@ defimmediatesubr xelse "else" {
     ⌈ THEN will do the fixup of target2 ⌉
 }
 
-⌈ see diagrams `compiling-IF-THEN.drawio.png` and `compiling-IF-ELSE-THEN.drawio.png` ⌉
+⌈ see diagrams compiling-IF-THEN.drawio.png and compiling-IF-ELSE-THEN.drawio.png ⌉
 defimmediatesubr xthen "then" {
     ⌈ Step. 1: fixup target (from IF or from ELSE, above), retrieving memo from R-stack ⌉
     deftemp target ⇐ %rpop
@@ -519,7 +519,7 @@ The execution model maintains two critical registers:
    the return stack on each invocation.
 
 2. W (Word Pointer): References the CFA of the currently executing primitive.
-   This global register serves an analogous function to 'self in object-oriented
+   This global register serves an analogous function to 'self' in object-oriented
    languages, enabling subroutines to access word header fields through fixed
    offsets from the CFA.
 

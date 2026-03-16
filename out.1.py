@@ -364,7 +364,7 @@ code("0branch",0,  x0branch)
 #  immediate words that only have meaning in compile mode: xif, xelse, xthen, xsemi⎩248⎭
 #                                                      #line 249#line 250#line 251
 # IF, ELSE and THEN are "immediate" words - they should only be used inside of ":" (colon compiler) #line 252#line 253
-# see diagram compiling-IF-THEN.drawio.png`            #line 254
+# see diagram compiling-IF-THEN.drawio.png             #line 254
 def xif ():
     global State                                       #line 255
     State.compiling = False
@@ -384,7 +384,7 @@ def xif ():
     # THEN or ELSE will do the fixup of (-1)           #line 264#line 265#line 266
 code("if",0,  xif)
 
-# see diagram `compiling-IF-ELSE-THEN.drawio.png`      #line 267
+# see diagram compiling-IF-ELSE-THEN.drawio.png        #line 267
 def xelse ():
     global State                                       #line 268
     # Step. 1: fixup target1 from IF-true, retrieving memo from R-stack #line 269
@@ -405,7 +405,7 @@ def xelse ():
     # THEN will do the fixup of target2                #line 278#line 279#line 280
 code("else", 1, xelse)
 
-# see diagrams `compiling-IF-THEN.drawio.png` and `compiling-IF-ELSE-THEN.drawio.png` #line 281
+# see diagrams compiling-IF-THEN.drawio.png and compiling-IF-ELSE-THEN.drawio.png #line 281
 def xthen ():
     global State                                       #line 282
     # Step. 1: fixup target (from IF or from ELSE, above), retrieving memo from R-stack #line 283
@@ -716,7 +716,7 @@ def doword ():
     #   the return stack on each invocation.⎩519⎭
     #⎩520⎭
     #2. W (Word Pointer): References the CFA of the currently executing primitive.⎩521⎭
-    #   This global register serves an analogous function to 'self in object-oriented⎩522⎭
+    #   This global register serves an analogous function to 'self' in object-oriented⎩522⎭
     #   languages, enabling subroutines to access word header fields through fixed⎩523⎭
     #   offsets from the CFA.⎩524⎭
     #⎩525⎭

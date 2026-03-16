@@ -251,7 +251,7 @@ defsubr x0branch "0branch" {⎩234⎭
 ⎩251⎭
 ⌈ IF, ELSE and THEN are "immediate" words - they should only be used inside of ":" (colon compiler) ⌉⎩252⎭
 ⎩253⎭
-⌈ see diagram compiling-IF-THEN.drawio.png` ⌉⎩254⎭
+⌈ see diagram compiling-IF-THEN.drawio.png ⌉⎩254⎭
 defsubr xif "if" { ⎩255⎭
     %immediate ⌈ This instruction appears only inside subroutine sequences, ( f -- ) compile if test and branchFalse ⌉ ⎩256⎭
     ⌈ Step. 1: generate conditional branch to yet-unknown target1 ⌉ ⎩257⎭
@@ -264,7 +264,7 @@ defsubr xif "if" { ⎩255⎭
     ⌈ THEN or ELSE will do the fixup of target1 ⌉ ⎩264⎭
 } ⎩265⎭
 ⎩266⎭
-⌈ see diagram `compiling-IF-ELSE-THEN.drawio.png` ⌉⎩267⎭
+⌈ see diagram compiling-IF-ELSE-THEN.drawio.png ⌉⎩267⎭
 defimmediatesubr xelse "else" {⎩268⎭
     ⌈ Step. 1: fixup target1 from IF-true, retrieving memo from R-stack ⌉⎩269⎭
     deftemp target1 ⇐ %rpop⎩270⎭
@@ -278,7 +278,7 @@ defimmediatesubr xelse "else" {⎩268⎭
     ⌈ THEN will do the fixup of target2 ⌉⎩278⎭
 }⎩279⎭
 ⎩280⎭
-⌈ see diagrams `compiling-IF-THEN.drawio.png` and `compiling-IF-ELSE-THEN.drawio.png` ⌉⎩281⎭
+⌈ see diagrams compiling-IF-THEN.drawio.png and compiling-IF-ELSE-THEN.drawio.png ⌉⎩281⎭
 defimmediatesubr xthen "then" {⎩282⎭
     ⌈ Step. 1: fixup target (from IF or from ELSE, above), retrieving memo from R-stack ⌉⎩283⎭
     deftemp target ⇐ %rpop⎩284⎭
@@ -519,7 +519,7 @@ The execution model maintains two critical registers:⎩514⎭
    the return stack on each invocation.⎩519⎭
 ⎩520⎭
 2. W (Word Pointer): References the CFA of the currently executing primitive.⎩521⎭
-   This global register serves an analogous function to 'self in object-oriented⎩522⎭
+   This global register serves an analogous function to 'self' in object-oriented⎩522⎭
    languages, enabling subroutines to access word header fields through fixed⎩523⎭
    offsets from the CFA.⎩524⎭
 ⎩525⎭
