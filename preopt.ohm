@@ -1,18 +1,35 @@
 pretransmogrifier {
   code = item+
   item =
-    | applySyntactic<Pattern> -- pattern
+    | applySyntactic<ScopedSubr> -- scopedsubr
     | any -- other
+    
+  ScopedSubr = "defsubr" subrname str "{" #subrinnards+ "}"
+  subrinnards =
+    | "{" subrinnards+ "}" subrinnards?     -- rec
+    | applySyntactic<Pattern> subrinnards? -- pattern
+    | name subrinnards? -- name
+    | (~"}" ~"defsynonym" ~name any)+  subrinnards?            -- other
+
   Pattern =
-    | "deftemp" "i" "⇐" "%toint" "(" "word" ")" -- replaceassignment
-    | "if" #exprCh+ "{" "pass" "}" "else" "{" #bodyCh+ "}" -- invertpass
-    | "defsynonym" "i" "≡" "%toint" "(" "word" ")" line? "%push" "(" "i" ")" -- foldmacrouse
+    | "defsynonym" name "≡" PureExpression -- memomacro
     
   exprCh = ~"{" any
   bodyCh =
     | "{" bodyCh+ "}" -- recursive
     | ~"}" item     -- flat
 
-  line = "⎩" (~"⎩" ~"⎭" any)* "⎭"
-  space += line  
+  PureExpression =
+    | "(" PureExpression ")" -- parenthesized
+    | primary "[" PureExpression "]" -- indexed
+    | primary op PureExpression -- op
+    | primary -- primary
+  
+  primary = int | "State.RAM" | "State.IP" | "State.W" | "State.LAST" | "State.BUFFP" | "State.BUFF" |  name
+  op = "+" | "-" | "*" | "/" | ">=" | "<=" | "<" | ">" | "and" | "or" | "="
+  int = "-"? digit+
+  subrname = id
+  name = id
+  id = (letter | "_") (alnum | "_")*
+  str = "\"" (~"\"" any)* "\""
 }

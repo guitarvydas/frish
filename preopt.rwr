@@ -1,11 +1,36 @@
 % rewrite pretransmogrifier {
   code [item+] = ‛«item»’
-  item_pattern [p] = ‛«p»’
+  item_scopedsubr [s] = ‛«s»’
   item_other [c] = ‛«c»’
-  Pattern_replaceassignment [_1 _2 _assign _4 _5 _6 _7] = ‛\ndefsynonym i ≡ %toint (word)⎨xcontinue⎬’
-  Pattern_invertpass [_if e+ _lb _pass _rb _else _lb2 b+ _rb2] = ‛\nif (not «e») { «b» }⎨xcontinue⎬’
-  Pattern_foldmacrouse [_defsyn _i _eq _toint _lpar _word _rpar line? _push _lpar2 _i2 _rpar3] = ‛\n%push (%toint (word))⎨xcontinue⎬’
+
+  ScopedSubr [_def name str lb innards rb] = 
+    ⎡ ⎨resetmacros⎬
+      ‛\ndefsubr «name» «str» { «innards» } ’
+    ⎦
+
+  subrinnards_rec [lb innards* rb rec?] = ‛{«innards»}«rec»’
+  subrinnards_name [n rec?] = ‛«n»«rec»’
+  subrinnards_pattern [p rec?] = ‛«p»«rec»’
+  subrinnards_other [c* rec?] = ‛«c»«rec»’
+  
+  Pattern_memomacro [_defsyn name _def e] =
+    ⎡ ⎨memomacro ‛«name»’ ‛«e»’⎬
+      ‛ ⎨xcontinue⎬’
+    ⎦
+  
   exprCh [c] = ‛«c»’
   bodyCh_recursive [_lb cs+ _rb] = ‛«_lb»«cs»«_rb»’
   bodyCh_flat [c] =‛«c»’
+
+  PureExpression_parenthesized [lp e rp] = ‛(«e»)’
+  PureExpression_indexed [p lb e rb] = ‛«p»[«e»]’
+  PureExpression_op [prim op e] = ‛(«prim»«op»«e»)’
+  PureExpression_primary [prim] = ‛(«prim»)’
+  primary [p] = ‛«p»’
+  op [x] = ‛«x»’
+  int [sign? ds+] = ‛«sign»«ds»’
+  subrname [s] = ‛«s»’
+  name [s] = ‛⎨macrolookup ‛«s»’⎬’
+  id [c cs*] = ‛«c»«cs»’
+  str [lq cs* rq] = ‛"«cs»"’
 }

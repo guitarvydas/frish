@@ -57,19 +57,6 @@
       },
       {
         "dir": 1,
-        "source_port": "",
-        "target_port": "",
-        "source": {
-          "name": "Pre Optimize",
-          "id": 17
-        },
-        "target": {
-          "name": "Generate Python",
-          "id": 8
-        }
-      },
-      {
-        "dir": 1,
         "source_port": "✗",
         "target_port": "",
         "source": {

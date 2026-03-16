@@ -1,0 +1,8 @@
+defsubr xquote "'" {
+    defsynonym DQ ≡ 34
+    %push (DQ)
+    @xword
+    if %incompilingstate {
+        %funcall literalize ()
+    }
+}
