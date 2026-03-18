@@ -627,7 +627,7 @@ defsubr xinterpret "interpret" {
     	    	   						    defsynonym notfound ≡ (result = 0)
     	    	   						    defsynonym found ≡ (foundimmediate or foundnormal)
 
-include(`xinterpret.frish')
+⊕⟨xinterpret.frish⟩
 
     return True
 }
