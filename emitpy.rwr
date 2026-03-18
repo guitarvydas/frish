@@ -23,14 +23,14 @@ State = StateClass ()
 
 «TopLevel»’
 
-TopLevel_defvar [ Defvar] =‛«Defvar»’
-TopLevel_defsynonym [ Defsynonym] =‛«Defsynonym»’
-TopLevel_defsubr [ Defsubr] =‛«Defsubr»’
-TopLevel_defimmediatesubr [ defimmediatesubr] =‛«defimmediatesubr»’
-TopLevel_deffunction [ Deffn] =‛«Deffn»’
-TopLevel_defobj [ Defobj] =‛«Defobj»’
-TopLevel_builtin [x] =‛«x»’
-TopLevel_call [x] =‛«x»’
+TopLevel_defvar [ Defvar] =‛\n«Defvar»’
+TopLevel_defsynonym [ Defsynonym] =‛\n«Defsynonym»’
+TopLevel_defsubr [ Defsubr] =‛\n«Defsubr»’
+TopLevel_defimmediatesubr [ defimmediatesubr] =‛\n«defimmediatesubr»’
+TopLevel_deffunction [ Deffn] =‛\n«Deffn»’
+TopLevel_defobj [ Defobj] =‛\n«Defobj»’
+TopLevel_builtin [x] =‛\n«x»’
+TopLevel_call [x] =‛\n«x»’
 TopLevel_comment [s line?] =‛\n«s»«line»’
 TopLevel_line [line] =‛«line»’
 

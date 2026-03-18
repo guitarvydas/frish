@@ -1,3 +1,116 @@
+
+
+⌈ fvget and fvset assume that the forth object (word) is a set of contiguous slots, each 1 machine word wide
+  these functions use direct integer offsets to access the fields of the fojbect, whereas in higher level languages
+  we'd use class fields instead - todo: fix this in the future (or not? at what point is customization better than
+  generalization?) ⌉
+deffunction fvget (name) {
+    deftemp fobjaddress ⇐ %funcall _find(%pop)
+    return State.RAM [fobjaddress + 1]
+}
+
+deffunction fvset (name, v) {
+    deftemp fobjaddress ⇐ %funcall _find(%pop)
+    defsynonym namefieldaddress ≡ fobjaddress + 1
+    State.RAM [namefieldaddress] ⇐ v
+}
+
+
+deffunction doword () {
+⌈
+Execute a colon-defined word using indirect threaded code interpretation.
+
+This function implements the inner interpreter for threaded code execution.
+Threaded code words store their definitions as arrays of code field addresses
+(CFAs) in the parameter field area (PFA) immediately following the word header.
+
+The execution model maintains two critical registers:
+
+1. IP (Instruction Pointer): References the current position within the
+   threaded code array being interpreted. Since threaded words may invoke
+   other threaded words, IP must be preserved in a reentrant manner via
+   the return stack on each invocation.
+
+2. W (Word Pointer): References the CFA of the currently executing primitive.
+   This global register serves an analogous function to 'self' in object-oriented
+   languages, enabling subroutines to access word header fields through fixed
+   offsets from the CFA.
+
+Optimization rationale: W is positioned to reference the CFA rather than the
+word header base. This design eliminates offset arithmetic for CFA access—the
+most frequent header operation—at the cost of requiring offset adjustments
+for other header fields (NFA: W-2, flags: W-1, PFA: W+1). This represents a
+deliberate trade-off favoring the common case.
+
+The inner interpreter loop performs the following operations:
+- Fetch the next CFA from RAM[IP] into W (performing the first indirection)
+- Increment IP to advance through the threaded code array
+- Execute the primitive via RAM[W]() (performing the second indirection)
+
+By caching the dereferenced CFA in W, we amortize the cost of double
+indirection: both primitive execution and header field access within
+subroutines utilize the same cached reference, avoiding redundant
+dereferences. This is functionally equivalent to parameter passing in
+object-oriented method invocation, but eliminates the overhead of
+explicitly passing 'self' to each primitive.
+
+Note: W's state is only defined during primitive execution (within RAM[W]()).
+Between loop iterations, W may reference a stale CFA, but this is
+architecturally sound since W is unconditionally updated before each
+primitive invocation.
+⌉
+
+    %rpush (State.IP)
+    State.IP ⇐ State.W + 1
+    while (-1 != State.RAM[State.IP]) {
+        State.W ⇐ State.RAM[State.IP]
+	State.IP ⇐ State.IP + 1
+	@State.RAM[State.W]
+    }
+    State.IP ⇐ %rpop
+}
+
+
+deffunction notfound (word) {
+    %clearS
+    %clearR
+    %print (word)
+    %print ("?")
+    %eol
+}
+
+deffunction exec (xt) {
+    ⌈ found and compiling and immediate ⌉
+    State.W ⇐ xt
+    State.IP ⇐ -1  ⌈ Dummy to hold place in return stack. ⌉	
+    @State.RAM[xt]  ⌈ Execute code. ⌉
+}
+
+deffunction compile_word (xt) {
+    ⌈ found and not compiling ⌉
+    State.W ⇐ xt
+    State.IP ⇐ -1  ⌈ Dummy to hold place in return stack. ⌉	
+    @State.RAM[xt]  ⌈ Execute code. ⌉
+}
+
+deffunction pushasinteger (word) {
+    %push (%toint (word))
+}
+
+deffunction pushasfloat (word) {
+    %push (%tofloat (word))
+}
+
+deffunction compileinteger (word) {
+    %funcall pushasinteger(word)
+    @literalize
+}
+
+deffunction compilefloat (word) {
+    %funcall pushasfloat(word)
+    @literalize
+}
+
 deffunction code (name, flags, does) {
     ⌈ Add new word to RAM dictionary. We create a word (Forth "object") in RAM with 5 fields and extend the
       the dictionary by linking back to the head of the dictionary list ⌉
@@ -11,6 +124,87 @@ deffunction code (name, flags, does) {
     State.LAST ⇐ x                ⌈ LAST is the pointer to the head of the dictionary list, set it to point to
                                       this new word ⌉
 }
+
+deffunction literalize () {
+    ⌈ Compile literal into definition. ⌉
+    %ram+ (%funcall _find ("(literal)"))  ⌈# Compile address of doliteral. ⌉
+    %ram+ (%pop)             ⌈ # Compile literal value. ⌉
+}
+
+deffunction ok () {
+    ⌈ ( --) Interaction loop -- REPL ⌉
+    defsynonym blank ≡ 32
+    while ⊤ {
+        %input
+        while not %empty-input {
+           @xinterpret
+        }
+    }
+}
+
+deffunction doconst () {  ⌈ method for const ⌉
+    defsynonym parameter ≡ State.RAM [State.W + 1]
+    %push (parameter)
+}
+
+
+deffunction docreate () {
+    defsynonym parameterAddress ≡ %funcall len (State.RAM) + 4
+    %push (parameterAddress)
+}
+deffunction create (name) {
+    defsynonym normal ≡ 0
+    %funcall code (name, normal, ↪︎docreate)
+}
+defsubr xcreate "create"{
+    defsynonym blank ≡ 32
+    %push (blank)
+    @xword
+    deftemp name ⇐ %pop
+    %funcall create (name)
+}
+
+deffunction comma (value) {
+    %ram+ (value)
+}
+
+deffunction fvar (name, value) {
+    %funcall create (name)
+    %funcall comma (value)
+}
+
+deffunction _find (name) {
+    ⌈ "( name -- cfa|0) Find CFA of word name." ⌉
+    deftemp x ⇐ State.LAST
+    while (x >= 0) {
+        ⌈ ## print(f"-- {x} : {RAM[x]}, {RAM[x + 1]}")  # Debug. ⌉
+        if (name = State.RAM[x + 1]) {  ⌈ # Match! ⌉
+            return x + 3
+        } else {
+            x ⇐ State.RAM[x]  ⌈ # Get next link. ⌉
+	}
+    }
+    return 0  ⌈ # Nothing found. ⌉
+}
+
+deffunction debugok () {
+    ⌈ ( --) Interaction loop -- REPL ⌉
+    defsynonym blank ≡ 32
+        %debuginput
+        while not %empty-input {
+           if (@xinterpret) {
+	           %print (" ok")
+		   %eol
+	   }
+	   %print (State.BUFP) %print (" -- ") %print (State.BUFF) %eol
+	   @xdots
+        }
+	   %print (State.BUFP) %print (" == ") %print (State.BUFF) %eol
+	   @xdot
+	   @xdots
+}
+
+
 
 defsubr xdrop "drop" {
     ⌈ ( a -- ) ⌉
@@ -217,12 +411,6 @@ defsubr xdoliteral "(literal)" {
     State.IP ⇐ State.IP + 1 ⌈ move past this item (the literal) - we're done with it ⌉
 }
 
-deffunction literalize () {
-    ⌈ Compile literal into definition. ⌉
-    %ram+ (%funcall _find ("(literal)"))  ⌈# Compile address of doliteral. ⌉
-    %ram+ (%pop)             ⌈ # Compile literal value. ⌉
-}
-
 defsubr xbranch "branch" {
     ⌈ This instruction appears only inside subroutine sequences, jump to address in next cell ⌉
     ⌈ This instruction is inserted into a subr sequence when compiling control-flow words, like "else" see below) ⌉
@@ -358,39 +546,8 @@ defsubr xconst "const" {
     %ram+ (value)
 }
 
-deffunction doconst () {  ⌈ method for const ⌉
-    defsynonym parameter ≡ State.RAM [State.W + 1]
-    %push (parameter)
-}
-
-
-deffunction docreate () {
-    defsynonym parameterAddress ≡ %funcall len (State.RAM) + 4
-    %push (parameterAddress)
-}
-deffunction create (name) {
-    defsynonym normal ≡ 0
-    %funcall code (name, normal, ↪︎docreate)
-}
-defsubr xcreate "create"{
-    defsynonym blank ≡ 32
-    %push (blank)
-    @xword
-    deftemp name ⇐ %pop
-    %funcall create (name)
-}
-
-deffunction comma (value) {
-    %ram+ (value)
-}
-
 defsubr xcomma "," {
     %funcall comma (%pop)
-}
-
-deffunction fvar (name, value) {
-    %funcall create (name)
-    %funcall comma (value)
 }
 
 defsubr xvar "variable" {
@@ -425,20 +582,6 @@ defsubr xstore"!" {
 defsubr xbye "bye" { ⌈ ( --) Leave interpreter ⌉ %quit }
 
 
-deffunction _find (name) {
-    ⌈ "( name -- cfa|0) Find CFA of word name." ⌉
-    deftemp x ⇐ State.LAST
-    while (x >= 0) {
-        ⌈ ## print(f"-- {x} : {RAM[x]}, {RAM[x + 1]}")  # Debug. ⌉
-        if (name = State.RAM[x + 1]) {  ⌈ # Match! ⌉
-            return x + 3
-        } else {
-            x ⇐ State.RAM[x]  ⌈ # Get next link. ⌉
-	}
-    }
-    return 0  ⌈ # Nothing found. ⌉
-}
-
 defsubr xfind "find" {
     ⌈ "( name | -- (name 0)|(xt 1)|(xt -1)) Search for word name." ⌉
     ⌈ 3 possible results: 1. (name 0) if not found, 2. (xt 1) if found and word is immediate, 3. (xt -1) if found and word is normal ⌉
@@ -469,22 +612,6 @@ defsubr xnone "None" {
     %pushNone
 }
 
-⌈ fvget and fvset assume that the forth object (word) is a set of contiguous slots, each 1 machine word wide
-  these functions use direct integer offsets to access the fields of the fojbect, whereas in higher level languages
-  we'd use class fields instead - todo: fix this in the future (or not? at what point is customization better than
-  generalization?) ⌉
-deffunction fvget (name) {
-    deftemp fobjaddress ⇐ %funcall _find(%pop)
-    return State.RAM [fobjaddress + 1]
-}
-
-deffunction fvset (name, v) {
-    deftemp fobjaddress ⇐ %funcall _find(%pop)
-    defsynonym namefieldaddress ≡ fobjaddress + 1
-    State.RAM [namefieldaddress] ⇐ v
-}
-
-
 defsubr xwords "words" {
     ⌈ print words in dictionary ⌉
     deftemp x ⇐ State.LAST
@@ -503,60 +630,6 @@ defsubr xexecute "execute" {
 }
 
 
-deffunction doword () {
-⌈
-Execute a colon-defined word using indirect threaded code interpretation.
-
-This function implements the inner interpreter for threaded code execution.
-Threaded code words store their definitions as arrays of code field addresses
-(CFAs) in the parameter field area (PFA) immediately following the word header.
-
-The execution model maintains two critical registers:
-
-1. IP (Instruction Pointer): References the current position within the
-   threaded code array being interpreted. Since threaded words may invoke
-   other threaded words, IP must be preserved in a reentrant manner via
-   the return stack on each invocation.
-
-2. W (Word Pointer): References the CFA of the currently executing primitive.
-   This global register serves an analogous function to 'self' in object-oriented
-   languages, enabling subroutines to access word header fields through fixed
-   offsets from the CFA.
-
-Optimization rationale: W is positioned to reference the CFA rather than the
-word header base. This design eliminates offset arithmetic for CFA access—the
-most frequent header operation—at the cost of requiring offset adjustments
-for other header fields (NFA: W-2, flags: W-1, PFA: W+1). This represents a
-deliberate trade-off favoring the common case.
-
-The inner interpreter loop performs the following operations:
-- Fetch the next CFA from RAM[IP] into W (performing the first indirection)
-- Increment IP to advance through the threaded code array
-- Execute the primitive via RAM[W]() (performing the second indirection)
-
-By caching the dereferenced CFA in W, we amortize the cost of double
-indirection: both primitive execution and header field access within
-subroutines utilize the same cached reference, avoiding redundant
-dereferences. This is functionally equivalent to parameter passing in
-object-oriented method invocation, but eliminates the overhead of
-explicitly passing 'self' to each primitive.
-
-Note: W's state is only defined during primitive execution (within RAM[W]()).
-Between loop iterations, W may reference a stale CFA, but this is
-architecturally sound since W is unconditionally updated before each
-primitive invocation.
-⌉
-
-    %rpush (State.IP)
-    State.IP ⇐ State.W + 1
-    while (-1 != State.RAM[State.IP]) {
-        State.W ⇐ State.RAM[State.IP]
-	State.IP ⇐ State.IP + 1
-	@State.RAM[State.W]
-    }
-    State.IP ⇐ %rpop
-}
-
 defsubr xcolon ":" {
     ⌈ ( name | --) Start compilation. ⌉
     defsynonym blank ≡ 32
@@ -574,46 +647,6 @@ defimmediatesubr xsemi ";"{
     %setNotCompilingState
 }
 
-deffunction notfound (word) {
-    %clearS
-    %clearR
-    %print (word)
-    %print ("?")
-    %eol
-}
-
-deffunction exec (xt) {
-    ⌈ found and compiling and immediate ⌉
-    State.W ⇐ xt
-    State.IP ⇐ -1  ⌈ Dummy to hold place in return stack. ⌉	
-    @State.RAM[xt]  ⌈ Execute code. ⌉
-}
-
-deffunction compile_word (xt) {
-    ⌈ found and not compiling ⌉
-    State.W ⇐ xt
-    State.IP ⇐ -1  ⌈ Dummy to hold place in return stack. ⌉	
-    @State.RAM[xt]  ⌈ Execute code. ⌉
-}
-
-deffunction pushasinteger (word) {
-    %push (%toint (word))
-}
-
-deffunction pushasfloat (word) {
-    %push (%tofloat (word))
-}
-
-deffunction compileinteger (word) {
-    %funcall pushasinteger(word)
-    @literalize
-}
-
-deffunction compilefloat (word) {
-    %funcall pushasfloat(word)
-    @literalize
-}
-
 defsubr xinterpret "interpret" {
     ⌈ ( string --) Execute word. ⌉
 
@@ -627,38 +660,12 @@ defsubr xinterpret "interpret" {
     	    	   						    defsynonym notfound ≡ (result = 0)
     	    	   						    defsynonym found ≡ (foundimmediate or foundnormal)
 
-⊕⟨xinterpret.frish⟩
+    ⊕⟨xinterpret.frish⟩
 
     return True
 }
 
-deffunction ok () {
-    ⌈ ( --) Interaction loop -- REPL ⌉
-    defsynonym blank ≡ 32
-    while ⊤ {
-        %input
-        while not %empty-input {
-           @xinterpret
-        }
-    }
-}
 
-deffunction debugok () {
-    ⌈ ( --) Interaction loop -- REPL ⌉
-    defsynonym blank ≡ 32
-        %debuginput
-        while not %empty-input {
-           if (@xinterpret) {
-	           %print (" ok")
-		   %eol
-	   }
-	   %print (State.BUFP) %print (" -- ") %print (State.BUFF) %eol
-	   @xdots
-        }
-	   %print (State.BUFP) %print (" == ") %print (State.BUFF) %eol
-	   @xdot
-	   @xdots
-}
 
 @ok
     

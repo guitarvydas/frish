@@ -1,703 +1,710 @@
-deffunction code (name, flags, does) {⎩1⎭
-    ⌈ Add new word to RAM dictionary. We create a word (Forth "object") in RAM with 5 fields and extend the⎩2⎭
-      the dictionary by linking back to the head of the dictionary list ⌉⎩3⎭
-    x ⇐ %funcall len (State.RAM)⎩4⎭
-⎩5⎭
-    %ram+ (State.LAST) ⌈ (LFA) link to previous word in dictionary list ⌉⎩6⎭
-    %ram+ (name)       ⌈ (NFA) name of word ⌉⎩7⎭
-    %ram+ (flags)      ⌈       0 = normal word, 1 = immediate word ⌉⎩8⎭
-    %ram+ (does)       ⌈ (CFA) function pointer that points to code that executes the word ⌉⎩9⎭
-⎩10⎭
-    State.LAST ⇐ x                ⌈ LAST is the pointer to the head of the dictionary list, set it to point to⎩11⎭
-                                      this new word ⌉⎩12⎭
-}⎩13⎭
-⎩14⎭
-defsubr xdrop "drop" {⎩15⎭
-    ⌈ ( a -- ) ⌉⎩16⎭
-    %pop⎩17⎭
-}⎩18⎭
-⎩19⎭
-defsubr xdup "dup" {⎩20⎭
-    ⌈ ( a -- a a ) ⌉⎩21⎭
-    deftemp A ⇐ %pop⎩22⎭
-    %push (A)⎩23⎭
-    %push (A)⎩24⎭
-}⎩25⎭
+⎩1⎭
+⎩2⎭
+⌈ fvget and fvset assume that the forth object (word) is a set of contiguous slots, each 1 machine word wide⎩3⎭
+  these functions use direct integer offsets to access the fields of the fojbect, whereas in higher level languages⎩4⎭
+  we'd use class fields instead - todo: fix this in the future (or not? at what point is customization better than⎩5⎭
+  generalization?) ⌉⎩6⎭
+deffunction fvget (name) {⎩7⎭
+    deftemp fobjaddress ⇐ %funcall _find(%pop)⎩8⎭
+    return State.RAM [fobjaddress + 1]⎩9⎭
+}⎩10⎭
+⎩11⎭
+deffunction fvset (name, v) {⎩12⎭
+    deftemp fobjaddress ⇐ %funcall _find(%pop)⎩13⎭
+    defsynonym namefieldaddress ≡ fobjaddress + 1⎩14⎭
+    State.RAM [namefieldaddress] ⇐ v⎩15⎭
+}⎩16⎭
+⎩17⎭
+⎩18⎭
+deffunction doword () {⎩19⎭
+⌈⎩20⎭
+Execute a colon-defined word using indirect threaded code interpretation.⎩21⎭
+⎩22⎭
+This function implements the inner interpreter for threaded code execution.⎩23⎭
+Threaded code words store their definitions as arrays of code field addresses⎩24⎭
+(CFAs) in the parameter field area (PFA) immediately following the word header.⎩25⎭
 ⎩26⎭
-defsubr xnegate "negate" {⎩27⎭
-    ⌈ ( n -- (-n) ) ⌉⎩28⎭
-    deftemp n ⇐ %pop⎩29⎭
-    %push (-n)⎩30⎭
-}⎩31⎭
-⎩32⎭
-defsubr xemit "emit" {⎩33⎭
-    ⌈ ( c -- ) emit specified character ⌉⎩34⎭
-    deftemp c ⇐ %pop⎩35⎭
-    %printAsCharacter (c)⎩36⎭
-}⎩37⎭
+The execution model maintains two critical registers:⎩27⎭
+⎩28⎭
+1. IP (Instruction Pointer): References the current position within the⎩29⎭
+   threaded code array being interpreted. Since threaded words may invoke⎩30⎭
+   other threaded words, IP must be preserved in a reentrant manner via⎩31⎭
+   the return stack on each invocation.⎩32⎭
+⎩33⎭
+2. W (Word Pointer): References the CFA of the currently executing primitive.⎩34⎭
+   This global register serves an analogous function to 'self' in object-oriented⎩35⎭
+   languages, enabling subroutines to access word header fields through fixed⎩36⎭
+   offsets from the CFA.⎩37⎭
 ⎩38⎭
-defsubr xcr "cr" { %eol }⎩39⎭
-defsubr xdot "." { ⌈ ( n --) Print TOS ⌉ %print (%pop) %eol }⎩40⎭
-defsubr xdots ".s" { ⌈ ( --) Print stack contents ⌉ %print (%stack) %eol }⎩41⎭
-⎩42⎭
-defsubr xadd "+" {⎩43⎭
-    ⌈ ( a b -- sum) ⌉⎩44⎭
-    deftemp B ⇐ %pop⎩45⎭
-    deftemp A ⇐ %pop⎩46⎭
-    %push (A + B)⎩47⎭
-}⎩48⎭
+Optimization rationale: W is positioned to reference the CFA rather than the⎩39⎭
+word header base. This design eliminates offset arithmetic for CFA access—the⎩40⎭
+most frequent header operation—at the cost of requiring offset adjustments⎩41⎭
+for other header fields (NFA: W-2, flags: W-1, PFA: W+1). This represents a⎩42⎭
+deliberate trade-off favoring the common case.⎩43⎭
+⎩44⎭
+The inner interpreter loop performs the following operations:⎩45⎭
+- Fetch the next CFA from RAM[IP] into W (performing the first indirection)⎩46⎭
+- Increment IP to advance through the threaded code array⎩47⎭
+- Execute the primitive via RAM[W]() (performing the second indirection)⎩48⎭
 ⎩49⎭
-defsubr xmul "*" {⎩50⎭
-    ⌈ ( a b -- product ) ⌉⎩51⎭
-    deftemp B ⇐ %pop⎩52⎭
-    deftemp A ⇐ %pop⎩53⎭
-    %push (A * B)⎩54⎭
-}⎩55⎭
+By caching the dereferenced CFA in W, we amortize the cost of double⎩50⎭
+indirection: both primitive execution and header field access within⎩51⎭
+subroutines utilize the same cached reference, avoiding redundant⎩52⎭
+dereferences. This is functionally equivalent to parameter passing in⎩53⎭
+object-oriented method invocation, but eliminates the overhead of⎩54⎭
+explicitly passing 'self' to each primitive.⎩55⎭
 ⎩56⎭
-defsubr xeq "=" {⎩57⎭
-    ⌈ ( a b -- bool ) ⌉⎩58⎭
-    deftemp B ⇐ %pop⎩59⎭
-    deftemp A ⇐ %pop⎩60⎭
-    %push (A = B)⎩61⎭
-}⎩62⎭
-⎩63⎭
-defsubr xlt "<" {⎩64⎭
-    ⌈ ( a b -- bool ) ⌉⎩65⎭
-    deftemp B ⇐ %pop⎩66⎭
-    deftemp A ⇐ %pop⎩67⎭
-    %push (A < B)⎩68⎭
-}⎩69⎭
-⎩70⎭
-defsubr xgt ">" {⎩71⎭
-    ⌈ ( a b -- bool ) ⌉⎩72⎭
-    deftemp B ⇐ %pop⎩73⎭
-    deftemp A ⇐ %pop⎩74⎭
-    %push (A > B)⎩75⎭
-}⎩76⎭
-⎩77⎭
-defsubr xeq0 "0=" {⎩78⎭
-    ⌈ ( a -- bool ) ⌉⎩79⎭
-    deftemp a ⇐ %pop⎩80⎭
-    %push (a = 0)⎩81⎭
-}⎩82⎭
-⎩83⎭
-defsubr x0lt "0<"  {⎩84⎭
-    ⌈ ( a -- bool ) ⌉⎩85⎭
-    deftemp a ⇐ %pop⎩86⎭
-    %push (0 < a)⎩87⎭
-}⎩88⎭
-⎩89⎭
-defsubr x0gt "0>" {⎩90⎭
-    ⌈ ( a -- bool ) ⌉⎩91⎭
-    deftemp a ⇐ %pop⎩92⎭
-    %push (0 > a)⎩93⎭
+Note: W's state is only defined during primitive execution (within RAM[W]()).⎩57⎭
+Between loop iterations, W may reference a stale CFA, but this is⎩58⎭
+architecturally sound since W is unconditionally updated before each⎩59⎭
+primitive invocation.⎩60⎭
+⌉⎩61⎭
+⎩62⎭
+    %rpush (State.IP)⎩63⎭
+    State.IP ⇐ State.W + 1⎩64⎭
+    while (-1 != State.RAM[State.IP]) {⎩65⎭
+        State.W ⇐ State.RAM[State.IP]⎩66⎭
+	State.IP ⇐ State.IP + 1⎩67⎭
+	@State.RAM[State.W]⎩68⎭
+    }⎩69⎭
+    State.IP ⇐ %rpop⎩70⎭
+}⎩71⎭
+⎩72⎭
+⎩73⎭
+deffunction notfound (word) {⎩74⎭
+    %clearS⎩75⎭
+    %clearR⎩76⎭
+    %print (word)⎩77⎭
+    %print ("?")⎩78⎭
+    %eol⎩79⎭
+}⎩80⎭
+⎩81⎭
+deffunction exec (xt) {⎩82⎭
+    ⌈ found and compiling and immediate ⌉⎩83⎭
+    State.W ⇐ xt⎩84⎭
+    State.IP ⇐ -1  ⌈ Dummy to hold place in return stack. ⌉	⎩85⎭
+    @State.RAM[xt]  ⌈ Execute code. ⌉⎩86⎭
+}⎩87⎭
+⎩88⎭
+deffunction compile_word (xt) {⎩89⎭
+    ⌈ found and not compiling ⌉⎩90⎭
+    State.W ⇐ xt⎩91⎭
+    State.IP ⇐ -1  ⌈ Dummy to hold place in return stack. ⌉	⎩92⎭
+    @State.RAM[xt]  ⌈ Execute code. ⌉⎩93⎭
 }⎩94⎭
 ⎩95⎭
-defsubr xnot "not" {⎩96⎭
-    ⌈ ( a -- bool ) ⌉⎩97⎭
-    deftemp a ⇐ %pop⎩98⎭
-    %push (not a)⎩99⎭
-}⎩100⎭
-⎩101⎭
-defsubr xand "and" {⎩102⎭
-    ⌈ ( a b -- bool ) ⌉⎩103⎭
-    deftemp b ⇐ %pop⎩104⎭
-    deftemp a ⇐ %pop⎩105⎭
-    %push (a and b)⎩106⎭
+deffunction pushasinteger (word) {⎩96⎭
+    %push (%toint (word))⎩97⎭
+}⎩98⎭
+⎩99⎭
+deffunction pushasfloat (word) {⎩100⎭
+    %push (%tofloat (word))⎩101⎭
+}⎩102⎭
+⎩103⎭
+deffunction compileinteger (word) {⎩104⎭
+    %funcall pushasinteger(word)⎩105⎭
+    @literalize⎩106⎭
 }⎩107⎭
 ⎩108⎭
-defsubr xor "or" {⎩109⎭
-    ⌈ ( a b -- bool ) ⌉⎩110⎭
-    deftemp b ⇐ %pop⎩111⎭
-    deftemp a ⇐ %pop⎩112⎭
-    %push (a or b)⎩113⎭
-}⎩114⎭
-⎩115⎭
-defsubr xStoR ">r" {⎩116⎭
-    ⌈ ( a --  ) ⌉⎩117⎭
-    deftemp a ⇐ %pop⎩118⎭
-    %rpush (a)⎩119⎭
-}⎩120⎭
-⎩121⎭
-defsubr xRtoS "r>" {⎩122⎭
-    ⌈ ( -- x ) ⌉⎩123⎭
-    deftemp x ⇐ %rpop⎩124⎭
-    %push (x)⎩125⎭
+deffunction compilefloat (word) {⎩109⎭
+    %funcall pushasfloat(word)⎩110⎭
+    @literalize⎩111⎭
+}⎩112⎭
+⎩113⎭
+deffunction code (name, flags, does) {⎩114⎭
+    ⌈ Add new word to RAM dictionary. We create a word (Forth "object") in RAM with 5 fields and extend the⎩115⎭
+      the dictionary by linking back to the head of the dictionary list ⌉⎩116⎭
+    x ⇐ %funcall len (State.RAM)⎩117⎭
+⎩118⎭
+    %ram+ (State.LAST) ⌈ (LFA) link to previous word in dictionary list ⌉⎩119⎭
+    %ram+ (name)       ⌈ (NFA) name of word ⌉⎩120⎭
+    %ram+ (flags)      ⌈       0 = normal word, 1 = immediate word ⌉⎩121⎭
+    %ram+ (does)       ⌈ (CFA) function pointer that points to code that executes the word ⌉⎩122⎭
+⎩123⎭
+    State.LAST ⇐ x                ⌈ LAST is the pointer to the head of the dictionary list, set it to point to⎩124⎭
+                                      this new word ⌉⎩125⎭
 }⎩126⎭
 ⎩127⎭
-defsubr xi "i" {⎩128⎭
-    ⌈ ( -- i ) get current loop index from R stack ⌉⎩129⎭
-    deftemp i ⇐ %rtop⎩130⎭
-    %push (i)⎩131⎭
+deffunction literalize () {⎩128⎭
+    ⌈ Compile literal into definition. ⌉⎩129⎭
+    %ram+ (%funcall _find ("(literal)"))  ⌈# Compile address of doliteral. ⌉⎩130⎭
+    %ram+ (%pop)             ⌈ # Compile literal value. ⌉⎩131⎭
 }⎩132⎭
 ⎩133⎭
-defsubr xiquote "i'" {⎩134⎭
-    ⌈ ( -- i ) get outer loop limit from R stack ⌉⎩135⎭
-    deftemp i ⇐ %rsecond⎩136⎭
-    %push (i)⎩137⎭
-}⎩138⎭
-⎩139⎭
-defsubr xj "j" {⎩140⎭
-    ⌈ ( -- j ) get outer loop index from R stack ⌉⎩141⎭
-    deftemp j ⇐ %rthird⎩142⎭
-    %push (j)⎩143⎭
-}⎩144⎭
-⎩145⎭
-defsubr xswap "swap" {⎩146⎭
-    ⌈ ( a b -- b a) ⌉⎩147⎭
-    deftemp B ⇐ %pop⎩148⎭
-    deftemp A ⇐ %pop⎩149⎭
-    %push (B)⎩150⎭
-    %push (A)⎩151⎭
-}⎩152⎭
-defsubr xsub "-" {⎩153⎭
-    ⌈ ( a b -- diff) ⌉⎩154⎭
-    deftemp B ⇐ %pop⎩155⎭
-    deftemp A ⇐ %pop⎩156⎭
-    %push (A - B)⎩157⎭
+deffunction ok () {⎩134⎭
+    ⌈ ( --) Interaction loop -- REPL ⌉⎩135⎭
+    defsynonym blank ≡ 32⎩136⎭
+    while ⊤ {⎩137⎭
+        %input⎩138⎭
+        while not %empty-input {⎩139⎭
+           @xinterpret⎩140⎭
+        }⎩141⎭
+    }⎩142⎭
+}⎩143⎭
+⎩144⎭
+deffunction doconst () {  ⌈ method for const ⌉⎩145⎭
+    defsynonym parameter ≡ State.RAM [State.W + 1]⎩146⎭
+    %push (parameter)⎩147⎭
+}⎩148⎭
+⎩149⎭
+⎩150⎭
+deffunction docreate () {⎩151⎭
+    defsynonym parameterAddress ≡ %funcall len (State.RAM) + 4⎩152⎭
+    %push (parameterAddress)⎩153⎭
+}⎩154⎭
+deffunction create (name) {⎩155⎭
+    defsynonym normal ≡ 0⎩156⎭
+    %funcall code (name, normal, ↪︎docreate)⎩157⎭
 }⎩158⎭
-defsubr xdiv "/" {⎩159⎭
-    ⌈ ( a b -- div) ⌉⎩160⎭
-    @xswap⎩161⎭
-    deftemp B ⇐ %pop⎩162⎭
-    deftemp A ⇐ %pop⎩163⎭
-    %push (B / A)⎩164⎭
+defsubr xcreate "create"{⎩159⎭
+    defsynonym blank ≡ 32⎩160⎭
+    %push (blank)⎩161⎭
+    @xword⎩162⎭
+    deftemp name ⇐ %pop⎩163⎭
+    %funcall create (name)⎩164⎭
 }⎩165⎭
 ⎩166⎭
-defsubr xword "word" {⎩167⎭
-    ⌈ (char -- string) Read in string delimited by char ⌉⎩168⎭
-    deftemp wanted ⇐ %popchar⎩169⎭
-    %scanfor (wanted)⎩170⎭
-}⎩171⎭
-⎩172⎭
-⌈ Example of state-smart word, which Brodie sez not to do. Sorry, Leo... ⌉⎩173⎭
-⌈ This sin allows it to be used the same way compiling or interactive. ⌉⎩174⎭
-defsubr xquote "'" {⎩175⎭
-    ⌈ ( -- string) Read up to closing dquote, push to stack ⌉⎩176⎭
-    ⌈ A string in Forth begins with the word " (followed by a space) then all characters up to the next " ⌉⎩177⎭
-    ⌈ E.G. " abc" ⌉⎩178⎭
-    defsynonym DQ ≡ 34⎩179⎭
-    %push (DQ)⎩180⎭
-    @xword⎩181⎭
-    if %incompilingstate {⎩182⎭
-        %funcall literalize ()⎩183⎭
-    }⎩184⎭
-}⎩185⎭
-⎩186⎭
-defsubr xdotquote ".'" {⎩187⎭
-    ⌈ ( --) Print string. ⌉⎩188⎭
-    @xquote⎩189⎭
-    %print (%pop)⎩190⎭
-}⎩191⎭
-⎩192⎭
-⎩193⎭
-⎩194⎭
-defsubr xdoliteral "(literal)" {⎩195⎭
-    ⌈⎩196⎭
- Inside definitions only, pushes compiled literal to stack ⎩197⎭
-    ⎩198⎭
-     Certain Forth words are only applicable inside compiled sequences of subroutines ⎩199⎭
-     Literals are handled in different ways when interpreted when in the REPL vs⎩200⎭
-     compiled into sequences of subrs ⎩201⎭
-     In the REPL, when we encounter a literal, we simply push it onto the stack ⎩202⎭
-     In the compiler, though, we have to create an instruction that pushes ⎩203⎭
-       the literal onto the stack. ⎩204⎭
-       Compiled code doesn't do what the REPL does, we have to hard-wire and ⎩205⎭
-       bake in code that pushes the literal when the time comes to run the sequence. ⎩206⎭
+deffunction comma (value) {⎩167⎭
+    %ram+ (value)⎩168⎭
+}⎩169⎭
+⎩170⎭
+deffunction fvar (name, value) {⎩171⎭
+    %funcall create (name)⎩172⎭
+    %funcall comma (value)⎩173⎭
+}⎩174⎭
+⎩175⎭
+deffunction _find (name) {⎩176⎭
+    ⌈ "( name -- cfa|0) Find CFA of word name." ⌉⎩177⎭
+    deftemp x ⇐ State.LAST⎩178⎭
+    while (x >= 0) {⎩179⎭
+        ⌈ ## print(f"-- {x} : {RAM[x]}, {RAM[x + 1]}")  # Debug. ⌉⎩180⎭
+        if (name = State.RAM[x + 1]) {  ⌈ # Match! ⌉⎩181⎭
+            return x + 3⎩182⎭
+        } else {⎩183⎭
+            x ⇐ State.RAM[x]  ⌈ # Get next link. ⌉⎩184⎭
+	}⎩185⎭
+    }⎩186⎭
+    return 0  ⌈ # Nothing found. ⌉⎩187⎭
+}⎩188⎭
+⎩189⎭
+deffunction debugok () {⎩190⎭
+    ⌈ ( --) Interaction loop -- REPL ⌉⎩191⎭
+    defsynonym blank ≡ 32⎩192⎭
+        %debuginput⎩193⎭
+        while not %empty-input {⎩194⎭
+           if (@xinterpret) {⎩195⎭
+	           %print (" ok")⎩196⎭
+		   %eol⎩197⎭
+	   }⎩198⎭
+	   %print (State.BUFP) %print (" -- ") %print (State.BUFF) %eol⎩199⎭
+	   @xdots⎩200⎭
+        }⎩201⎭
+	   %print (State.BUFP) %print (" == ") %print (State.BUFF) %eol⎩202⎭
+	   @xdot⎩203⎭
+	   @xdots⎩204⎭
+}⎩205⎭
+⎩206⎭
 ⎩207⎭
-     This word - "(literal)" - is a simple case and one could actually type this ⎩208⎭
-       instruction into the REPL, but, that would be redundant.  Other kinds of words, ⎩209⎭
-       e.g. some control-flow words, tend to be messier and the code below only handles ⎩210⎭
-       the compiled aspects and ignores the REPL aspects ⎩211⎭
-⎩212⎭
-     "IP" is the current word index in a sequence of words being compiled. ⎩213⎭
-⌉⎩214⎭
-    defsynonym lit ≡ State.RAM [State.IP]⎩215⎭
-    %push (lit)⎩216⎭
-    State.IP ⇐ State.IP + 1 ⌈ move past this item (the literal) - we're done with it ⌉⎩217⎭
-}⎩218⎭
-⎩219⎭
-deffunction literalize () {⎩220⎭
-    ⌈ Compile literal into definition. ⌉⎩221⎭
-    %ram+ (%funcall _find ("(literal)"))  ⌈# Compile address of doliteral. ⌉⎩222⎭
-    %ram+ (%pop)             ⌈ # Compile literal value. ⌉⎩223⎭
-}⎩224⎭
-⎩225⎭
-defsubr xbranch "branch" {⎩226⎭
-    ⌈ This instruction appears only inside subroutine sequences, jump to address in next cell ⌉⎩227⎭
-    ⌈ This instruction is inserted into a subr sequence when compiling control-flow words, like "else" see below) ⌉⎩228⎭
-    State.IP ⇐ State.RAM [State.IP]⎩229⎭
-    ⌈ normally, we just execute an instruction then move the IP sequentially forward by 1 unit, i.e. IP ⇐ IP + 1 ⌉⎩230⎭
-    ⌈   in this case, though, we explicitly change the IP to some other value and don't just increment it ⌉⎩231⎭
-}⎩232⎭
-⎩233⎭
-defsubr x0branch "0branch" {⎩234⎭
-    ⌈ This instruction appears only inside subroutine sequences, jump on false to address in next cell ⌉⎩235⎭
-    deftemp test ⇐ %toboolean (%pop)⎩236⎭
-    if (test) {⎩237⎭
-        State.IP ⇐ State.IP + 1⎩238⎭
-    } else {⎩239⎭
-       State.IP ⇐ State.RAM [State.IP]⎩240⎭
-    }⎩241⎭
+⎩208⎭
+defsubr xdrop "drop" {⎩209⎭
+    ⌈ ( a -- ) ⌉⎩210⎭
+    %pop⎩211⎭
+}⎩212⎭
+⎩213⎭
+defsubr xdup "dup" {⎩214⎭
+    ⌈ ( a -- a a ) ⌉⎩215⎭
+    deftemp A ⇐ %pop⎩216⎭
+    %push (A)⎩217⎭
+    %push (A)⎩218⎭
+}⎩219⎭
+⎩220⎭
+defsubr xnegate "negate" {⎩221⎭
+    ⌈ ( n -- (-n) ) ⌉⎩222⎭
+    deftemp n ⇐ %pop⎩223⎭
+    %push (-n)⎩224⎭
+}⎩225⎭
+⎩226⎭
+defsubr xemit "emit" {⎩227⎭
+    ⌈ ( c -- ) emit specified character ⌉⎩228⎭
+    deftemp c ⇐ %pop⎩229⎭
+    %printAsCharacter (c)⎩230⎭
+}⎩231⎭
+⎩232⎭
+defsubr xcr "cr" { %eol }⎩233⎭
+defsubr xdot "." { ⌈ ( n --) Print TOS ⌉ %print (%pop) %eol }⎩234⎭
+defsubr xdots ".s" { ⌈ ( --) Print stack contents ⌉ %print (%stack) %eol }⎩235⎭
+⎩236⎭
+defsubr xadd "+" {⎩237⎭
+    ⌈ ( a b -- sum) ⌉⎩238⎭
+    deftemp B ⇐ %pop⎩239⎭
+    deftemp A ⇐ %pop⎩240⎭
+    %push (A + B)⎩241⎭
 }⎩242⎭
 ⎩243⎭
-⎩244⎭
-⌈ "immediate" words are fully operational even when in compile mode. Some (not all) of these words are meant to⎩245⎭
-    work /only/ in compile mode. At the REPL prompt ("interpret" mode), they produce unwanted results.⎩246⎭
-  immediate words: xif, xelse, xthen, xquote, xcomment, xsemi⎩247⎭
-  immediate words that only have meaning in compile mode: xif, xelse, xthen, xsemi⎩248⎭
-⌉⎩249⎭
+defsubr xmul "*" {⎩244⎭
+    ⌈ ( a b -- product ) ⌉⎩245⎭
+    deftemp B ⇐ %pop⎩246⎭
+    deftemp A ⇐ %pop⎩247⎭
+    %push (A * B)⎩248⎭
+}⎩249⎭
 ⎩250⎭
-⎩251⎭
-⌈ IF, ELSE and THEN are "immediate" words - they should only be used inside of ":" (colon compiler) ⌉⎩252⎭
-⎩253⎭
-⌈ see diagram compiling-IF-THEN.drawio.png ⌉⎩254⎭
-defsubr xif "if" { ⎩255⎭
-    %immediate ⌈ This instruction appears only inside subroutine sequences, ( f -- ) compile if test and branchFalse ⌉ ⎩256⎭
-    ⌈ Step. 1: generate conditional branch to yet-unknown target1 ⌉ ⎩257⎭
-    deftemp branchFalseAddress ⇐ %funcall _find ("0branch")⎩258⎭
-    %ram+ (branchFalseAddress) ⌈ insert branch-if-false opcode (word) ⌉ ⎩259⎭
-    %rpush (%RAMnext) ⌈ target1 onto r-stack as memo for later fixup ⌉ ⎩260⎭
-    defsynonym target1 ≡ -1 ⎩261⎭
-    %ram+ (target1) ⌈ branch target will be fixed up later ⌉ ⎩262⎭
-    ⌈ Step. 2: generate code for true branch - return to compiler which will compile the following words ⌉ ⎩263⎭
-    ⌈ THEN or ELSE will do the fixup of target1 ⌉ ⎩264⎭
-} ⎩265⎭
-⎩266⎭
-⌈ see diagram compiling-IF-ELSE-THEN.drawio.png ⌉⎩267⎭
-defimmediatesubr xelse "else" {⎩268⎭
-    ⌈ Step. 1: fixup target1 from IF-true, retrieving memo from R-stack ⌉⎩269⎭
-    deftemp target1 ⇐ %rpop⎩270⎭
-    State.RAM [target1] ⇐ %RAMnext⎩271⎭
-    ⌈ Step. 2: generate unconditional branch for preceding IF, creating new memo for target2 on R-stack ⌉⎩272⎭
-    deftemp brAddress ⇐ %funcall _find ("branch")⎩273⎭
-    %rpush (%RAMnext) ⌈ target2 address on R-stack as memo for later fixup ⌉⎩274⎭
-    defsynonym target2 ≡ -1⎩275⎭
-    %ram+ (target2) ⌈ branch target will be fixed up later ⌉⎩276⎭
-    ⌈ Step. 3: generate code for false branch - return to compiler which will compile the following words ⌉⎩277⎭
-    ⌈ THEN will do the fixup of target2 ⌉⎩278⎭
-}⎩279⎭
-⎩280⎭
-⌈ see diagrams compiling-IF-THEN.drawio.png and compiling-IF-ELSE-THEN.drawio.png ⌉⎩281⎭
-defimmediatesubr xthen "then" {⎩282⎭
-    ⌈ Step. 1: fixup target (from IF or from ELSE, above), retrieving memo from R-stack ⌉⎩283⎭
-    deftemp target ⇐ %rpop⎩284⎭
-    State.RAM [target] ⇐ %RAMnext⎩285⎭
-}⎩286⎭
-⎩287⎭
-defsubr x_do "(do)" {⎩288⎭
-    ⌈ ( limit index --) Puts limit and index on return stack. ⌉⎩289⎭
-    @xswap⎩290⎭
-    deftemp index ⇐ %pop⎩291⎭
-    deftemp limit ⇐ %pop⎩292⎭
-    %rpush (index)⎩293⎭
-    %rpush (limit)⎩294⎭
-}⎩295⎭
-⎩296⎭
-defimmediatesubr xdo "xdo" {⎩297⎭
-    ⌈ (  limit index --) Begin counted loop. ⌉⎩298⎭
-    %ram+(%funcall _find("(do)"))  ⌈ Push do loop handler. ⌉⎩299⎭
-    %rpush(%RAMnext)           ⌈ Push address to jump back to. ⌉⎩300⎭
+defsubr xeq "=" {⎩251⎭
+    ⌈ ( a b -- bool ) ⌉⎩252⎭
+    deftemp B ⇐ %pop⎩253⎭
+    deftemp A ⇐ %pop⎩254⎭
+    %push (A = B)⎩255⎭
+}⎩256⎭
+⎩257⎭
+defsubr xlt "<" {⎩258⎭
+    ⌈ ( a b -- bool ) ⌉⎩259⎭
+    deftemp B ⇐ %pop⎩260⎭
+    deftemp A ⇐ %pop⎩261⎭
+    %push (A < B)⎩262⎭
+}⎩263⎭
+⎩264⎭
+defsubr xgt ">" {⎩265⎭
+    ⌈ ( a b -- bool ) ⌉⎩266⎭
+    deftemp B ⇐ %pop⎩267⎭
+    deftemp A ⇐ %pop⎩268⎭
+    %push (A > B)⎩269⎭
+}⎩270⎭
+⎩271⎭
+defsubr xeq0 "0=" {⎩272⎭
+    ⌈ ( a -- bool ) ⌉⎩273⎭
+    deftemp a ⇐ %pop⎩274⎭
+    %push (a = 0)⎩275⎭
+}⎩276⎭
+⎩277⎭
+defsubr x0lt "0<"  {⎩278⎭
+    ⌈ ( a -- bool ) ⌉⎩279⎭
+    deftemp a ⇐ %pop⎩280⎭
+    %push (0 < a)⎩281⎭
+}⎩282⎭
+⎩283⎭
+defsubr x0gt "0>" {⎩284⎭
+    ⌈ ( a -- bool ) ⌉⎩285⎭
+    deftemp a ⇐ %pop⎩286⎭
+    %push (0 > a)⎩287⎭
+}⎩288⎭
+⎩289⎭
+defsubr xnot "not" {⎩290⎭
+    ⌈ ( a -- bool ) ⌉⎩291⎭
+    deftemp a ⇐ %pop⎩292⎭
+    %push (not a)⎩293⎭
+}⎩294⎭
+⎩295⎭
+defsubr xand "and" {⎩296⎭
+    ⌈ ( a b -- bool ) ⌉⎩297⎭
+    deftemp b ⇐ %pop⎩298⎭
+    deftemp a ⇐ %pop⎩299⎭
+    %push (a and b)⎩300⎭
 }⎩301⎭
 ⎩302⎭
-defsubr x_loop "(loop)" {⎩303⎭
-    ⌈ (  -- f) Determine if loop is done. ⌉⎩304⎭
-    deftemp index ⇐ %rpop⎩305⎭
-    deftemp limit ⇐ %rpop⎩306⎭
-    defsynonym cond ≡ (index >= limit)⎩307⎭
-    %push (cond)⎩308⎭
-    if (cond) { ⌈ clean up rstack if index >= limit ⌉⎩309⎭
-        %rpop⎩310⎭
-        %rpop⎩311⎭
-    }    ⎩312⎭
-}⎩313⎭
-⎩314⎭
-defimmediatesubr xploop "+loop" {⎩315⎭
-    ⌈ ( --) Close counted loop. ⌉⎩316⎭
-    %ram+(%funcall _find("(loop)"))   ⌈ Compile in loop test. ⌉⎩317⎭
-    %ram+(%funcall _find("0branch"))  ⌈ Compile in branch check. ⌉⎩318⎭
-    %ram+(%rpop)           ⌈ Address to jump back to. ⌉⎩319⎭
+defsubr xor "or" {⎩303⎭
+    ⌈ ( a b -- bool ) ⌉⎩304⎭
+    deftemp b ⇐ %pop⎩305⎭
+    deftemp a ⇐ %pop⎩306⎭
+    %push (a or b)⎩307⎭
+}⎩308⎭
+⎩309⎭
+defsubr xStoR ">r" {⎩310⎭
+    ⌈ ( a --  ) ⌉⎩311⎭
+    deftemp a ⇐ %pop⎩312⎭
+    %rpush (a)⎩313⎭
+}⎩314⎭
+⎩315⎭
+defsubr xRtoS "r>" {⎩316⎭
+    ⌈ ( -- x ) ⌉⎩317⎭
+    deftemp x ⇐ %rpop⎩318⎭
+    %push (x)⎩319⎭
 }⎩320⎭
 ⎩321⎭
-defimmediatesubr xloop "xloop" {⎩322⎭
-    ⌈ (  --) Close counted loop. ⌉⎩323⎭
-    %push (1)⎩324⎭
-    @literalize                  ⌈ Default loop increment for x_loop. ⌉⎩325⎭
-    %ram+(%funcall _find("(loop)"))   ⌈ Compile in loop test. ⌉⎩326⎭
-    %ram+(%funcall _find("0branch"))  ⌈ Compile in branch check. ⌉⎩327⎭
-    %ram+(%rpop)           ⌈ Address to jump back to. ⌉⎩328⎭
-}⎩329⎭
-⎩330⎭
-defimmediatesubr xbegin "begin" {⎩331⎭
-    %rpush (%RAMnext)  ⌈ ( --) Start indefinite loop. ⌉⎩332⎭
-}⎩333⎭
-⎩334⎭
-defimmediatesubr xuntil "until" {⎩335⎭
-    ⌈ (  f --) Close indefinite loop with test. ⌉⎩336⎭
-    %ram+(%funcall _find("0branch"))  ⌈ Expects result of test on stack. ⌉⎩337⎭
-    %ram+(%rpop)           ⌈ Address to jump back to. ⌉⎩338⎭
-}⎩339⎭
-⎩340⎭
-⎩341⎭
-⎩342⎭
-⌈  "... 123 constant K ..." ⌉⎩343⎭
-⌈  at interpretation time: 123 is on the Stack, we have consumed "constant" from BUFF, BUFF now contains "K ..." ⌉⎩344⎭
-⌈  invoke 'word' which parses "K" and pushed it. The stack becomes [... 123 "K"] ⌉⎩345⎭
-⌈  pop "K", pop 123, create a new word called 'K' with its PFA set to 123 and its CFA set to a subr that⎩346⎭
-     gets 123 from its PFA and pushes it onto the stack ⌉⎩347⎭
-defsubr xconst "const" {⎩348⎭
-    ⌈  get next word - the name - from BUFF ⌉⎩349⎭
-    defsynonym blank ≡ 32⎩350⎭
-    %push (blank)⎩351⎭
-    @xword⎩352⎭
-    ⌈  stack is now: ( NNNN name -- ) ⌉⎩353⎭
-    deftemp name ⇐ %pop⎩354⎭
-    deftemp value ⇐ %pop⎩355⎭
-    defsynonym normal ≡ 0⎩356⎭
-    deftemp fobj ⇐ %funcall code (name, normal, ↪︎doconst)⎩357⎭
-    %ram+ (value)⎩358⎭
+defsubr xi "i" {⎩322⎭
+    ⌈ ( -- i ) get current loop index from R stack ⌉⎩323⎭
+    deftemp i ⇐ %rtop⎩324⎭
+    %push (i)⎩325⎭
+}⎩326⎭
+⎩327⎭
+defsubr xiquote "i'" {⎩328⎭
+    ⌈ ( -- i ) get outer loop limit from R stack ⌉⎩329⎭
+    deftemp i ⇐ %rsecond⎩330⎭
+    %push (i)⎩331⎭
+}⎩332⎭
+⎩333⎭
+defsubr xj "j" {⎩334⎭
+    ⌈ ( -- j ) get outer loop index from R stack ⌉⎩335⎭
+    deftemp j ⇐ %rthird⎩336⎭
+    %push (j)⎩337⎭
+}⎩338⎭
+⎩339⎭
+defsubr xswap "swap" {⎩340⎭
+    ⌈ ( a b -- b a) ⌉⎩341⎭
+    deftemp B ⇐ %pop⎩342⎭
+    deftemp A ⇐ %pop⎩343⎭
+    %push (B)⎩344⎭
+    %push (A)⎩345⎭
+}⎩346⎭
+defsubr xsub "-" {⎩347⎭
+    ⌈ ( a b -- diff) ⌉⎩348⎭
+    deftemp B ⇐ %pop⎩349⎭
+    deftemp A ⇐ %pop⎩350⎭
+    %push (A - B)⎩351⎭
+}⎩352⎭
+defsubr xdiv "/" {⎩353⎭
+    ⌈ ( a b -- div) ⌉⎩354⎭
+    @xswap⎩355⎭
+    deftemp B ⇐ %pop⎩356⎭
+    deftemp A ⇐ %pop⎩357⎭
+    %push (B / A)⎩358⎭
 }⎩359⎭
 ⎩360⎭
-deffunction doconst () {  ⌈ method for const ⌉⎩361⎭
-    defsynonym parameter ≡ State.RAM [State.W + 1]⎩362⎭
-    %push (parameter)⎩363⎭
-}⎩364⎭
-⎩365⎭
+defsubr xword "word" {⎩361⎭
+    ⌈ (char -- string) Read in string delimited by char ⌉⎩362⎭
+    deftemp wanted ⇐ %popchar⎩363⎭
+    %scanfor (wanted)⎩364⎭
+}⎩365⎭
 ⎩366⎭
-deffunction docreate () {⎩367⎭
-    defsynonym parameterAddress ≡ %funcall len (State.RAM) + 4⎩368⎭
-    %push (parameterAddress)⎩369⎭
-}⎩370⎭
-deffunction create (name) {⎩371⎭
-    defsynonym normal ≡ 0⎩372⎭
-    %funcall code (name, normal, ↪︎docreate)⎩373⎭
-}⎩374⎭
-defsubr xcreate "create"{⎩375⎭
-    defsynonym blank ≡ 32⎩376⎭
-    %push (blank)⎩377⎭
-    @xword⎩378⎭
-    deftemp name ⇐ %pop⎩379⎭
-    %funcall create (name)⎩380⎭
-}⎩381⎭
-⎩382⎭
-deffunction comma (value) {⎩383⎭
-    %ram+ (value)⎩384⎭
+⌈ Example of state-smart word, which Brodie sez not to do. Sorry, Leo... ⌉⎩367⎭
+⌈ This sin allows it to be used the same way compiling or interactive. ⌉⎩368⎭
+defsubr xquote "'" {⎩369⎭
+    ⌈ ( -- string) Read up to closing dquote, push to stack ⌉⎩370⎭
+    ⌈ A string in Forth begins with the word " (followed by a space) then all characters up to the next " ⌉⎩371⎭
+    ⌈ E.G. " abc" ⌉⎩372⎭
+    defsynonym DQ ≡ 34⎩373⎭
+    %push (DQ)⎩374⎭
+    @xword⎩375⎭
+    if %incompilingstate {⎩376⎭
+        %funcall literalize ()⎩377⎭
+    }⎩378⎭
+}⎩379⎭
+⎩380⎭
+defsubr xdotquote ".'" {⎩381⎭
+    ⌈ ( --) Print string. ⌉⎩382⎭
+    @xquote⎩383⎭
+    %print (%pop)⎩384⎭
 }⎩385⎭
 ⎩386⎭
-defsubr xcomma "," {⎩387⎭
-    %funcall comma (%pop)⎩388⎭
-}⎩389⎭
-⎩390⎭
-deffunction fvar (name, value) {⎩391⎭
-    %funcall create (name)⎩392⎭
-    %funcall comma (value)⎩393⎭
-}⎩394⎭
-⎩395⎭
-defsubr xvar "variable" {⎩396⎭
-    defsynonym blank ≡ 32⎩397⎭
-    %push (blank)⎩398⎭
-    @xword⎩399⎭
-    deftemp name ⇐ %pop⎩400⎭
-    deftemp value ⇐ %pop⎩401⎭
-    %funcall fvar (name, value)    ⎩402⎭
-}⎩403⎭
-⎩404⎭
-defsubr xdump "dump" {⎩405⎭
-    deftemp n ⇐ %toint (%pop)⎩406⎭
-    deftemp start ⇐ %toint (%pop)⎩407⎭
-    %print ("----------------------------------------------------------------")⎩408⎭
-    deftemp a ⇐ start⎩409⎭
-    while (a < start + (%funcall min (n, (%funcall len (State.RAM) - start)))) {⎩410⎭
-        %print (a)⎩411⎭
-	%print (": ")⎩412⎭
-	%print (State.RAM [a])⎩413⎭
-	%eol⎩414⎭
-        deftemp a ⇐ a + 1⎩415⎭
-    }⎩416⎭
-}⎩417⎭
-⎩418⎭
-defsubr xstore"!" {⎩419⎭
-    deftemp b ⇐ %pop⎩420⎭
-    deftemp a ⇐ %pop⎩421⎭
-    State.RAM [b] ⇐ a⎩422⎭
-}⎩423⎭
-⎩424⎭
-defsubr xbye "bye" { ⌈ ( --) Leave interpreter ⌉ %quit }⎩425⎭
-⎩426⎭
-⎩427⎭
-deffunction _find (name) {⎩428⎭
-    ⌈ "( name -- cfa|0) Find CFA of word name." ⌉⎩429⎭
-    deftemp x ⇐ State.LAST⎩430⎭
-    while (x >= 0) {⎩431⎭
-        ⌈ ## print(f"-- {x} : {RAM[x]}, {RAM[x + 1]}")  # Debug. ⌉⎩432⎭
-        if (name = State.RAM[x + 1]) {  ⌈ # Match! ⌉⎩433⎭
-            return x + 3⎩434⎭
-        } else {⎩435⎭
-            x ⇐ State.RAM[x]  ⌈ # Get next link. ⌉⎩436⎭
-	}⎩437⎭
-    }⎩438⎭
-    return 0  ⌈ # Nothing found. ⌉⎩439⎭
-}⎩440⎭
+⎩387⎭
+⎩388⎭
+defsubr xdoliteral "(literal)" {⎩389⎭
+    ⌈⎩390⎭
+ Inside definitions only, pushes compiled literal to stack ⎩391⎭
+    ⎩392⎭
+     Certain Forth words are only applicable inside compiled sequences of subroutines ⎩393⎭
+     Literals are handled in different ways when interpreted when in the REPL vs⎩394⎭
+     compiled into sequences of subrs ⎩395⎭
+     In the REPL, when we encounter a literal, we simply push it onto the stack ⎩396⎭
+     In the compiler, though, we have to create an instruction that pushes ⎩397⎭
+       the literal onto the stack. ⎩398⎭
+       Compiled code doesn't do what the REPL does, we have to hard-wire and ⎩399⎭
+       bake in code that pushes the literal when the time comes to run the sequence. ⎩400⎭
+⎩401⎭
+     This word - "(literal)" - is a simple case and one could actually type this ⎩402⎭
+       instruction into the REPL, but, that would be redundant.  Other kinds of words, ⎩403⎭
+       e.g. some control-flow words, tend to be messier and the code below only handles ⎩404⎭
+       the compiled aspects and ignores the REPL aspects ⎩405⎭
+⎩406⎭
+     "IP" is the current word index in a sequence of words being compiled. ⎩407⎭
+⌉⎩408⎭
+    defsynonym lit ≡ State.RAM [State.IP]⎩409⎭
+    %push (lit)⎩410⎭
+    State.IP ⇐ State.IP + 1 ⌈ move past this item (the literal) - we're done with it ⌉⎩411⎭
+}⎩412⎭
+⎩413⎭
+defsubr xbranch "branch" {⎩414⎭
+    ⌈ This instruction appears only inside subroutine sequences, jump to address in next cell ⌉⎩415⎭
+    ⌈ This instruction is inserted into a subr sequence when compiling control-flow words, like "else" see below) ⌉⎩416⎭
+    State.IP ⇐ State.RAM [State.IP]⎩417⎭
+    ⌈ normally, we just execute an instruction then move the IP sequentially forward by 1 unit, i.e. IP ⇐ IP + 1 ⌉⎩418⎭
+    ⌈   in this case, though, we explicitly change the IP to some other value and don't just increment it ⌉⎩419⎭
+}⎩420⎭
+⎩421⎭
+defsubr x0branch "0branch" {⎩422⎭
+    ⌈ This instruction appears only inside subroutine sequences, jump on false to address in next cell ⌉⎩423⎭
+    deftemp test ⇐ %toboolean (%pop)⎩424⎭
+    if (test) {⎩425⎭
+        State.IP ⇐ State.IP + 1⎩426⎭
+    } else {⎩427⎭
+       State.IP ⇐ State.RAM [State.IP]⎩428⎭
+    }⎩429⎭
+}⎩430⎭
+⎩431⎭
+⎩432⎭
+⌈ "immediate" words are fully operational even when in compile mode. Some (not all) of these words are meant to⎩433⎭
+    work /only/ in compile mode. At the REPL prompt ("interpret" mode), they produce unwanted results.⎩434⎭
+  immediate words: xif, xelse, xthen, xquote, xcomment, xsemi⎩435⎭
+  immediate words that only have meaning in compile mode: xif, xelse, xthen, xsemi⎩436⎭
+⌉⎩437⎭
+⎩438⎭
+⎩439⎭
+⌈ IF, ELSE and THEN are "immediate" words - they should only be used inside of ":" (colon compiler) ⌉⎩440⎭
 ⎩441⎭
-defsubr xfind "find" {⎩442⎭
-    ⌈ "( name | -- (name 0)|(xt 1)|(xt -1)) Search for word name." ⌉⎩443⎭
-    ⌈ 3 possible results: 1. (name 0) if not found, 2. (xt 1) if found and word is immediate, 3. (xt -1) if found and word is normal ⌉⎩444⎭
-    %push (32)⎩445⎭
-    @xword⎩446⎭
-    deftemp found ⇐ %funcall _find(%stop)⎩447⎭
-    if (0 = found) {⎩448⎭
-        %push (0)⎩449⎭
-    } else {⎩450⎭
-        %pop  ⌈ # Get rid of name on stack. ⌉⎩451⎭
-        %push(found)⎩452⎭
-        deftemp immediate ⇐ -1⎩453⎭
-        if (State.RAM[%stop - 1] & 1) { immediate ⇐ 1 }⎩454⎭
-        %push(immediate)⎩455⎭
-    }⎩456⎭
-}⎩457⎭
-⎩458⎭
-defsubr xtick "'"  {⎩459⎭
-    ⌈ "( name -- xt|-1) Search for execution token of word name." ⌉⎩460⎭
-    %push (32)⎩461⎭
-    @xword⎩462⎭
-    deftemp name ⇐ %pop⎩463⎭
-    deftemp found ⇐ %funcall _find(name)⎩464⎭
-    %push (found)⎩465⎭
-}⎩466⎭
-⎩467⎭
-defsubr xnone "None" {⎩468⎭
-    %pushNone⎩469⎭
-}⎩470⎭
-⎩471⎭
-⌈ fvget and fvset assume that the forth object (word) is a set of contiguous slots, each 1 machine word wide⎩472⎭
-  these functions use direct integer offsets to access the fields of the fojbect, whereas in higher level languages⎩473⎭
-  we'd use class fields instead - todo: fix this in the future (or not? at what point is customization better than⎩474⎭
-  generalization?) ⌉⎩475⎭
-deffunction fvget (name) {⎩476⎭
-    deftemp fobjaddress ⇐ %funcall _find(%pop)⎩477⎭
-    return State.RAM [fobjaddress + 1]⎩478⎭
-}⎩479⎭
-⎩480⎭
-deffunction fvset (name, v) {⎩481⎭
-    deftemp fobjaddress ⇐ %funcall _find(%pop)⎩482⎭
-    defsynonym namefieldaddress ≡ fobjaddress + 1⎩483⎭
-    State.RAM [namefieldaddress] ⇐ v⎩484⎭
-}⎩485⎭
-⎩486⎭
-⎩487⎭
-defsubr xwords "words" {⎩488⎭
-    ⌈ print words in dictionary ⌉⎩489⎭
-    deftemp x ⇐ State.LAST⎩490⎭
-    while (x > -1) {⎩491⎭
-        %print (State.RAM [x+ 1])⎩492⎭
-	%print (" ")⎩493⎭
-    }⎩494⎭
-    %eol⎩495⎭
-}⎩496⎭
-⎩497⎭
-⎩498⎭
-defsubr xexecute "execute" {⎩499⎭
-    ⌈ invoke given word ⌉⎩500⎭
-    deftemp wordAddress ⇐ %pop⎩501⎭
-    @@wordAddress⎩502⎭
-}⎩503⎭
-⎩504⎭
-⎩505⎭
-deffunction doword () {⎩506⎭
-⌈⎩507⎭
-Execute a colon-defined word using indirect threaded code interpretation.⎩508⎭
+⌈ see diagram compiling-IF-THEN.drawio.png ⌉⎩442⎭
+defsubr xif "if" { ⎩443⎭
+    %immediate ⌈ This instruction appears only inside subroutine sequences, ( f -- ) compile if test and branchFalse ⌉ ⎩444⎭
+    ⌈ Step. 1: generate conditional branch to yet-unknown target1 ⌉ ⎩445⎭
+    deftemp branchFalseAddress ⇐ %funcall _find ("0branch")⎩446⎭
+    %ram+ (branchFalseAddress) ⌈ insert branch-if-false opcode (word) ⌉ ⎩447⎭
+    %rpush (%RAMnext) ⌈ target1 onto r-stack as memo for later fixup ⌉ ⎩448⎭
+    defsynonym target1 ≡ -1 ⎩449⎭
+    %ram+ (target1) ⌈ branch target will be fixed up later ⌉ ⎩450⎭
+    ⌈ Step. 2: generate code for true branch - return to compiler which will compile the following words ⌉ ⎩451⎭
+    ⌈ THEN or ELSE will do the fixup of target1 ⌉ ⎩452⎭
+} ⎩453⎭
+⎩454⎭
+⌈ see diagram compiling-IF-ELSE-THEN.drawio.png ⌉⎩455⎭
+defimmediatesubr xelse "else" {⎩456⎭
+    ⌈ Step. 1: fixup target1 from IF-true, retrieving memo from R-stack ⌉⎩457⎭
+    deftemp target1 ⇐ %rpop⎩458⎭
+    State.RAM [target1] ⇐ %RAMnext⎩459⎭
+    ⌈ Step. 2: generate unconditional branch for preceding IF, creating new memo for target2 on R-stack ⌉⎩460⎭
+    deftemp brAddress ⇐ %funcall _find ("branch")⎩461⎭
+    %rpush (%RAMnext) ⌈ target2 address on R-stack as memo for later fixup ⌉⎩462⎭
+    defsynonym target2 ≡ -1⎩463⎭
+    %ram+ (target2) ⌈ branch target will be fixed up later ⌉⎩464⎭
+    ⌈ Step. 3: generate code for false branch - return to compiler which will compile the following words ⌉⎩465⎭
+    ⌈ THEN will do the fixup of target2 ⌉⎩466⎭
+}⎩467⎭
+⎩468⎭
+⌈ see diagrams compiling-IF-THEN.drawio.png and compiling-IF-ELSE-THEN.drawio.png ⌉⎩469⎭
+defimmediatesubr xthen "then" {⎩470⎭
+    ⌈ Step. 1: fixup target (from IF or from ELSE, above), retrieving memo from R-stack ⌉⎩471⎭
+    deftemp target ⇐ %rpop⎩472⎭
+    State.RAM [target] ⇐ %RAMnext⎩473⎭
+}⎩474⎭
+⎩475⎭
+defsubr x_do "(do)" {⎩476⎭
+    ⌈ ( limit index --) Puts limit and index on return stack. ⌉⎩477⎭
+    @xswap⎩478⎭
+    deftemp index ⇐ %pop⎩479⎭
+    deftemp limit ⇐ %pop⎩480⎭
+    %rpush (index)⎩481⎭
+    %rpush (limit)⎩482⎭
+}⎩483⎭
+⎩484⎭
+defimmediatesubr xdo "xdo" {⎩485⎭
+    ⌈ (  limit index --) Begin counted loop. ⌉⎩486⎭
+    %ram+(%funcall _find("(do)"))  ⌈ Push do loop handler. ⌉⎩487⎭
+    %rpush(%RAMnext)           ⌈ Push address to jump back to. ⌉⎩488⎭
+}⎩489⎭
+⎩490⎭
+defsubr x_loop "(loop)" {⎩491⎭
+    ⌈ (  -- f) Determine if loop is done. ⌉⎩492⎭
+    deftemp index ⇐ %rpop⎩493⎭
+    deftemp limit ⇐ %rpop⎩494⎭
+    defsynonym cond ≡ (index >= limit)⎩495⎭
+    %push (cond)⎩496⎭
+    if (cond) { ⌈ clean up rstack if index >= limit ⌉⎩497⎭
+        %rpop⎩498⎭
+        %rpop⎩499⎭
+    }    ⎩500⎭
+}⎩501⎭
+⎩502⎭
+defimmediatesubr xploop "+loop" {⎩503⎭
+    ⌈ ( --) Close counted loop. ⌉⎩504⎭
+    %ram+(%funcall _find("(loop)"))   ⌈ Compile in loop test. ⌉⎩505⎭
+    %ram+(%funcall _find("0branch"))  ⌈ Compile in branch check. ⌉⎩506⎭
+    %ram+(%rpop)           ⌈ Address to jump back to. ⌉⎩507⎭
+}⎩508⎭
 ⎩509⎭
-This function implements the inner interpreter for threaded code execution.⎩510⎭
-Threaded code words store their definitions as arrays of code field addresses⎩511⎭
-(CFAs) in the parameter field area (PFA) immediately following the word header.⎩512⎭
-⎩513⎭
-The execution model maintains two critical registers:⎩514⎭
-⎩515⎭
-1. IP (Instruction Pointer): References the current position within the⎩516⎭
-   threaded code array being interpreted. Since threaded words may invoke⎩517⎭
-   other threaded words, IP must be preserved in a reentrant manner via⎩518⎭
-   the return stack on each invocation.⎩519⎭
-⎩520⎭
-2. W (Word Pointer): References the CFA of the currently executing primitive.⎩521⎭
-   This global register serves an analogous function to 'self' in object-oriented⎩522⎭
-   languages, enabling subroutines to access word header fields through fixed⎩523⎭
-   offsets from the CFA.⎩524⎭
-⎩525⎭
-Optimization rationale: W is positioned to reference the CFA rather than the⎩526⎭
-word header base. This design eliminates offset arithmetic for CFA access—the⎩527⎭
-most frequent header operation—at the cost of requiring offset adjustments⎩528⎭
-for other header fields (NFA: W-2, flags: W-1, PFA: W+1). This represents a⎩529⎭
-deliberate trade-off favoring the common case.⎩530⎭
-⎩531⎭
-The inner interpreter loop performs the following operations:⎩532⎭
-- Fetch the next CFA from RAM[IP] into W (performing the first indirection)⎩533⎭
-- Increment IP to advance through the threaded code array⎩534⎭
-- Execute the primitive via RAM[W]() (performing the second indirection)⎩535⎭
-⎩536⎭
-By caching the dereferenced CFA in W, we amortize the cost of double⎩537⎭
-indirection: both primitive execution and header field access within⎩538⎭
-subroutines utilize the same cached reference, avoiding redundant⎩539⎭
-dereferences. This is functionally equivalent to parameter passing in⎩540⎭
-object-oriented method invocation, but eliminates the overhead of⎩541⎭
-explicitly passing 'self' to each primitive.⎩542⎭
-⎩543⎭
-Note: W's state is only defined during primitive execution (within RAM[W]()).⎩544⎭
-Between loop iterations, W may reference a stale CFA, but this is⎩545⎭
-architecturally sound since W is unconditionally updated before each⎩546⎭
-primitive invocation.⎩547⎭
-⌉⎩548⎭
-⎩549⎭
-    %rpush (State.IP)⎩550⎭
-    State.IP ⇐ State.W + 1⎩551⎭
-    while (-1 != State.RAM[State.IP]) {⎩552⎭
-        State.W ⇐ State.RAM[State.IP]⎩553⎭
-	State.IP ⇐ State.IP + 1⎩554⎭
-	@State.RAM[State.W]⎩555⎭
-    }⎩556⎭
-    State.IP ⇐ %rpop⎩557⎭
-}⎩558⎭
-⎩559⎭
-defsubr xcolon ":" {⎩560⎭
-    ⌈ ( name | --) Start compilation. ⌉⎩561⎭
-    defsynonym blank ≡ 32⎩562⎭
-    %push (blank)⎩563⎭
-    @xword⎩564⎭
-    deftemp name ⇐ %pop⎩565⎭
-    %funcall code(name, 0, doword)⎩566⎭
-    %setCompilingState⎩567⎭
-}⎩568⎭
-⎩569⎭
-defimmediatesubr xsemi ";"{⎩570⎭
-    ⌈ ( --) Finish definition. ⌉⎩571⎭
-⎩572⎭
-    %ram+(-1)  ⌈ Marker for end of definition. ⌉⎩573⎭
-    %setNotCompilingState⎩574⎭
-}⎩575⎭
-⎩576⎭
-deffunction notfound (word) {⎩577⎭
-    %clearS⎩578⎭
-    %clearR⎩579⎭
-    %print (word)⎩580⎭
-    %print ("?")⎩581⎭
-    %eol⎩582⎭
-}⎩583⎭
+defimmediatesubr xloop "xloop" {⎩510⎭
+    ⌈ (  --) Close counted loop. ⌉⎩511⎭
+    %push (1)⎩512⎭
+    @literalize                  ⌈ Default loop increment for x_loop. ⌉⎩513⎭
+    %ram+(%funcall _find("(loop)"))   ⌈ Compile in loop test. ⌉⎩514⎭
+    %ram+(%funcall _find("0branch"))  ⌈ Compile in branch check. ⌉⎩515⎭
+    %ram+(%rpop)           ⌈ Address to jump back to. ⌉⎩516⎭
+}⎩517⎭
+⎩518⎭
+defimmediatesubr xbegin "begin" {⎩519⎭
+    %rpush (%RAMnext)  ⌈ ( --) Start indefinite loop. ⌉⎩520⎭
+}⎩521⎭
+⎩522⎭
+defimmediatesubr xuntil "until" {⎩523⎭
+    ⌈ (  f --) Close indefinite loop with test. ⌉⎩524⎭
+    %ram+(%funcall _find("0branch"))  ⌈ Expects result of test on stack. ⌉⎩525⎭
+    %ram+(%rpop)           ⌈ Address to jump back to. ⌉⎩526⎭
+}⎩527⎭
+⎩528⎭
+⎩529⎭
+⎩530⎭
+⌈  "... 123 constant K ..." ⌉⎩531⎭
+⌈  at interpretation time: 123 is on the Stack, we have consumed "constant" from BUFF, BUFF now contains "K ..." ⌉⎩532⎭
+⌈  invoke 'word' which parses "K" and pushed it. The stack becomes [... 123 "K"] ⌉⎩533⎭
+⌈  pop "K", pop 123, create a new word called 'K' with its PFA set to 123 and its CFA set to a subr that⎩534⎭
+     gets 123 from its PFA and pushes it onto the stack ⌉⎩535⎭
+defsubr xconst "const" {⎩536⎭
+    ⌈  get next word - the name - from BUFF ⌉⎩537⎭
+    defsynonym blank ≡ 32⎩538⎭
+    %push (blank)⎩539⎭
+    @xword⎩540⎭
+    ⌈  stack is now: ( NNNN name -- ) ⌉⎩541⎭
+    deftemp name ⇐ %pop⎩542⎭
+    deftemp value ⇐ %pop⎩543⎭
+    defsynonym normal ≡ 0⎩544⎭
+    deftemp fobj ⇐ %funcall code (name, normal, ↪︎doconst)⎩545⎭
+    %ram+ (value)⎩546⎭
+}⎩547⎭
+⎩548⎭
+defsubr xcomma "," {⎩549⎭
+    %funcall comma (%pop)⎩550⎭
+}⎩551⎭
+⎩552⎭
+defsubr xvar "variable" {⎩553⎭
+    defsynonym blank ≡ 32⎩554⎭
+    %push (blank)⎩555⎭
+    @xword⎩556⎭
+    deftemp name ⇐ %pop⎩557⎭
+    deftemp value ⇐ %pop⎩558⎭
+    %funcall fvar (name, value)    ⎩559⎭
+}⎩560⎭
+⎩561⎭
+defsubr xdump "dump" {⎩562⎭
+    deftemp n ⇐ %toint (%pop)⎩563⎭
+    deftemp start ⇐ %toint (%pop)⎩564⎭
+    %print ("----------------------------------------------------------------")⎩565⎭
+    deftemp a ⇐ start⎩566⎭
+    while (a < start + (%funcall min (n, (%funcall len (State.RAM) - start)))) {⎩567⎭
+        %print (a)⎩568⎭
+	%print (": ")⎩569⎭
+	%print (State.RAM [a])⎩570⎭
+	%eol⎩571⎭
+        deftemp a ⇐ a + 1⎩572⎭
+    }⎩573⎭
+}⎩574⎭
+⎩575⎭
+defsubr xstore"!" {⎩576⎭
+    deftemp b ⇐ %pop⎩577⎭
+    deftemp a ⇐ %pop⎩578⎭
+    State.RAM [b] ⇐ a⎩579⎭
+}⎩580⎭
+⎩581⎭
+defsubr xbye "bye" { ⌈ ( --) Leave interpreter ⌉ %quit }⎩582⎭
+⎩583⎭
 ⎩584⎭
-deffunction exec (xt) {⎩585⎭
-    ⌈ found and compiling and immediate ⌉⎩586⎭
-    State.W ⇐ xt⎩587⎭
-    State.IP ⇐ -1  ⌈ Dummy to hold place in return stack. ⌉	⎩588⎭
-    @State.RAM[xt]  ⌈ Execute code. ⌉⎩589⎭
-}⎩590⎭
-⎩591⎭
-deffunction compile_word (xt) {⎩592⎭
-    ⌈ found and not compiling ⌉⎩593⎭
-    State.W ⇐ xt⎩594⎭
-    State.IP ⇐ -1  ⌈ Dummy to hold place in return stack. ⌉	⎩595⎭
-    @State.RAM[xt]  ⌈ Execute code. ⌉⎩596⎭
-}⎩597⎭
-⎩598⎭
-deffunction pushasinteger (word) {⎩599⎭
-    %push (%toint (word))⎩600⎭
-}⎩601⎭
-⎩602⎭
-deffunction pushasfloat (word) {⎩603⎭
-    %push (%tofloat (word))⎩604⎭
-}⎩605⎭
-⎩606⎭
-deffunction compileinteger (word) {⎩607⎭
-    %funcall pushasinteger(word)⎩608⎭
-    @literalize⎩609⎭
-}⎩610⎭
-⎩611⎭
-deffunction compilefloat (word) {⎩612⎭
-    %funcall pushasfloat(word)⎩613⎭
-    @literalize⎩614⎭
-}⎩615⎭
-⎩616⎭
-defsubr xinterpret "interpret" {⎩617⎭
-    ⌈ ( string --) Execute word. ⌉⎩618⎭
-⎩619⎭
-    @xfind⎩620⎭
-    ⌈ 3 possible results from xfind:⎩621⎭
-        1. (name 0) if not found,⎩622⎭
-	2. (xt 1) if found and word is immediate,⎩623⎭
-	3. (xt -1) if found and word is normal ⌉⎩624⎭
-    deftemp result ⇐ %pop					    defsynonym foundimmediate ≡ (result = 1)⎩625⎭
-    deftemp item ⇐ %pop						    defsynonym foundnormal ≡ (result = -1)⎩626⎭
-    	    	   						    defsynonym notfound ≡ (result = 0)⎩627⎭
-    	    	   						    defsynonym found ≡ (foundimmediate or foundnormal)⎩628⎭
-⎩629⎭
-if (found) {⎩630⎭
-    if (%incompilingstate) {⎩631⎭
-        if (foundimmediate) {⎩632⎭
-            λexec(item)⎩633⎭
-        } else {⎩634⎭
-            λcompileword(item)⎩635⎭
-        }⎩636⎭
-        ⎩637⎭
-    } else {⎩638⎭
-        λexec(item)⎩639⎭
-    }⎩640⎭
-    ⎩641⎭
-} else {⎩642⎭
-    if (%incompilingstate) {⎩643⎭
-        if (%isinteger(item)) {⎩644⎭
-            λcompileinteger(item)⎩645⎭
-        } else {⎩646⎭
-            if (%isfloat(item)) {⎩647⎭
-                λcompilefloat(item)⎩648⎭
-            } else {⎩649⎭
-                @returnFalse⎩650⎭
-            }⎩651⎭
-            ⎩652⎭
-        }⎩653⎭
-        ⎩654⎭
-    } else {⎩655⎭
-        if (%isinteger(item)) {⎩656⎭
-            λpushasinteger(item)⎩657⎭
-        } else {⎩658⎭
-            if (%isfloat(item)) {⎩659⎭
-                λpushasfloat(item)⎩660⎭
-            } else {⎩661⎭
-                @returnFalse⎩662⎭
-            }⎩663⎭
-            ⎩664⎭
-        }⎩665⎭
-        ⎩666⎭
-    }⎩667⎭
-    ⎩668⎭
-}⎩669⎭
-⎩670⎭
-    return True⎩671⎭
-}⎩672⎭
-⎩673⎭
-deffunction ok () {⎩674⎭
-    ⌈ ( --) Interaction loop -- REPL ⌉⎩675⎭
-    defsynonym blank ≡ 32⎩676⎭
-    while ⊤ {⎩677⎭
-        %input⎩678⎭
-        while not %empty-input {⎩679⎭
-           @xinterpret⎩680⎭
-        }⎩681⎭
-    }⎩682⎭
-}⎩683⎭
-⎩684⎭
-deffunction debugok () {⎩685⎭
-    ⌈ ( --) Interaction loop -- REPL ⌉⎩686⎭
-    defsynonym blank ≡ 32⎩687⎭
-        %debuginput⎩688⎭
-        while not %empty-input {⎩689⎭
-           if (@xinterpret) {⎩690⎭
-	           %print (" ok")⎩691⎭
-		   %eol⎩692⎭
-	   }⎩693⎭
-	   %print (State.BUFP) %print (" -- ") %print (State.BUFF) %eol⎩694⎭
-	   @xdots⎩695⎭
-        }⎩696⎭
-	   %print (State.BUFP) %print (" == ") %print (State.BUFF) %eol⎩697⎭
-	   @xdot⎩698⎭
-	   @xdots⎩699⎭
-}⎩700⎭
-⎩701⎭
-@ok⎩702⎭
-    ⎩703⎭
+defsubr xfind "find" {⎩585⎭
+    ⌈ "( name | -- (name 0)|(xt 1)|(xt -1)) Search for word name." ⌉⎩586⎭
+    ⌈ 3 possible results: 1. (name 0) if not found, 2. (xt 1) if found and word is immediate, 3. (xt -1) if found and word is normal ⌉⎩587⎭
+    %push (32)⎩588⎭
+    @xword⎩589⎭
+    deftemp found ⇐ %funcall _find(%stop)⎩590⎭
+    if (0 = found) {⎩591⎭
+        %push (0)⎩592⎭
+    } else {⎩593⎭
+        %pop  ⌈ # Get rid of name on stack. ⌉⎩594⎭
+        %push(found)⎩595⎭
+        deftemp immediate ⇐ -1⎩596⎭
+        if (State.RAM[%stop - 1] & 1) { immediate ⇐ 1 }⎩597⎭
+        %push(immediate)⎩598⎭
+    }⎩599⎭
+}⎩600⎭
+⎩601⎭
+defsubr xtick "'"  {⎩602⎭
+    ⌈ "( name -- xt|-1) Search for execution token of word name." ⌉⎩603⎭
+    %push (32)⎩604⎭
+    @xword⎩605⎭
+    deftemp name ⇐ %pop⎩606⎭
+    deftemp found ⇐ %funcall _find(name)⎩607⎭
+    %push (found)⎩608⎭
+}⎩609⎭
+⎩610⎭
+defsubr xnone "None" {⎩611⎭
+    %pushNone⎩612⎭
+}⎩613⎭
+⎩614⎭
+defsubr xwords "words" {⎩615⎭
+    ⌈ print words in dictionary ⌉⎩616⎭
+    deftemp x ⇐ State.LAST⎩617⎭
+    while (x > -1) {⎩618⎭
+        %print (State.RAM [x+ 1])⎩619⎭
+	%print (" ")⎩620⎭
+    }⎩621⎭
+    %eol⎩622⎭
+}⎩623⎭
+⎩624⎭
+⎩625⎭
+defsubr xexecute "execute" {⎩626⎭
+    ⌈ invoke given word ⌉⎩627⎭
+    deftemp wordAddress ⇐ %pop⎩628⎭
+    @@wordAddress⎩629⎭
+}⎩630⎭
+⎩631⎭
+⎩632⎭
+defsubr xcolon ":" {⎩633⎭
+    ⌈ ( name | --) Start compilation. ⌉⎩634⎭
+    defsynonym blank ≡ 32⎩635⎭
+    %push (blank)⎩636⎭
+    @xword⎩637⎭
+    deftemp name ⇐ %pop⎩638⎭
+    %funcall code(name, 0, doword)⎩639⎭
+    %setCompilingState⎩640⎭
+}⎩641⎭
+⎩642⎭
+defimmediatesubr xsemi ";"{⎩643⎭
+    ⌈ ( --) Finish definition. ⌉⎩644⎭
+⎩645⎭
+    %ram+(-1)  ⌈ Marker for end of definition. ⌉⎩646⎭
+    %setNotCompilingState⎩647⎭
+}⎩648⎭
+⎩649⎭
+defsubr xinterpret "interpret" {⎩650⎭
+    ⌈ ( string --) Execute word. ⌉⎩651⎭
+⎩652⎭
+    @xfind⎩653⎭
+    ⌈ 3 possible results from xfind:⎩654⎭
+        1. (name 0) if not found,⎩655⎭
+	2. (xt 1) if found and word is immediate,⎩656⎭
+	3. (xt -1) if found and word is normal ⌉⎩657⎭
+    deftemp result ⇐ %pop					    defsynonym foundimmediate ≡ (result = 1)⎩658⎭
+    deftemp item ⇐ %pop						    defsynonym foundnormal ≡ (result = -1)⎩659⎭
+    	    	   						    defsynonym notfound ≡ (result = 0)⎩660⎭
+    	    	   						    defsynonym found ≡ (foundimmediate or foundnormal)⎩661⎭
+⎩662⎭
+    if (found) {⎩663⎭
+        if (%incompilingstate) {⎩664⎭
+            if (foundimmediate) {⎩665⎭
+                λexec(item)⎩666⎭
+            } else {⎩667⎭
+                λcompileword(item)⎩668⎭
+            }⎩669⎭
+        ⎩670⎭
+        } else {⎩671⎭
+            λexec(item)⎩672⎭
+        }⎩673⎭
+    ⎩674⎭
+    } else {⎩675⎭
+        if (%incompilingstate) {⎩676⎭
+            if (%isinteger(item)) {⎩677⎭
+                λcompileinteger(item)⎩678⎭
+            } else {⎩679⎭
+                if (%isfloat(item)) {⎩680⎭
+                    λcompilefloat(item)⎩681⎭
+                } else {⎩682⎭
+                    @returnFalse⎩683⎭
+                }⎩684⎭
+            ⎩685⎭
+            }⎩686⎭
+        ⎩687⎭
+        } else {⎩688⎭
+            if (%isinteger(item)) {⎩689⎭
+                λpushasinteger(item)⎩690⎭
+            } else {⎩691⎭
+                if (%isfloat(item)) {⎩692⎭
+                    λpushasfloat(item)⎩693⎭
+                } else {⎩694⎭
+                    @returnFalse⎩695⎭
+                }⎩696⎭
+            ⎩697⎭
+            }⎩698⎭
+        ⎩699⎭
+        }⎩700⎭
+    ⎩701⎭
+    }⎩702⎭
+⎩703⎭
+    return True⎩704⎭
+}⎩705⎭
+⎩706⎭
+⎩707⎭
+⎩708⎭
+@ok⎩709⎭
+    ⎩710⎭

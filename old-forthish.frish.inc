@@ -1,3 +1,17 @@
+deffunction code (name, flags, does) {
+    ⌈ Add new word to RAM dictionary. We create a word (Forth "object") in RAM with 5 fields and extend the
+      the dictionary by linking back to the head of the dictionary list ⌉
+    x ⇐ %funcall len (State.RAM)
+
+    %ram+ (State.LAST) ⌈ (LFA) link to previous word in dictionary list ⌉
+    %ram+ (name)       ⌈ (NFA) name of word ⌉
+    %ram+ (flags)      ⌈       0 = normal word, 1 = immediate word ⌉
+    %ram+ (does)       ⌈ (CFA) function pointer that points to code that executes the word ⌉
+
+    State.LAST ⇐ x                ⌈ LAST is the pointer to the head of the dictionary list, set it to point to
+                                      this new word ⌉
+}
+
 defsubr xdrop "drop" {
     ⌈ ( a -- ) ⌉
     %pop
@@ -203,6 +217,12 @@ defsubr xdoliteral "(literal)" {
     State.IP ⇐ State.IP + 1 ⌈ move past this item (the literal) - we're done with it ⌉
 }
 
+deffunction literalize () {
+    ⌈ Compile literal into definition. ⌉
+    %ram+ (%funcall _find ("(literal)"))  ⌈# Compile address of doliteral. ⌉
+    %ram+ (%pop)             ⌈ # Compile literal value. ⌉
+}
+
 defsubr xbranch "branch" {
     ⌈ This instruction appears only inside subroutine sequences, jump to address in next cell ⌉
     ⌈ This instruction is inserted into a subr sequence when compiling control-flow words, like "else" see below) ⌉
@@ -231,7 +251,7 @@ defsubr x0branch "0branch" {
 
 ⌈ IF, ELSE and THEN are "immediate" words - they should only be used inside of ":" (colon compiler) ⌉
 
-⌈ see diagram `compiling-IF-THEN.drawio.png` ⌉
+⌈ see diagram compiling-IF-THEN.drawio.png ⌉
 defsubr xif "if" { 
     %immediate ⌈ This instruction appears only inside subroutine sequences, ( f -- ) compile if test and branchFalse ⌉ 
     ⌈ Step. 1: generate conditional branch to yet-unknown target1 ⌉ 
@@ -244,7 +264,7 @@ defsubr xif "if" {
     ⌈ THEN or ELSE will do the fixup of target1 ⌉ 
 } 
 
-⌈ see diagram `compiling-IF-ELSE-THEN.drawio.png` ⌉
+⌈ see diagram compiling-IF-ELSE-THEN.drawio.png ⌉
 defimmediatesubr xelse "else" {
     ⌈ Step. 1: fixup target1 from IF-true, retrieving memo from R-stack ⌉
     deftemp target1 ⇐ %rpop
@@ -258,7 +278,7 @@ defimmediatesubr xelse "else" {
     ⌈ THEN will do the fixup of target2 ⌉
 }
 
-⌈ see diagrams `compiling-IF-THEN.drawio.png` and `compiling-IF-ELSE-THEN.drawio.png` ⌉
+⌈ see diagrams compiling-IF-THEN.drawio.png and compiling-IF-ELSE-THEN.drawio.png ⌉
 defimmediatesubr xthen "then" {
     ⌈ Step. 1: fixup target (from IF or from ELSE, above), retrieving memo from R-stack ⌉
     deftemp target ⇐ %rpop
@@ -338,6 +358,20 @@ defsubr xconst "const" {
     %ram+ (value)
 }
 
+deffunction doconst () {  ⌈ method for const ⌉
+    defsynonym parameter ≡ State.RAM [State.W + 1]
+    %push (parameter)
+}
+
+
+deffunction docreate () {
+    defsynonym parameterAddress ≡ %funcall len (State.RAM) + 4
+    %push (parameterAddress)
+}
+deffunction create (name) {
+    defsynonym normal ≡ 0
+    %funcall code (name, normal, ↪︎docreate)
+}
 defsubr xcreate "create"{
     defsynonym blank ≡ 32
     %push (blank)
@@ -346,8 +380,17 @@ defsubr xcreate "create"{
     %funcall create (name)
 }
 
+deffunction comma (value) {
+    %ram+ (value)
+}
+
 defsubr xcomma "," {
     %funcall comma (%pop)
+}
+
+deffunction fvar (name, value) {
+    %funcall create (name)
+    %funcall comma (value)
 }
 
 defsubr xvar "variable" {
@@ -382,6 +425,20 @@ defsubr xstore"!" {
 defsubr xbye "bye" { ⌈ ( --) Leave interpreter ⌉ %quit }
 
 
+deffunction _find (name) {
+    ⌈ "( name -- cfa|0) Find CFA of word name." ⌉
+    deftemp x ⇐ State.LAST
+    while (x >= 0) {
+        ⌈ ## print(f"-- {x} : {RAM[x]}, {RAM[x + 1]}")  # Debug. ⌉
+        if (name = State.RAM[x + 1]) {  ⌈ # Match! ⌉
+            return x + 3
+        } else {
+            x ⇐ State.RAM[x]  ⌈ # Get next link. ⌉
+	}
+    }
+    return 0  ⌈ # Nothing found. ⌉
+}
+
 defsubr xfind "find" {
     ⌈ "( name | -- (name 0)|(xt 1)|(xt -1)) Search for word name." ⌉
     ⌈ 3 possible results: 1. (name 0) if not found, 2. (xt 1) if found and word is immediate, 3. (xt -1) if found and word is normal ⌉
@@ -412,6 +469,22 @@ defsubr xnone "None" {
     %pushNone
 }
 
+⌈ fvget and fvset assume that the forth object (word) is a set of contiguous slots, each 1 machine word wide
+  these functions use direct integer offsets to access the fields of the fojbect, whereas in higher level languages
+  we'd use class fields instead - todo: fix this in the future (or not? at what point is customization better than
+  generalization?) ⌉
+deffunction fvget (name) {
+    deftemp fobjaddress ⇐ %funcall _find(%pop)
+    return State.RAM [fobjaddress + 1]
+}
+
+deffunction fvset (name, v) {
+    deftemp fobjaddress ⇐ %funcall _find(%pop)
+    defsynonym namefieldaddress ≡ fobjaddress + 1
+    State.RAM [namefieldaddress] ⇐ v
+}
+
+
 defsubr xwords "words" {
     ⌈ print words in dictionary ⌉
     deftemp x ⇐ State.LAST
@@ -429,115 +502,6 @@ defsubr xexecute "execute" {
     @@wordAddress
 }
 
-
-defsubr xcolon ":" {
-    ⌈ ( name | --) Start compilation. ⌉
-    defsynonym blank ≡ 32
-    %push (blank)
-    @xword
-    deftemp name ⇐ %pop
-    %funcall code(name, 0, doword)
-    %setCompilingState
-}
-
-defimmediatesubr xsemi ";"{
-    ⌈ ( --) Finish definition. ⌉
-
-    %ram+(-1)  ⌈ Marker for end of definition. ⌉
-    %setNotCompilingState
-}
-
-defsubr xinterpret "interpret" {
-    ⌈ ( string --) Execute word. ⌉
-
-    @xfind
-    ⌈ 3 possible results from xfind:
-        1. (name 0) if not found,
-	2. (xt 1) if found and word is immediate,
-	3. (xt -1) if found and word is normal ⌉
-    deftemp result ⇐ %pop					    defsynonym foundimmediate ≡ (result = 1)
-    deftemp item ⇐ %pop						    defsynonym foundnormal ≡ (result = -1)
-    	    	   						    defsynonym notfound ≡ (result = 0)
-    	    	   						    defsynonym found ≡ (foundimmediate or foundnormal)
-
-include(`xinterpret.frish')
-
-    return True
-}
-
-
-deffunction code (name, flags, does) {
-    ⌈ Add new word to RAM dictionary. We create a word (Forth "object") in RAM with 5 fields and extend the
-      the dictionary by linking back to the head of the dictionary list ⌉
-    x ⇐ %funcall len (State.RAM)
-
-    %ram+ (State.LAST) ⌈ (LFA) link to previous word in dictionary list ⌉
-    %ram+ (name)       ⌈ (NFA) name of word ⌉
-    %ram+ (flags)      ⌈       0 = normal word, 1 = immediate word ⌉
-    %ram+ (does)       ⌈ (CFA) function pointer that points to code that executes the word ⌉
-
-    State.LAST ⇐ x                ⌈ LAST is the pointer to the head of the dictionary list, set it to point to
-                                      this new word ⌉
-}
-
-deffunction literalize () {
-    ⌈ Compile literal into definition. ⌉
-    %ram+ (%funcall _find ("(literal)"))  ⌈# Compile address of doliteral. ⌉
-    %ram+ (%pop)             ⌈ # Compile literal value. ⌉
-}
-
-deffunction doconst () {  ⌈ method for const ⌉
-    defsynonym parameter ≡ State.RAM [State.W + 1]
-    %push (parameter)
-}
-
-
-deffunction docreate () {
-    defsynonym parameterAddress ≡ %funcall len (State.RAM) + 4
-    %push (parameterAddress)
-}
-deffunction create (name) {
-    defsynonym normal ≡ 0
-    %funcall code (name, normal, ↪︎docreate)
-}
-
-deffunction comma (value) {
-    %ram+ (value)
-}
-
-deffunction fvar (name, value) {
-    %funcall create (name)
-    %funcall comma (value)
-}
-
-deffunction _find (name) {
-    ⌈ "( name -- cfa|0) Find CFA of word name." ⌉
-    deftemp x ⇐ State.LAST
-    while (x >= 0) {
-        ⌈ ## print(f"-- {x} : {RAM[x]}, {RAM[x + 1]}")  # Debug. ⌉
-        if (name = State.RAM[x + 1]) {  ⌈ # Match! ⌉
-            return x + 3
-        } else {
-            x ⇐ State.RAM[x]  ⌈ # Get next link. ⌉
-	}
-    }
-    return 0  ⌈ # Nothing found. ⌉
-}
-
-⌈ fvget and fvset assume that the forth object (word) is a set of contiguous slots, each 1 machine word wide
-  these functions use direct integer offsets to access the fields of the fojbect, whereas in higher level languages
-  we'd use class fields instead - todo: fix this in the future (or not? at what point is customization better than
-  generalization?) ⌉
-deffunction fvget (name) {
-    deftemp fobjaddress ⇐ %funcall _find(%pop)
-    return State.RAM [fobjaddress + 1]
-}
-
-deffunction fvset (name, v) {
-    deftemp fobjaddress ⇐ %funcall _find(%pop)
-    defsynonym namefieldaddress ≡ fobjaddress + 1
-    State.RAM [namefieldaddress] ⇐ v
-}
 
 deffunction doword () {
 ⌈
@@ -593,6 +557,23 @@ primitive invocation.
     State.IP ⇐ %rpop
 }
 
+defsubr xcolon ":" {
+    ⌈ ( name | --) Start compilation. ⌉
+    defsynonym blank ≡ 32
+    %push (blank)
+    @xword
+    deftemp name ⇐ %pop
+    %funcall code(name, 0, doword)
+    %setCompilingState
+}
+
+defimmediatesubr xsemi ";"{
+    ⌈ ( --) Finish definition. ⌉
+
+    %ram+(-1)  ⌈ Marker for end of definition. ⌉
+    %setNotCompilingState
+}
+
 deffunction notfound (word) {
     %clearS
     %clearR
@@ -631,6 +612,24 @@ deffunction compileinteger (word) {
 deffunction compilefloat (word) {
     %funcall pushasfloat(word)
     @literalize
+}
+
+defsubr xinterpret "interpret" {
+    ⌈ ( string --) Execute word. ⌉
+
+    @xfind
+    ⌈ 3 possible results from xfind:
+        1. (name 0) if not found,
+	2. (xt 1) if found and word is immediate,
+	3. (xt -1) if found and word is normal ⌉
+    deftemp result ⇐ %pop					    defsynonym foundimmediate ≡ (result = 1)
+    deftemp item ⇐ %pop						    defsynonym foundnormal ≡ (result = -1)
+    	    	   						    defsynonym notfound ≡ (result = 0)
+    	    	   						    defsynonym found ≡ (foundimmediate or foundnormal)
+
+    ⊕⟨xinterpret.frish⟩
+
+    return True
 }
 
 deffunction ok () {
