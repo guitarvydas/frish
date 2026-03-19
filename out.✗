@@ -1,0 +1,16 @@
+Error: Line 15, col 21:
+  14 | 
+> 15 |    StatementBlock = #noise? "{" #noise? Rec_Statement #noise? "}" #noise? -- block
+                           ^~~~~~
+  16 | 
+Nullable expression #(noise) is not allowed inside '?' (possible infinite loop)
+Application stack (most recent application last):
+Main
+FunctionsSection
+FunctionDefinition
+StatementBlock
+StatementBlock_block
+
+grammar = "frish
+"
+Error: Command failed with exit code 1
