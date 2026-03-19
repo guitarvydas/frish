@@ -2,18 +2,18 @@ frish {
 
   Main = FunctionsSection SubroutinesSection InvokeSection
 
-  FunctionsSection = #noise? "functions" #noise? "{" #noise? FunctionDefinition* "}" #noise?
-  SubroutinesSection = #noise? "subroutines" #noise "{" #noise? SubroutineDefinition* "}" #noise?
+  FunctionsSection = #noise "functions" #noise "{" #noise FunctionDefinition* "}" #noise
+  SubroutinesSection = #noise "subroutines" #noise "{" #noise SubroutineDefinition* "}" #noise
   InvokeSection = "invoke" "{" Call "}"
 
-  FunctionDefinition = token Formals StatementBlock #noise?
+  FunctionDefinition = token Formals StatementBlock #noise
   SubroutineDefinition =
-    | "%immediate" #token StatementBlock #noise? -- immediate
-    |              #token StatementBlock #noise? -- normal
+    | "%immediate" #token StatementBlock #noise -- immediate
+    |              #token StatementBlock #noise -- normal
 
-   StatementBlock = #noise? "{" #noise? Rec_Statement #noise? "}" #noise? -- block
+   StatementBlock = #noise "{" Rec_Statement "}" #noise -- block
 
-   Rec_Statement = #noise? R_Statement #noise?
+   Rec_Statement = #noise R_Statement #noise
    R_Statement =
      | comment Rec_Statement? -- comment
      | Builtin Rec_Statement? -- builtin
@@ -34,7 +34,7 @@ frish {
 
    Call = "@" Lval Rec_Statement?
 
-   Builtin = BuiltinPhrase #noise?
+   Builtin = BuiltinPhrase #noise
    BuiltinPhrase =
      | "%popchar" -- popchar
      | "%pop" -- pop
@@ -164,8 +164,8 @@ frish {
       | "[" "]" -- emptylistconst
       | "{" "}" -- emptydict
       | "(" Exp ")" -- paren
-      | "[" #noise? PrimaryComma+ #noise? "]" -- listconst
-      | "{" #noise? PairComma+ #noise? "}" -- dict
+      | "[" #noise PrimaryComma+ #noise "]" -- listconst
+      | "{" #noise PairComma+ #noise "}" -- dict
       | phi -- phi
       | "⊤" -- true
       | "⊥" -- false
@@ -178,7 +178,7 @@ frish {
 
     Subraddress =  "↪︎" ident
 
-    PrimaryComma = Primary Comma? #noise?
+    PrimaryComma = Primary Comma? #noise
     PairComma = Pair Comma?
 
     StuffInsideParentheses =
@@ -199,10 +199,10 @@ frish {
     
     Actuals = 
       | "(" ")" -- noactuals
-      | "(" ActualComma* ")" #noise? -- actuals
+      | "(" ActualComma* ")" #noise -- actuals
 
    Actual = Exp
-   ActualComma = comment? Actual Comma? #noise?
+   ActualComma = comment? Actual Comma? #noise
 
     number =
       | digit* "." digit+  -- fract
@@ -251,11 +251,15 @@ frish {
       | "pair"
       | "@"
       | phi
+      | "%immediate"
       ) ~idchar
       
   phi = ("ϕ" | "%CF%95")
 
-  token = (~space ~comment any)+
+  token = 
+    | "❲" (~"❳" any)+ "❳" -- bracketed
+    | (~space ~comment ~keyword any)+ -- raw
+
   ident  = ~keyword idchar+
   idchar =
     | "❲" idchar+ "❳" -- rec
@@ -277,5 +281,5 @@ frish {
 
   Comma = line? "," line?
 
-  noise = spaces line? spaces comment? spaces line? spaces
+  noise = spaces line* spaces (line | comment | space)* spaces (line | comment | space)* spaces
 }
