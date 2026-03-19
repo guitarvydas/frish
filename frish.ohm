@@ -4,14 +4,14 @@ frish {
 
   FunctionsSection (FunctionSection) = #noise "functions" #noise "{" #noise FunctionDefinition* "}" #noise
   SubroutinesSection (SubroutineSection) = #noise "subroutines" #noise "{" #noise SubroutineDefinition* "}" #noise
-  InvokeSection (InvokeSection) = #noise "invoke" #noise "{" #noise "@" Lval #noise "}" #noise
+  InvokeSection (InvokeSection) = #noise "invoke" #noise "{" #noise "@" ident #noise "}" #noise
 
   FunctionDefinition = token Formals StatementBlock #noise
   SubroutineDefinition =
     | "%immediate" spaces #token StatementBlock #noise -- immediate
     |              spaces #token StatementBlock #noise -- normal
 
-   StatementBlock = #noise "{" Rec_Statement "}" #noise -- block
+   StatementBlock = #noise "{" Rec_Statement "}" #noise
 
    Rec_Statement = #noise R_Statement #noise
    R_Statement =
@@ -281,5 +281,6 @@ frish {
 
   Comma = line? "," line?
 
-  noise = spaces line* spaces (line | comment | space)* spaces (line | comment | space)* spaces
+  noise = spaces line* spaces noi* spaces noi* spaces
+  noi = line | comment | space
 }
