@@ -276,7 +276,7 @@ subroutines {
       %push (a = 0)
   }
 
-  0<"  {
+  0<  {
       ⌈ ( a -- bool ) ⌉
       deftemp a ⇐ %pop
       %push (0 < a)

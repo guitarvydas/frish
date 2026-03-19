@@ -26,12 +26,12 @@ State = StateClass ()
 «i»’
 
 FunctionsSection [n1 _functions n2 lb n3 def* rb n4] = ‛«n1»«def»«n4»’
-SubroutinesSection [n1 _subroutines n2 lb n3 def* rb n4] = ‛«n1»«def»«n4»’
+SubroutinesSection [n1 _subroutines n2 lb n3 def* rb n4] = ‛def _walk ():⤷\nmatch opcode:⤷«n1»«def»«n4»⤶⤶\n’
 InvokeSection [n1 _invoke n2 lb n3 _at id n4 rb n5] = ‛«n1»«n2»«n3»«id»«n4»«n5»’
 
-FunctionDefinition [token formals block noise] = ‛def «token» «formals»:⤷«block»⤶\n«noise»’
+FunctionDefinition [token formals block noise] = ‛def «token» «formals»:«block»⤶\n«noise»’
 SubroutineDefinition_immediate [_imm ws token block n] = ‛State.compiling = False\ndef «token» ():⤷«block»⤶\n«n»’
-SubroutineDefinition_normal [ws token block n] = ‛def «token» ():⤷«block»⤶\n«n»’
+SubroutineDefinition_normal [ws token block n] = ‛\ncase "«token»":⤷«block»⤶\n«n»’
 
 StatementBlock [nleft lb Statement rb nright] = ‛«nleft»⤷«Statement»⤶\n«nright»’
 
