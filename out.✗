@@ -1,9 +1,8 @@
-Error: Line 262, col 46:
-  261 |     | (~space ~comment ~keyword any)+ -- raw
-> 262 |     | ~space ~comment ~keyword "❲" (~"❳" any(+ "❳" -- bracketed
-                                                     ^
-  263 | 
-Expected ")"
+Error: Line 711, col 1:
+  710 |   @ok⎩710⎭
+> 711 | }⎩711⎭
+        ^
+Expected "⎩", "⌈", "@", "@@", "-", "_", a digit, a letter, "❲", ".", "\"", "“", "range", "↪︎", "⊥", "⊤", "%CF%95", "ϕ", "{", "[", "(", "%", "%returnFalse", "%ram+", "%RAMnext", "%immediate", "%setNotCompilingState", "%setCompilingState", "%incompilingstate", "%funcall", "λ", "%toboolean", "%rthird", "%rsecond", "%rtop", "%rpush", "%rpop", "%pushNone", "%clearR", "%clearS", "%debuginput", "%input", "%isfloat", "%isFloat", "%isinteger", "%isInteger", "%tofloat", "%toint", "%digits?", "%freshdict", "%stack", "%quit", "%empty-string?", "%empty-input", "%printAsCharacter", "%print", "%eol", "%assoc", "%scanfor", "%stop", "%push", "%pop", "%popchar", "not", "while", "for", "return", "pass", "if", "defsynonym", "deftemps", or "deftemp"
 
 grammar = "frish
 "

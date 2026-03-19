@@ -2,7 +2,7 @@ internalize {
   text = char+
   char =
     | nl -- nl
-    | ~"❲" ~"❳" any -- any
+    | any -- any
 
   nl = "\n"
 }

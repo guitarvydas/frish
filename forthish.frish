@@ -54,7 +54,7 @@ functions {
   object-oriented method invocation, but eliminates the overhead of
   explicitly passing 'self' to each primitive.
 
-  Note: W's state is only defined during primitive execution (within RAM[W]()).
+  Note: Ws state is only defined during primitive execution (within RAM[W]()).
   Between loop iterations, W may reference a stale CFA, but this is
   architecturally sound since W is unconditionally updated before each
   primitive invocation.
@@ -288,20 +288,20 @@ subroutines {
       %push (0 > a)
   }
 
-  not {
+  ❲not❳ {
       ⌈ ( a -- bool ) ⌉
       deftemp a ⇐ %pop
       %push (not a)
   }
 
-  and {
+  ❲and❳ {
       ⌈ ( a b -- bool ) ⌉
       deftemp b ⇐ %pop
       deftemp a ⇐ %pop
       %push (a and b)
   }
 
-  or {
+  ❲or❳ {
       ⌈ ( a b -- bool ) ⌉
       deftemp b ⇐ %pop
       deftemp a ⇐ %pop
@@ -441,7 +441,7 @@ subroutines {
   ⌈ IF, ELSE and THEN are "immediate" words - they should only be used inside of ":" (colon compiler) ⌉
 
   ⌈ see diagram compiling-IF-THEN.drawio.png ⌉
-  %immediate if { 
+  %immediate ❲if❳ { 
       ⌈ This instruction appears only inside subroutine sequences, ( f -- ) compile if test and branchFalse ⌉ 
       ⌈ Step. 1: generate conditional branch to yet-unknown target1 ⌉ 
       deftemp branchFalseAddress ⇐ %funcall _find ("0branch")
@@ -451,10 +451,10 @@ subroutines {
       %ram+ (target1) ⌈ branch target will be fixed up later ⌉ 
       ⌈ Step. 2: generate code for true branch - return to compiler which will compile the following words ⌉ 
       ⌈ THEN or ELSE will do the fixup of target1 ⌉ 
-  } 
+  }
 
   ⌈ see diagram compiling-IF-ELSE-THEN.drawio.png ⌉
-  %immediate else {
+  %immediate ❲else❳ {
       ⌈ Step. 1: fixup target1 from IF-true, retrieving memo from R-stack ⌉
       deftemp target1 ⇐ %rpop
       State.RAM [target1] ⇐ %RAMnext
@@ -468,7 +468,7 @@ subroutines {
   }
 
   ⌈ see diagrams compiling-IF-THEN.drawio.png and compiling-IF-ELSE-THEN.drawio.png ⌉
-  %immediate then {
+  %immediate ❲then❳ {
       ⌈ Step. 1: fixup target (from IF or from ELSE, above), retrieving memo from R-stack ⌉
       deftemp target ⇐ %rpop
       State.RAM [target] ⇐ %RAMnext
@@ -483,7 +483,7 @@ subroutines {
       %rpush (limit)
   }
 
-  %immediate xdo "xdo {
+  %immediate ❲do❳ {
       ⌈ (  limit index --) Begin counted loop. ⌉
       %ram+(%funcall _find("(do)"))  ⌈ Push do loop handler. ⌉
       %rpush(%RAMnext)           ⌈ Push address to jump back to. ⌉
@@ -498,7 +498,7 @@ subroutines {
       if (cond) { ⌈ clean up rstack if index >= limit ⌉
 	  %rpop
 	  %rpop
-      }    
+      }  
   }
 
   %immediate +loop {
@@ -508,7 +508,7 @@ subroutines {
       %ram+(%rpop)           ⌈ Address to jump back to. ⌉
   }
 
-  %immediate xloop {
+  %immediate ❲loop❳ {
       ⌈ (  --) Close counted loop. ⌉
       %push (1)
       @literalize                  ⌈ Default loop increment for x_loop. ⌉
@@ -517,11 +517,11 @@ subroutines {
       %ram+(%rpop)           ⌈ Address to jump back to. ⌉
   }
 
-  %immediate begin {
+  %immediate ❲begin❳ {
       %rpush (%RAMnext)  ⌈ ( --) Start indefinite loop. ⌉
   }
 
-  %immediate until {
+  %immediate ❲until❳ {
       ⌈ (  f --) Close indefinite loop with test. ⌉
       %ram+(%funcall _find("0branch"))  ⌈ Expects result of test on stack. ⌉
       %ram+(%rpop)           ⌈ Address to jump back to. ⌉
@@ -534,7 +534,7 @@ subroutines {
   ⌈  invoke 'word' which parses "K" and pushed it. The stack becomes [... 123 "K"] ⌉
   ⌈  pop "K", pop 123, create a new word called 'K' with its PFA set to 123 and its CFA set to a subr that
        gets 123 from its PFA and pushes it onto the stack ⌉
-  const {
+  ❲const❳ {
       ⌈  get next word - the name - from BUFF ⌉
       defsynonym blank ≡ 32
       %push (blank)
@@ -661,46 +661,46 @@ subroutines {
 								      defsynonym notfound ≡ (result = 0)
 								      defsynonym found ≡ (foundimmediate or foundnormal)
 
-      if (found) {
-          if (%incompilingstate) {
-              if (foundimmediate) {
-                  λexec(item)
-              } else {
-                  λcompileword(item)
-              }
+if (found) {
+    if (%incompilingstate) {
+        if (foundimmediate) {
+            λexec(item)
+        } else {
+            λcompileword(item)
+        }
         
-          } else {
-              λexec(item)
-          }
+    } else {
+        λexec(item)
+    }
     
-      } else {
-          if (%incompilingstate) {
-              if (%isinteger(item)) {
-                  λcompileinteger(item)
-              } else {
-                  if (%isfloat(item)) {
-                      λcompilefloat(item)
-                  } else {
-                      @returnFalse
-                  }
+} else {
+    if (%incompilingstate) {
+        if (%isinteger(item)) {
+            λcompileinteger(item)
+        } else {
+            if (%isfloat(item)) {
+                λcompilefloat(item)
+            } else {
+                @returnFalse
+            }
             
-              }
+        }
         
-          } else {
-              if (%isinteger(item)) {
-                  λpushasinteger(item)
-              } else {
-                  if (%isfloat(item)) {
-                      λpushasfloat(item)
-                  } else {
-                      @returnFalse
-                  }
+    } else {
+        if (%isinteger(item)) {
+            λpushasinteger(item)
+        } else {
+            if (%isfloat(item)) {
+                λpushasfloat(item)
+            } else {
+                @returnFalse
+            }
             
-              }
+        }
         
-          }
+    }
     
-      }
+}
 
       return True
   }
@@ -708,4 +708,4 @@ subroutines {
 
 invoke {
   @ok
-}    
+}

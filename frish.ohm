@@ -4,12 +4,12 @@ frish {
 
   FunctionsSection = #noise "functions" #noise "{" #noise FunctionDefinition* "}" #noise
   SubroutinesSection = #noise "subroutines" #noise "{" #noise SubroutineDefinition* "}" #noise
-  InvokeSection = "invoke" "{" Call "}"
+  InvokeSection = "invoke" "{" #noise Call "}" #noise
 
   FunctionDefinition = token Formals StatementBlock #noise
   SubroutineDefinition =
-    | "%immediate" #token StatementBlock #noise -- immediate
-    |              #token StatementBlock #noise -- normal
+    | "%immediate" spaces #token StatementBlock #noise -- immediate
+    |              spaces #token StatementBlock #noise -- normal
 
    StatementBlock = #noise "{" Rec_Statement "}" #noise -- block
 
