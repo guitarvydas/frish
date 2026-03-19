@@ -275,7 +275,7 @@ frish {
 
   line = "⎩" (~"⎩" ~"⎭" any)* "⎭"
 
-  Comma = #noise? "," #noise?
+  Comma = line? "," line?
 
   noise = spaces line? spaces comment? spaces line? spaces
 }
