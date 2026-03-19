@@ -27,13 +27,14 @@ State = StateClass ()
 
 FunctionsSection [n1 _functions n2 lb n3 def* rb n4] = ‛«n1»«def»«n4»’
 SubroutinesSection [n1 _subroutines n2 lb n3 def* rb n4] = ‛def _walk ():⤷\nmatch opcode:⤷«n1»«def»«n4»⤶⤶\n’
-InvokeSection [n1 _invoke n2 lb n3 _at id n4 rb n5] = ‛«n1»«n2»«n3»«id»«n4»«n5»’
+InvokeSection [n1 _invoke n2 lb n3 _at id n4 rb n5] = ‛«n1»«n2»«n3»«id» ()«n4»«n5»’
 
-FunctionDefinition [token formals block noise] = ‛def «token» «formals»:«block»⤶\n«noise»’
-SubroutineDefinition_immediate [_imm ws token block n] = ‛State.compiling = False\ndef «token» ():⤷«block»⤶\n«n»’
-SubroutineDefinition_normal [ws token block n] = ‛\ncase "«token»":⤷«block»⤶\n«n»’
+FunctionDefinition [token formals block noise] = ‛def «token» «formals»:⤷«block»⤶\n«noise»’
+SubroutineDefinition_immediate [_imm ws token block n] =
+‛Acase "«token»":⤷B\nC_prevstate = State.compiling\nState.compiling = False«block»\nState.compiling = _prevstate⤶«n»’
+SubroutineDefinition_normal [ws token block n] = ‛\ncase "«token»":⤷«block»⤶«n»’
 
-StatementBlock [nleft lb Statement rb nright] = ‛«nleft»⤷«Statement»⤶\n«nright»’
+StatementBlock [nleft lb Statement rb nright] = ‛«nleft»«Statement»\n«nright»’
 
 Rec_Statement [n1 R_Statement n2] = ‛«n1»«R_Statement»«n2»’
 R_Statement_comment [s rec?] =‛\n«s»«rec»’
@@ -130,11 +131,11 @@ Defsyn_legal [id _eqv e rec?] = ‛\n«id» = «e»«rec»’
 
 
 InitStatement [ _mark ident _33 Exp fluff*] = ‛\nself.«ident» = «Exp» «fluff»’
-IfStatement [ _35 Exp StatementBlock ElifStatement* ElseStatement? rec?] = ‛\nif «Exp»:«StatementBlock»«ElifStatement»«ElseStatement»«rec»’
-ElifStatement [ _37 Exp StatementBlock] = ‛\nelif «Exp»:«StatementBlock»’
-ElseStatement [ _39 StatementBlock] = ‛\nelse:«StatementBlock»’
-ForStatement [ _41 ident _43 Exp StatementBlock rec?] = ‛\nfor «ident» in «Exp»:«StatementBlock»«rec»’
-WhileStatement [ _45 Exp StatementBlock rec?] = ‛\nwhile «Exp»:«StatementBlock»«rec»’
+IfStatement [ _35 Exp StatementBlock ElifStatement* ElseStatement? rec?] = ‛\nif «Exp»:⤷\n«StatementBlock»⤶\n«ElifStatement»«ElseStatement»«rec»’
+ElifStatement [ _37 Exp StatementBlock] = ‛\nelif «Exp»:⤷\n«StatementBlock»⤶\n’
+ElseStatement [ _39 StatementBlock] = ‛\nelse:⤷\n«StatementBlock»⤶\n’
+ForStatement [ _41 ident _43 Exp StatementBlock rec?] = ‛\nfor «ident» in «Exp»:⤷\n«StatementBlock»⤶\n«rec»’
+WhileStatement [ _45 Exp StatementBlock rec?] = ‛\nwhile «Exp»:⤷\n«StatementBlock»⤶\n«rec»’
 
 Synonym [ Lval _59 Exp rec?] =‛\n«Lval» = «Exp»«rec»’
 
