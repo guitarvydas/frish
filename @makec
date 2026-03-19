@@ -12,4 +12,5 @@ ${PBP}/include forthish.frish.inc | tr -d '\r' > forthish.frish
 
 # transmogrify `forthish.frish` into `forthish.py`
 ${PBP}/das2json frish.drawio
-python main.py test.frish main frish.drawio.json | ${PBP}/splitoutputs
+python main.py forthish.frish main frish.drawio.json | ${PBP}/splitoutputs
+
