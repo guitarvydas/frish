@@ -2,9 +2,9 @@ frish {
 
   Main = FunctionsSection SubroutinesSection InvokeSection
 
-  FunctionsSection = #noise "functions" #noise "{" #noise FunctionDefinition* "}" #noise
-  SubroutinesSection = #noise "subroutines" #noise "{" #noise SubroutineDefinition* "}" #noise
-  InvokeSection = "invoke" "{" #noise Call "}" #noise
+  FunctionsSection (FunctionSection) = #noise "functions" #noise "{" #noise FunctionDefinition* "}" #noise
+  SubroutinesSection (SubroutineSection) = #noise "subroutines" #noise "{" #noise SubroutineDefinition* "}" #noise
+  InvokeSection (InvokeSection) = #noise "invoke" #noise "{" #noise "@" Lval #noise "}" #noise
 
   FunctionDefinition = token Formals StatementBlock #noise
   SubroutineDefinition =
