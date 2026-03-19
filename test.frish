@@ -1,8 +1,18 @@
-defsubr xquote "'" {
-    defsynonym DQ ≡ 34
-    %push (DQ)
-    @xword
-    if %incompilingstate {
-        %funcall literalize ()
-    }
+
+functions { 
+  pushasinteger (word) {
+      %push (%toint (word))
+  }
+}
+
+subroutines {
+
+  drop {
+      ⌈ ( a -- ) ⌉
+      %pop
+  }
+}
+
+invoke {
+  @ok
 }

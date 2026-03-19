@@ -29,11 +29,11 @@ FunctionsSection [n1 _functions n2 lb n3 def* rb n4] = ‛«n1»«def»«n4»’
 SubroutinesSection [n1 _subroutines n2 lb n3 def* rb n4] = ‛«n1»«def»«n4»’
 InvokeSection [n1 _invoke n2 lb n3 _at id n4 rb n5] = ‛«n1»«n2»«n3»«id»«n4»«n5»’
 
-FunctionDefinition [token formals block noise] = ‛def «token» «formals» «block» «noise»’
-SubroutineDefinition_immediate [_imm ws token block n] = ‛State.compiling = False\ndef «token» «block» «n»’
-SubroutineDefinition_normal [ws token block n] = ‛def «token» «block» «n»’
+FunctionDefinition [token formals block noise] = ‛def «token» «formals»:⤷«block»⤶\n«noise»’
+SubroutineDefinition_immediate [_imm ws token block n] = ‛State.compiling = False\ndef «token» ():⤷«block»⤶\n«n»’
+SubroutineDefinition_normal [ws token block n] = ‛def «token» ():⤷«block»⤶\n«n»’
 
-StatementBlock [nleft lb Statement rb nright] = ‛«nleft»{⤷«Statement»⤶\n}«nright»’
+StatementBlock [nleft lb Statement rb nright] = ‛«nleft»⤷«Statement»⤶\n«nright»’
 
 Rec_Statement [n1 R_Statement n2] = ‛«n1»«R_Statement»«n2»’
 R_Statement_comment [s rec?] =‛\n«s»«rec»’
@@ -254,6 +254,7 @@ errorchar_other [ any] =‛«any»’
 
 line [lb cs* rb] = ‛«lb»«cs»«rb»’
 Comma [line1? _comma line2?] = ‛«_comma»’
-noise [ws1 line* ws2 n1* ws3 n2* ws4] = ‛«ws2»«n»«ws2»«n1»«ws3»«n2»«ws4»’
+noise [ws1 line* ws2 n1* ws3 n2* ws4] = ‛«ws1»«line»«ws2»«n1»«ws3»«n2»«ws4»’
 noi [x] = ‛«x»’
+spaces [s?] = ‛«s»’
 }
