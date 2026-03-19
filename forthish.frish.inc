@@ -665,8 +665,8 @@ subroutines {
 
       return True
   }
-
 }
 
-@ok
-    
+invoke {
+  @ok
+}    

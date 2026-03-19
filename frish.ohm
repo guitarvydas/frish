@@ -1,27 +1,19 @@
 frish {
 
-  Main = TopLevel+
-  TopLevel =
-    | Defvar -- defvar
-    | Defsynonym -- defsynonym
-    | Defsubr -- defsubr
-    | Defimmediatesubr -- defimmediatesubr
-    | Deffunction -- deffunction
-    | Defobj -- defobj
-    | Builtin -- builtin
-    | Call -- call
-    | comment line? -- comment
-    | line -- line
+  Main = FunctionsSection SubroutinesSection InvokeSection
 
-   Defvar = "defvar" Lval "⇐" Exp line?
-   Defsubr = "defsubr" ident string StatementBlock line?
-   Defimmediatesubr = "defimmediatesubr" ident string StatementBlock line?
-   Deffunction = "deffunction" ident Formals StatementBlock line?
-   Defobj = "defobj" ident ObjFormals? line? "{" line? InitStatement+ "}" line?
+  FunctionsSection = #noise? "functions" #noise? "{" #noise? FunctionDefinition* "}" #noise?
+  SubroutinesSection = #noise? "subroutines" #noise "{" #noise? SubroutineDefinition* "}" #noise?
+  InvokeSection = "invoke" "{" Call "}"
 
-   StatementBlock = line? "{" line? Rec_Statement line? "}" line?
+  FunctionDefinition = token Formals StatementBlock #noise?
+  SubroutineDefinition =
+    | "%immediate" #token StatementBlock #noise? -- immediate
+    |              #token StatementBlock #noise? -- normal
 
-   Rec_Statement = line? R_Statement line?
+   StatementBlock = #noise? "{" #noise? Rec_Statement #noise? "}" #noise? -- block
+
+   Rec_Statement = #noise? R_Statement #noise?
    R_Statement =
      | comment Rec_Statement? -- comment
      | Builtin Rec_Statement? -- builtin
@@ -42,7 +34,7 @@ frish {
 
    Call = "@" Lval Rec_Statement?
 
-   Builtin = BuiltinPhrase line?
+   Builtin = BuiltinPhrase #noise?
    BuiltinPhrase =
      | "%popchar" -- popchar
      | "%pop" -- pop
@@ -172,8 +164,8 @@ frish {
       | "[" "]" -- emptylistconst
       | "{" "}" -- emptydict
       | "(" Exp ")" -- paren
-      | "[" line? PrimaryComma+ line? "]" -- listconst
-      | "{" line? PairComma+ line? "}" -- dict
+      | "[" #noise? PrimaryComma+ #noise? "]" -- listconst
+      | "{" #noise? PairComma+ #noise? "}" -- dict
       | phi -- phi
       | "⊤" -- true
       | "⊥" -- false
@@ -186,7 +178,7 @@ frish {
 
     Subraddress =  "↪︎" ident
 
-    PrimaryComma = Primary Comma? line?
+    PrimaryComma = Primary Comma? #noise?
     PairComma = Pair Comma?
 
     StuffInsideParentheses =
@@ -207,10 +199,10 @@ frish {
     
     Actuals = 
       | "(" ")" -- noactuals
-      | "(" ActualComma* ")" line? -- actuals
+      | "(" ActualComma* ")" #noise? -- actuals
 
    Actual = Exp
-   ActualComma = comment? Actual Comma? line?
+   ActualComma = comment? Actual Comma? #noise?
 
     number =
       | digit* "." digit+  -- fract
@@ -263,6 +255,7 @@ frish {
       
   phi = ("ϕ" | "%CF%95")
 
+  token = (~space ~comment any)+
   ident  = ~keyword idchar+
   idchar =
     | "❲" idchar+ "❳" -- rec
@@ -282,5 +275,7 @@ frish {
 
   line = "⎩" (~"⎩" ~"⎭" any)* "⎭"
 
-  Comma = line? "," line?
+  Comma = #noise? "," #noise?
+
+  noise = spaces line? spaces comment? spaces line? spaces
 }

@@ -1,0 +1,18 @@
+Error: Line 279, col 11:
+  278 | 
+> 279 |   Comma = #noise? "," #noise?
+                  ^~~~~~
+  280 | 
+Nullable expression #(noise) is not allowed inside '?' (possible infinite loop)
+Application stack (most recent application last):
+Main
+FunctionsSection
+FunctionDefinition
+Formals
+Formals_withformals
+FormalComma
+Comma
+
+grammar = "frish
+"
+Error: Command failed with exit code 1
