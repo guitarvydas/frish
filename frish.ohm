@@ -81,7 +81,10 @@ frish {
      | "%RAMnext" -- ramnext
      | "%ram+" "(" Exp ")" -- ramappend
      
+     | "%returnTrue" -- returnTrue
      | "%returnFalse" -- returnFalse
+     | "%next" -- next
+     | "%interpret" -- interpret
 
      | "%" #ident Args? -- unrecognized
 

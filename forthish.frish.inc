@@ -131,13 +131,18 @@ functions {
       %ram+ (%pop)             ⌈ # Compile literal value. ⌉
   }
 
+  xinterpret () {
+    %rpush ("interpret")
+    return %funcall _walk ()
+  }
+  
   ok () {
       ⌈ ( --) Interaction loop -- REPL ⌉
       defsynonym blank ≡ 32
       while ⊤ {
 	  %input
 	  while not %empty-input {
-	     @xinterpret
+	     %funcall xinterpret ()
 	  }
       }
   }
@@ -184,7 +189,7 @@ functions {
       defsynonym blank ≡ 32
 	  %debuginput
 	  while not %empty-input {
-	     if (@xinterpret) {
+	     if (%funcall interpret ()) {
 		     %print (" ok")
 		     %eol
 	     }
@@ -651,8 +656,8 @@ subroutines {
   interpret {
       ⌈ ( string --) Execute word. ⌉
 
-      @xfind
-      ⌈ 3 possible results from xfind:
+      @find
+      ⌈ 3 possible results from find:
 	  1. (name 0) if not found,
 	  2. (xt 1) if found and word is immediate,
 	  3. (xt -1) if found and word is normal ⌉

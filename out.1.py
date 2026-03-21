@@ -251,7 +251,9 @@ def ok ():
         while not (State.BUFP >= len(State.BUFF)) :
                                                        #line 139
 
-            xinterpret()                               #line 140
+
+            State.R.push ("interpret")
+            _walk ()                                   #line 140
 
                                                        #line 141
 
@@ -362,7 +364,9 @@ def debugok ():
     while not (State.BUFP >= len(State.BUFF)) :
                                                        #line 186
 
-        if ( xinterpret()):
+        if (
+        State.R.push ("interpret")
+        _walk ()):
                                                        #line 187
 
             print ( " ok", end="")                     #line 188
@@ -398,6 +402,7 @@ def debugok ():
 
 def _walk ():
     global State
+    opcode = State.R.pop ()
     match opcode:
         case "create":                                 #line 202
 
@@ -1342,8 +1347,8 @@ def _walk ():
             # ( string --) Execute word.               #line 652
                                                        #line 653
 
-            xfind()                                    #line 654
-            # 3 possible results from xfind:⎩655⎭
+            find()                                     #line 654
+            # 3 possible results from find:⎩655⎭
             #	  1. (name 0) if not found,⎩656⎭
             #	  2. (xt 1) if found and word is immediate,⎩657⎭
             #	  3. (xt -1) if found and word is normal #line 658

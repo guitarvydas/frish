@@ -137,7 +137,7 @@ functions {
       while ⊤ {
 	  %input
 	  while not %empty-input {
-	     @xinterpret
+	     %interpret
 	  }
       }
   }
@@ -184,7 +184,7 @@ functions {
       defsynonym blank ≡ 32
 	  %debuginput
 	  while not %empty-input {
-	     if (@xinterpret) {
+	     if (%interpret) {
 		     %print (" ok")
 		     %eol
 	     }
@@ -651,8 +651,8 @@ subroutines {
   interpret {
       ⌈ ( string --) Execute word. ⌉
 
-      @xfind
-      ⌈ 3 possible results from xfind:
+      @find
+      ⌈ 3 possible results from find:
 	  1. (name 0) if not found,
 	  2. (xt 1) if found and word is immediate,
 	  3. (xt -1) if found and word is normal ⌉

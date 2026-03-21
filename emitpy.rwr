@@ -26,7 +26,7 @@ State = StateClass ()
 «i»’
 
 FunctionsSection [n1 _functions n2 lb n3 def* rb n4] = ‛«n1»«def»«n4»’
-SubroutinesSection [n1 _subroutines n2 lb n3 def* rb n4] = ‛def _walk ():⤷\nglobal State\nmatch opcode:⤷«n1»«def»«n4»⤶⤶\n’
+SubroutinesSection [n1 _subroutines n2 lb n3 def* rb n4] = ‛def _walk ():⤷\nglobal State\nopcode = State.R.pop ()\nmatch opcode:⤷«n1»«def»«n4»⤶⤶\n’
 InvokeSection [n1 _invoke n2 lb n3 _at id n4 rb n5] = ‛«n1»«n2»«n3»«id» ()«n4»«n5»’
 
 FunctionDefinition [token formals block noise] = ‛def «token» «formals»:⤷\nglobal State«block»⤶\n«noise»’
@@ -118,7 +118,10 @@ BuiltinPhrase_setnotcompilingstate [_] = ‛State.compiling [-1] = False’
 BuiltinPhrase_ramnext [_] = ‛len (Stack.RAM)’
 BuiltinPhrase_ramappend [_ lp exp rp] = ‛\nState.RAM.append («exp»)’
  
-BuiltinPhrase_returnFalse [_] = ‛return False’
+BuiltinPhrase_returnTrue [_] = ‛ State.S.append (True) ’
+BuiltinPhrase_returnFalse [_] = ‛ State.S.append (False) ’
+BuiltinPhrase_next [_] = ‛’
+BuiltinPhrase_interpret [_] = ‛\nState.R.push ("interpret")\n_walk ()’
 
 BuiltinPhrase_unrecognized [_ ident args?] = ‛«_» ⎝ error - unrecognized builtin "«ident»" (with given arguments) ⎠ «args» ’
 

@@ -137,7 +137,7 @@ functions { ⎩2⎭
       while ⊤ {⎩137⎭
 	  %input⎩138⎭
 	  while not %empty-input {⎩139⎭
-	     @xinterpret⎩140⎭
+	     %interpret⎩140⎭
 	  }⎩141⎭
       }⎩142⎭
   }⎩143⎭
@@ -184,7 +184,7 @@ functions { ⎩2⎭
       defsynonym blank ≡ 32⎩184⎭
 	  %debuginput⎩185⎭
 	  while not %empty-input {⎩186⎭
-	     if (@xinterpret) {⎩187⎭
+	     if (%interpret) {⎩187⎭
 		     %print (" ok")⎩188⎭
 		     %eol⎩189⎭
 	     }⎩190⎭
@@ -651,8 +651,8 @@ subroutines {⎩200⎭
   interpret {⎩651⎭
       ⌈ ( string --) Execute word. ⌉⎩652⎭
 ⎩653⎭
-      @xfind⎩654⎭
-      ⌈ 3 possible results from xfind:⎩655⎭
+      @find⎩654⎭
+      ⌈ 3 possible results from find:⎩655⎭
 	  1. (name 0) if not found,⎩656⎭
 	  2. (xt 1) if found and word is immediate,⎩657⎭
 	  3. (xt -1) if found and word is normal ⌉⎩658⎭
