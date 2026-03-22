@@ -4,19 +4,19 @@ functions {
     these functions use direct integer offsets to access the fields of the fojbect, whereas in higher level languages
     we'd use class fields instead - todo: fix this in the future (or not? at what point is customization better than
     generalization?) ⌉
-  fvget (name) {
+  function fvget (name) {
       deftemp fobjaddress ⇐ %funcall _find(%pop)
       return State.RAM [fobjaddress + 1]
   }
 
-  fvset (name, v) {
+  function fvset (name, v) {
       deftemp fobjaddress ⇐ %funcall _find(%pop)
       defsynonym namefieldaddress ≡ fobjaddress + 1
       State.RAM [namefieldaddress] ⇐ v
   }
 
 
-  doword () {
+  function doword () {
   ⌈
   Execute a colon-defined word using indirect threaded code interpretation.
 
@@ -71,7 +71,7 @@ functions {
   }
 
 
-  notfound (word) {
+  function notfound (word) {
       %clearS
       %clearR
       %print (word)
@@ -79,39 +79,39 @@ functions {
       %eol
   }
 
-  exec (xt) {
+  function exec (xt) {
       ⌈ found and compiling and immediate ⌉
       State.W ⇐ xt
       State.IP ⇐ -1  ⌈ Dummy to hold place in return stack. ⌉	
       @State.RAM[xt]  ⌈ Execute code. ⌉
   }
 
-  compile_word (xt) {
+  function compile_word (xt) {
       ⌈ found and not compiling ⌉
       State.W ⇐ xt
       State.IP ⇐ -1  ⌈ Dummy to hold place in return stack. ⌉	
       @State.RAM[xt]  ⌈ Execute code. ⌉
   }
 
-  pushasinteger (word) {
+  function pushasinteger (word) {
       %push (%toint (word))
   }
 
-  pushasfloat (word) {
+  function pushasfloat (word) {
       %push (%tofloat (word))
   }
 
-  compileinteger (word) {
+  function compileinteger (word) {
       %funcall pushasinteger(word)
       @literalize
   }
 
-  compilefloat (word) {
+  function compilefloat (word) {
       %funcall pushasfloat(word)
       @literalize
   }
 
-  code (name, flags, does) {
+  function code (name, flags, does) {
       ⌈ Add new word to RAM dictionary. We create a word (Forth "object") in RAM with 5 fields and extend the
 	the dictionary by linking back to the head of the dictionary list ⌉
       x ⇐ %funcall len (State.RAM)
@@ -125,19 +125,18 @@ functions {
 					this new word ⌉
   }
 
-  literalize () {
+  function literalize () {
       ⌈ Compile literal into definition. ⌉
       %ram+ (%funcall _find ("(literal)"))  ⌈# Compile address of doliteral. ⌉
       %ram+ (%pop)             ⌈ # Compile literal value. ⌉
   }
 
-  xinterpret () {
-    %rpush ("interpret")
-    %funcall _walk ()
+  function xinterpret () {
+    %runsubr ("interpret")
     return %pop
   }
   
-  ok () {
+  function ok () {
       ⌈ ( --) Interaction loop -- REPL ⌉
       defsynonym blank ≡ 32
       while ⊤ {
@@ -148,30 +147,30 @@ functions {
       }
   }
 
-  doconst () {  ⌈ method for const ⌉
+  function doconst () {  ⌈ method for const ⌉
       defsynonym parameter ≡ State.RAM [State.W + 1]
       %push (parameter)
   }
 
 
-  docreate () {
+  function docreate () {
       defsynonym parameterAddress ≡ %funcall len (State.RAM) + 4
       %push (parameterAddress)
   }
-  create (name) {
+  function create (name) {
       defsynonym normal ≡ 0
       %funcall code (name, normal, ↪︎docreate)
   }
-  comma (value) {
+  function comma (value) {
       %ram+ (value)
   }
 
-  fvar (name, value) {
+  function fvar (name, value) {
       %funcall create (name)
       %funcall comma (value)
   }
 
-  _find (name) {
+  function _find (name) {
       ⌈ "( name -- cfa|0) Find CFA of word name." ⌉
       deftemp x ⇐ State.LAST
       while (x >= 0) {
@@ -185,7 +184,7 @@ functions {
       return 0  ⌈ # Nothing found. ⌉
   }
 
-  debugok () {
+  function debugok () {
       ⌈ ( --) Interaction loop -- REPL ⌉
       defsynonym blank ≡ 32
 	  %debuginput
@@ -205,7 +204,7 @@ functions {
 
 subroutines {
 
- create {
+ subr create {
       defsynonym blank ≡ 32
       %push (blank)
       @xword
@@ -213,151 +212,151 @@ subroutines {
       %funcall create (name)
   }
 
-  drop {
+  subr drop {
       ⌈ ( a -- ) ⌉
       %pop
   }
 
-  dup {
+  subr dup {
       ⌈ ( a -- a a ) ⌉
       deftemp A ⇐ %pop
       %push (A)
       %push (A)
   }
 
-  negate {
+  subr negate {
       ⌈ ( n -- (-n) ) ⌉
       deftemp n ⇐ %pop
       %push (-n)
   }
 
-  emit {
+  subr emit {
       ⌈ ( c -- ) emit specified character ⌉
       deftemp c ⇐ %pop
       %printAsCharacter (c)
   }
 
-  cr { %eol }
-  . { ⌈ ( n --) Print TOS ⌉ %print (%pop) %eol }
-  .s { ⌈ ( --) Print stack contents ⌉ %print (%stack) %eol }
+  subr cr { %eol }
+  subr . { ⌈ ( n --) Print TOS ⌉ %print (%pop) %eol }
+  subr .s { ⌈ ( --) Print stack contents ⌉ %print (%stack) %eol }
 
-  + {
+  subr + {
       ⌈ ( a b -- sum) ⌉
       deftemp B ⇐ %pop
       deftemp A ⇐ %pop
       %push (A + B)
   }
 
-  * {
+  subr * {
       ⌈ ( a b -- product ) ⌉
       deftemp B ⇐ %pop
       deftemp A ⇐ %pop
       %push (A * B)
   }
 
-  = {
+  subr = {
       ⌈ ( a b -- bool ) ⌉
       deftemp B ⇐ %pop
       deftemp A ⇐ %pop
       %push (A = B)
   }
 
-  < {
+  subr < {
       ⌈ ( a b -- bool ) ⌉
       deftemp B ⇐ %pop
       deftemp A ⇐ %pop
       %push (A < B)
   }
 
-  > {
+  subr > {
       ⌈ ( a b -- bool ) ⌉
       deftemp B ⇐ %pop
       deftemp A ⇐ %pop
       %push (A > B)
   }
 
-  0= {
+  subr 0= {
       ⌈ ( a -- bool ) ⌉
       deftemp a ⇐ %pop
       %push (a = 0)
   }
 
-  0<  {
+  subr 0<  {
       ⌈ ( a -- bool ) ⌉
       deftemp a ⇐ %pop
       %push (0 < a)
   }
 
-  0> {
+  subr 0> {
       ⌈ ( a -- bool ) ⌉
       deftemp a ⇐ %pop
       %push (0 > a)
   }
 
-  ❲not❳ {
+  subr ❲not❳ {
       ⌈ ( a -- bool ) ⌉
       deftemp a ⇐ %pop
       %push (not a)
   }
 
-  ❲and❳ {
+  subr ❲and❳ {
       ⌈ ( a b -- bool ) ⌉
       deftemp b ⇐ %pop
       deftemp a ⇐ %pop
       %push (a and b)
   }
 
-  ❲or❳ {
+  subr ❲or❳ {
       ⌈ ( a b -- bool ) ⌉
       deftemp b ⇐ %pop
       deftemp a ⇐ %pop
       %push (a or b)
   }
 
-  >r {
+  subr >r {
       ⌈ ( a --  ) ⌉
       deftemp a ⇐ %pop
       %rpush (a)
   }
 
-  r> {
+  subr r> {
       ⌈ ( -- x ) ⌉
       deftemp x ⇐ %rpop
       %push (x)
   }
 
-  i {
+  subr i {
       ⌈ ( -- i ) get current loop index from R stack ⌉
       deftemp i ⇐ %rtop
       %push (i)
   }
 
-  i' {
+  subr i' {
       ⌈ ( -- i ) get outer loop limit from R stack ⌉
       deftemp i ⇐ %rsecond
       %push (i)
   }
 
-  j {
+  subr j {
       ⌈ ( -- j ) get outer loop index from R stack ⌉
       deftemp j ⇐ %rthird
       %push (j)
   }
 
-  swap {
+  subr swap {
       ⌈ ( a b -- b a) ⌉
       deftemp B ⇐ %pop
       deftemp A ⇐ %pop
       %push (B)
       %push (A)
   }
-  - {
+  subr - {
       ⌈ ( a b -- diff) ⌉
       deftemp B ⇐ %pop
       deftemp A ⇐ %pop
       %push (A - B)
   }
-  / {
+  subr / {
       ⌈ ( a b -- div) ⌉
       @xswap
       deftemp B ⇐ %pop
@@ -365,7 +364,7 @@ subroutines {
       %push (B / A)
   }
 
-  word {
+  subr word {
       ⌈ (char -- string) Read in string delimited by char ⌉
       deftemp wanted ⇐ %popchar
       %scanfor (wanted)
@@ -373,7 +372,7 @@ subroutines {
 
   ⌈ Example of state-smart word, which Brodie sez not to do. Sorry, Leo... ⌉
   ⌈ This sin allows it to be used the same way compiling or interactive. ⌉
-  ' {
+  subr ' {
       ⌈ ( -- string) Read up to closing dquote, push to stack ⌉
       ⌈ A string in Forth begins with the word " (followed by a space) then all characters up to the next " ⌉
       ⌈ E.G. " abc" ⌉
@@ -385,7 +384,7 @@ subroutines {
       }
   }
 
-  .' {
+  subr .' {
       ⌈ ( --) Print string. ⌉
       @xquote
       %print (%pop)
@@ -393,7 +392,7 @@ subroutines {
 
 
 
-  (literal) {
+  subr (literal) {
       ⌈
    Inside definitions only, pushes compiled literal to stack 
 
@@ -418,7 +417,7 @@ subroutines {
       State.IP ⇐ State.IP + 1 ⌈ move past this item (the literal) - we're done with it ⌉
   }
 
-  branch {
+  subr branch {
       ⌈ This instruction appears only inside subroutine sequences, jump to address in next cell ⌉
       ⌈ This instruction is inserted into a subr sequence when compiling control-flow words, like "else" see below) ⌉
       State.IP ⇐ State.RAM [State.IP]
@@ -426,7 +425,7 @@ subroutines {
       ⌈   in this case, though, we explicitly change the IP to some other value and don't just increment it ⌉
   }
 
-  0branch {
+  subr 0branch {
       ⌈ This instruction appears only inside subroutine sequences, jump on false to address in next cell ⌉
       deftemp test ⇐ %toboolean (%pop)
       if (test) {
@@ -447,7 +446,7 @@ subroutines {
   ⌈ IF, ELSE and THEN are "immediate" words - they should only be used inside of ":" (colon compiler) ⌉
 
   ⌈ see diagram compiling-IF-THEN.drawio.png ⌉
-  %immediate ❲if❳ { 
+  subr %immediate ❲if❳ { 
       ⌈ This instruction appears only inside subroutine sequences, ( f -- ) compile if test and branchFalse ⌉ 
       ⌈ Step. 1: generate conditional branch to yet-unknown target1 ⌉ 
       deftemp branchFalseAddress ⇐ %funcall _find ("0branch")
@@ -460,7 +459,7 @@ subroutines {
   }
 
   ⌈ see diagram compiling-IF-ELSE-THEN.drawio.png ⌉
-  %immediate ❲else❳ {
+  subr %immediate ❲else❳ {
       ⌈ Step. 1: fixup target1 from IF-true, retrieving memo from R-stack ⌉
       deftemp target1 ⇐ %rpop
       State.RAM [target1] ⇐ %RAMnext
@@ -474,13 +473,13 @@ subroutines {
   }
 
   ⌈ see diagrams compiling-IF-THEN.drawio.png and compiling-IF-ELSE-THEN.drawio.png ⌉
-  %immediate ❲then❳ {
+  subr %immediate ❲then❳ {
       ⌈ Step. 1: fixup target (from IF or from ELSE, above), retrieving memo from R-stack ⌉
       deftemp target ⇐ %rpop
       State.RAM [target] ⇐ %RAMnext
   }
 
-  (do) {
+  subr (do) {
       ⌈ ( limit index --) Puts limit and index on return stack. ⌉
       @xswap
       deftemp index ⇐ %pop
@@ -489,13 +488,13 @@ subroutines {
       %rpush (limit)
   }
 
-  %immediate ❲do❳ {
+  subr %immediate ❲do❳ {
       ⌈ (  limit index --) Begin counted loop. ⌉
       %ram+(%funcall _find("(do)"))  ⌈ Push do loop handler. ⌉
       %rpush(%RAMnext)           ⌈ Push address to jump back to. ⌉
   }
 
-  (loop) {
+  subr (loop) {
       ⌈ (  -- f) Determine if loop is done. ⌉
       deftemp index ⇐ %rpop
       deftemp limit ⇐ %rpop
@@ -507,14 +506,14 @@ subroutines {
       }  
   }
 
-  %immediate +loop {
+  subr %immediate +loop {
       ⌈ ( --) Close counted loop. ⌉
       %ram+(%funcall _find("(loop)"))   ⌈ Compile in loop test. ⌉
       %ram+(%funcall _find("0branch"))  ⌈ Compile in branch check. ⌉
       %ram+(%rpop)           ⌈ Address to jump back to. ⌉
   }
 
-  %immediate ❲loop❳ {
+  subr %immediate ❲loop❳ {
       ⌈ (  --) Close counted loop. ⌉
       %push (1)
       @literalize                  ⌈ Default loop increment for x_loop. ⌉
@@ -523,11 +522,11 @@ subroutines {
       %ram+(%rpop)           ⌈ Address to jump back to. ⌉
   }
 
-  %immediate ❲begin❳ {
+  subr %immediate ❲begin❳ {
       %rpush (%RAMnext)  ⌈ ( --) Start indefinite loop. ⌉
   }
 
-  %immediate ❲until❳ {
+  subr %immediate ❲until❳ {
       ⌈ (  f --) Close indefinite loop with test. ⌉
       %ram+(%funcall _find("0branch"))  ⌈ Expects result of test on stack. ⌉
       %ram+(%rpop)           ⌈ Address to jump back to. ⌉
@@ -540,7 +539,7 @@ subroutines {
   ⌈  invoke 'word' which parses "K" and pushed it. The stack becomes [... 123 "K"] ⌉
   ⌈  pop "K", pop 123, create a new word called 'K' with its PFA set to 123 and its CFA set to a subr that
        gets 123 from its PFA and pushes it onto the stack ⌉
-  ❲const❳ {
+  subr ❲const❳ {
       ⌈  get next word - the name - from BUFF ⌉
       defsynonym blank ≡ 32
       %push (blank)
@@ -553,11 +552,11 @@ subroutines {
       %ram+ (value)
   }
 
-  , {
+  subr , {
       %funcall comma (%pop)
   }
 
-  variable {
+  subr variable {
       defsynonym blank ≡ 32
       %push (blank)
       @xword
@@ -566,7 +565,7 @@ subroutines {
       %funcall fvar (name, value)    
   }
 
-  dump {
+  subr dump {
       deftemp n ⇐ %toint (%pop)
       deftemp start ⇐ %toint (%pop)
       %print ("----------------------------------------------------------------")
@@ -580,16 +579,16 @@ subroutines {
       }
   }
 
-  ! {
+  subr ! {
       deftemp b ⇐ %pop
       deftemp a ⇐ %pop
       State.RAM [b] ⇐ a
   }
 
-  bye { ⌈ ( --) Leave interpreter ⌉ %quit }
+  subr bye { ⌈ ( --) Leave interpreter ⌉ %quit }
 
 
-  find {
+  subr find {
       ⌈ "( name | -- (name 0)|(xt 1)|(xt -1)) Search for word name." ⌉
       ⌈ 3 possible results: 1. (name 0) if not found, 2. (xt 1) if found and word is immediate, 3. (xt -1) if found and word is normal ⌉
       %push (32)
@@ -606,7 +605,7 @@ subroutines {
       }
   }
 
-  ' {
+  subr ' {
       ⌈ "( name -- xt|-1) Search for execution token of word name." ⌉
       %push (32)
       @xword
@@ -615,11 +614,11 @@ subroutines {
       %push (found)
   }
 
-  None {
+  subr None {
       %pushNone
   }
 
-  words {
+  subr words {
       ⌈ print words in dictionary ⌉
       deftemp x ⇐ State.LAST
       while (x > -1) {
@@ -630,14 +629,14 @@ subroutines {
   }
 
 
-  execute {
+  subr execute {
       ⌈ invoke given word ⌉
       deftemp wordAddress ⇐ %pop
       @@wordAddress
   }
 
 
-  : {
+  subr : {
       ⌈ ( name | --) Start compilation. ⌉
       defsynonym blank ≡ 32
       %push (blank)
@@ -647,14 +646,14 @@ subroutines {
       %setCompilingState
   }
 
-  %immediate ; {
+  subr %immediate ; {
       ⌈ ( --) Finish definition. ⌉
 
       %ram+(-1)  ⌈ Marker for end of definition. ⌉
       %setNotCompilingState
   }
 
-  interpret {
+  subr interpret {
       ⌈ ( string --) Execute word. ⌉
 
       @find

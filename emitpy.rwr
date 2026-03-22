@@ -29,10 +29,10 @@ FunctionsSection [n1 _functions n2 lb n3 def* rb n4] = ‛«n1»«def»«n4»’
 SubroutinesSection [n1 _subroutines n2 lb n3 def* rb n4] = ‛def _walk ():⤷\nglobal State\nopcode = State.R.pop ()\nmatch opcode:⤷«n1»«def»«n4»⤶⤶\n’
 InvokeSection [n1 _invoke n2 lb n3 _at id n4 rb n5] = ‛«n1»«n2»«n3»«id» ()«n4»«n5»’
 
-FunctionDefinition [token formals block noise] = ‛def «token» «formals»:⤷\nglobal State«block»⤶\n«noise»’
-SubroutineDefinition_immediate [_imm ws token block n] =
+FunctionDefinition [_function token formals block noise] = ‛def «token» «formals»:⤷\nglobal State«block»⤶\n«noise»’
+SubroutineDefinition_immediate [_subr _imm ws token block n] =
 ‛case "«token»":⤷\nState.compiling.push (False)\nState.compiling = False«block»\nState.compiling = State.compiling.pop ()⤶«n»\n’
-SubroutineDefinition_normal [ws token block n] = ‛\ncase "«token»":⤷«block»⤶«n»\n’
+SubroutineDefinition_normal [_subr ws token block n] = ‛\ncase "«token»":⤷«block»⤶«n»\n’
 
 StatementBlock [nleft lb Statement rb nright] = ‛«nleft»«Statement»\n«nright»’
 
