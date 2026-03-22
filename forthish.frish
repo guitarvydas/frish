@@ -131,7 +131,7 @@
   }
 
   function xinterpret () {
-    %runsubr ("interpret")
+    @interpret
     return %pop
   }
   
@@ -193,17 +193,17 @@
 		     %eol
 	     }
 	     %print (State.BUFP) %print (" -- ") %print (State.BUFF) %eol
-	     %runsubr ("dots")
+	     @dots
 	  }
 	     %print (State.BUFP) %print (" == ") %print (State.BUFF) %eol
-	     %runsubr ("dot")
-	     %runsubr ("dots")
+	     @dot
+	     @dots
   }
 
  subr create {
       defsynonym blank ≡ 32
       %push (blank)
-      %runsubr ("word")
+      @word
       deftemp name ⇐ %pop
       λcreate (name)
   }
@@ -354,7 +354,7 @@
   }
   subr / {
       ⌈ ( a b -- div) ⌉
-      %runsubr ("swap")
+      @swap
       deftemp B ⇐ %pop
       deftemp A ⇐ %pop
       %push (B / A)
@@ -374,7 +374,7 @@
       ⌈ E.G. " abc" ⌉
       defsynonym DQ ≡ 34
       %push (DQ)
-      %runsubr ("word")
+      @word
       if %incompilingstate {
 	  λliteralize ()
       }
@@ -382,7 +382,7 @@
 
   subr .' {
       ⌈ ( --) Print string. ⌉
-      %runsubr ("quote")
+      @quote
       %print (%pop)
   }
 
@@ -477,7 +477,7 @@
 
   subr (do) {
       ⌈ ( limit index --) Puts limit and index on return stack. ⌉
-      %runsubr ("swap")
+      @swap
       deftemp index ⇐ %pop
       deftemp limit ⇐ %pop
       %rpush (index)
@@ -539,7 +539,7 @@
       ⌈  get next word - the name - from BUFF ⌉
       defsynonym blank ≡ 32
       %push (blank)
-      %runsubr ("word")
+      @word
       ⌈  stack is now: ( NNNN name -- ) ⌉
       deftemp name ⇐ %pop
       deftemp value ⇐ %pop
@@ -555,7 +555,7 @@
   subr variable {
       defsynonym blank ≡ 32
       %push (blank)
-      %runsubr ("word")
+      @word
       deftemp name ⇐ %pop
       deftemp value ⇐ %pop
       λfvar (name, value)    
@@ -588,7 +588,7 @@
       ⌈ "( name | -- (name 0)|(xt 1)|(xt -1)) Search for word name." ⌉
       ⌈ 3 possible results: 1. (name 0) if not found, 2. (xt 1) if found and word is immediate, 3. (xt -1) if found and word is normal ⌉
       %push (32)
-      %runsubr ("word")
+      @word
       deftemp found ⇐ λ_find(%stop)
       if (0 = found) {
 	  %push (0)
@@ -604,7 +604,7 @@
   subr ' {
       ⌈ "( name -- xt|-1) Search for execution token of word name." ⌉
       %push (32)
-      %runsubr ("word")
+      @word
       deftemp name ⇐ %pop
       deftemp found ⇐ λ_find(name)
       %push (found)
@@ -636,7 +636,7 @@
       ⌈ ( name | --) Start compilation. ⌉
       defsynonym blank ≡ 32
       %push (blank)
-      %runsubr ("word")
+      @word
       deftemp name ⇐ %pop
       λcode(name, 0, doword)
       %setCompilingState
@@ -652,7 +652,7 @@
   subr interpret {
       ⌈ ( string --) Execute word. ⌉
 
-      %runsubr ("find")
+      @find
       ⌈ 3 possible results from find:
 	  1. (name 0) if not found,
 	  2. (xt 1) if found and word is immediate,
