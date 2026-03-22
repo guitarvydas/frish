@@ -27,10 +27,10 @@ State = StateClass ()
 SubrOrFunction [sf] = ‛«sf»’
 InvokeSection [n1 _invoke n2 lb n3 _lambda id lp rp n4 rb n5] = ‛«n1»«n2»«n3»«id» ()«n4»«n5»’
 
-FunctionDefinition [_function token formals block noise] = ‛def «token» «formals»:⤷\nglobal State«block»⤶\n«noise»’
-SubroutineDefinition_immediate [_subr _imm ws token block n] =
-‛case "«token»":⤷\nState.compiling.push (False)\nState.compiling = False«block»\nState.compiling = State.compiling.pop ()⤶«n»\n’
-SubroutineDefinition_normal [_subr ws token block n] = ‛\ncase "«token»":⤷«block»⤶«n»\n’
+FunctionDefinition [noise1 _function token formals block noise2] = ‛«noise1»def «token» «formals»:⤷\nglobal State«block»⤶\n)«noise2»’
+SubroutineDefinition_immediate [noise1 _subr _imm ws token block noise2] =
+‛case "«token»":⤷«noise1»\nState.compiling.push (False)\nState.compiling = False«block»\nState.compiling = State.compiling.pop ()⤶\ncode(«str»,0,  "«ident»")«noise2»\n’
+SubroutineDefinition_normal [noise1 _subr ws token block noise2] = ‛\ncase "«token»":⤷«noise1»«block»⤶\ncode(«str», 1, "«ident»")«noise2»\n’
 
 StatementBlock [nleft lb Statement rb nright] = ‛«nleft»«Statement»\n«nright»’
 
@@ -46,12 +46,12 @@ R_Statement_return [ _29 ReturnExp] =‛\nreturn «ReturnExp»’
 R_Statement_for [ ForStatement] =‛«ForStatement»’
 R_Statement_while [ WhileStatement] =‛«WhileStatement»’
 R_Statement_assignment [ Assignment] =‛«Assignment»’
-R_Statement_callindirect [_ lval rec?] =‛\n«lval»()«rec»’
-R_Statement_call [c] =‛\n«c»’
+R_Statement_executesubrindirect [_ lval rec?] =‛\nStack.R.push («lval»)\n_walk ()«rec»’
+R_Statement_executesubr [c] =‛\nStack.R.push ("«c»")\n_walk ()’
 R_Statement_line [ws comment? line rec?] = ‛«ws»«comment»«n»«rec»’
 CommaIdent [_comma ident] = ‛, «ident»’
 
-CallSubr [_ id rec?] = ‛\nState.R.push ("«id»")\n_walk ()«rec»’
+ExecuteSubr [_ id rec?] = ‛\nState.R.push ("«id»")\n_walk ()«rec»’
 
 Builtin [x n] = ‛«x»«n»’
 BuiltinPhrase_popchar [_] = ‛chr(State.S.pop ())’
@@ -179,7 +179,7 @@ PrimaryIndexed_nthslice [p lb ds+ _colon rb] = ‛«p» [«ds»:]’
 PrimaryIndexed_atom [a] = ‛«a»’
 
 Atom_builtin [x] = ‛«x»’
-Atom_callsubr [c] = ‛State.R.push ("«c»")\nwalk ()’
+Atom_executesubr [c] = ‛State.R.push ("«c»")\nwalk ()’
 Atom_emptylistconst [ _72 _73] =‛«_72»«_73»’
 Atom_emptydict [ _76 _77] =‛«_76»«_77»’
 Atom_paren [ _70 Exp _71] =‛«_70»«Exp»«_71»’

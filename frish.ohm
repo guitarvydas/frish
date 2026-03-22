@@ -26,12 +26,12 @@ frish {
      | WhileStatement  -- while
      | Synonym -- synonym
      | Assignment -- assignment
-     | "@@" Lval Rec_Statement? -- callindirect
-     | CallSubr -- callsubr
+     | "~" Lval Rec_Statement? -- executesubrindirect
+     | ExecuteSubr -- executesubr
      | spaces #comment? line Rec_Statement? -- line
    CommaIdent = Comma ident
 
-   CallSubr = "@" ident Rec_Statement?
+   ExecuteSubr = "@" ident Rec_Statement?
 
    Builtin = BuiltinPhrase #noise
    BuiltinPhrase =
@@ -161,7 +161,7 @@ frish {
 
     Atom =
       | Builtin -- builtin
-      | CallSubr -- callsubr
+      | ExecuteSubr -- executesubr
       | "[" "]" -- emptylistconst
       | "{" "}" -- emptydict
       | "(" Exp ")" -- paren

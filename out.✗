@@ -1,10 +1,16 @@
-Error: Line 18, col 3:
-  17 | ⎩17⎭
-> 18 |   function doword () {⎩18⎭
-         ^
-  19 |   ⌈⎩19⎭
-Expected InvokeSection
-
-grammar = "frish
-"
-Error: Command failed with exit code 1
+error:     %  >>>  error - unrecognized builtin "runsubr" (with given arguments)  <<<  ("interpret") #line 134
+error:         %  >>>  error - unrecognized builtin "runsubr" (with given arguments)  <<<  ("dots") #line 196
+error:     %  >>>  error - unrecognized builtin "runsubr" (with given arguments)  <<<  ("dot") #line 199
+error:     %  >>>  error - unrecognized builtin "runsubr" (with given arguments)  <<<  ("dots") #line 200
+error:     %  >>>  error - unrecognized builtin "runsubr" (with given arguments)  <<<  ("word") #line 206
+error:     %  >>>  error - unrecognized builtin "runsubr" (with given arguments)  <<<  ("swap") #line 357
+error:     %  >>>  error - unrecognized builtin "runsubr" (with given arguments)  <<<  ("word") #line 377
+error:     %  >>>  error - unrecognized builtin "runsubr" (with given arguments)  <<<  ("quote") #line 385
+error:     %  >>>  error - unrecognized builtin "runsubr" (with given arguments)  <<<  ("swap") #line 480
+error:     %  >>>  error - unrecognized builtin "runsubr" (with given arguments)  <<<  ("word") #line 542
+error:     %  >>>  error - unrecognized builtin "runsubr" (with given arguments)  <<<  ("word") #line 558
+error:     %  >>>  error - unrecognized builtin "runsubr" (with given arguments)  <<<  ("word") #line 591
+error:     %  >>>  error - unrecognized builtin "runsubr" (with given arguments)  <<<  ("word") #line 607
+error:     %  >>>  error - unrecognized builtin "runsubr" (with given arguments)  <<<  ("word") #line 639
+error:     %  >>>  error - unrecognized builtin "runsubr" (with given arguments)  <<<  ("find") #line 655
+errors found

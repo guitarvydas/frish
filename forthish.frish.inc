@@ -64,7 +64,7 @@
       while (-1 != State.RAM[State.IP]) {
 	  State.W ⇐ State.RAM[State.IP]
 	  State.IP ⇐ State.IP + 1
-	  @State.RAM[State.W]
+	  ~State.RAM[State.W]
       }
       State.IP ⇐ %rpop
   }
@@ -82,14 +82,14 @@
       ⌈ found and compiling and immediate ⌉
       State.W ⇐ xt
       State.IP ⇐ -1  ⌈ Dummy to hold place in return stack. ⌉	
-      @State.RAM[xt]  ⌈ Execute code. ⌉
+      ~State.RAM[xt]  ⌈ Execute code. ⌉
   }
 
   function compile_word (xt) {
       ⌈ found and not compiling ⌉
       State.W ⇐ xt
       State.IP ⇐ -1  ⌈ Dummy to hold place in return stack. ⌉	
-      @State.RAM[xt]  ⌈ Execute code. ⌉
+      ~State.RAM[xt]  ⌈ Execute code. ⌉
   }
 
   function pushasinteger (word) {
@@ -118,7 +118,7 @@
       %ram+ (State.LAST) ⌈ (LFA) link to previous word in dictionary list ⌉
       %ram+ (name)       ⌈ (NFA) name of word ⌉
       %ram+ (flags)      ⌈       0 = normal word, 1 = immediate word ⌉
-      %ram+ (does)       ⌈ (CFA) function pointer that points to code that executes the word ⌉
+      %ram+ (does)       ⌈ (CFA) function pointer that points to code that executes the word (a function pointer is now just a string (probably should be optimized to be a bytecode)) ⌉
 
       State.LAST ⇐ x                ⌈ LAST is the pointer to the head of the dictionary list, set it to point to
 					this new word ⌉
@@ -628,7 +628,7 @@
   subr execute {
       ⌈ invoke given word ⌉
       deftemp wordAddress ⇐ %pop
-      @@wordAddress
+      ~wordAddress
   }
 
 
