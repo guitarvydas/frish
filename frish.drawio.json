@@ -389,10 +389,6 @@
       {
         "name": ":$ _/t2t frish emitpy",
         "id": 5
-      },
-      {
-        "name": "🚫",
-        "id": 9
       }
     ],
     "connections": [
@@ -406,34 +402,21 @@
         }
       },
       {
-        "dir": 1,
+        "dir": 2,
+        "source_port": "",
+        "target_port": "",
+        "source": {
+          "name": ":$ _/t2t frish emitpy",
+          "id": 5
+        }
+      },
+      {
+        "dir": 2,
         "source_port": "✗",
-        "target_port": "",
-        "source": {
-          "name": ":$ _/t2t frish emitpy",
-          "id": 5
-        },
-        "target": {
-          "name": "🚫",
-          "id": 9
-        }
-      },
-      {
-        "dir": 2,
-        "source_port": "",
-        "target_port": "",
-        "source": {
-          "name": ":$ _/t2t frish emitpy",
-          "id": 5
-        }
-      },
-      {
-        "dir": 2,
-        "source_port": "",
         "target_port": "✗",
         "source": {
-          "name": "🚫",
-          "id": 9
+          "name": ":$ _/t2t frish emitpy",
+          "id": 5
         }
       }
     ],
@@ -591,10 +574,6 @@
       {
         "name": ":$ _/t2t pydecode",
         "id": 5
-      },
-      {
-        "name": "🚫",
-        "id": 9
       }
     ],
     "connections": [
@@ -608,34 +587,21 @@
         }
       },
       {
-        "dir": 1,
+        "dir": 2,
+        "source_port": "",
+        "target_port": "",
+        "source": {
+          "name": ":$ _/t2t pydecode",
+          "id": 5
+        }
+      },
+      {
+        "dir": 2,
         "source_port": "✗",
-        "target_port": "",
-        "source": {
-          "name": ":$ _/t2t pydecode",
-          "id": 5
-        },
-        "target": {
-          "name": "🚫",
-          "id": 9
-        }
-      },
-      {
-        "dir": 2,
-        "source_port": "",
-        "target_port": "",
-        "source": {
-          "name": ":$ _/t2t pydecode",
-          "id": 5
-        }
-      },
-      {
-        "dir": 2,
-        "source_port": "",
         "target_port": "✗",
         "source": {
-          "name": "🚫",
-          "id": 9
+          "name": ":$ _/t2t pydecode",
+          "id": 5
         }
       }
     ],
@@ -647,10 +613,6 @@
       {
         "name": ":$ _/indent",
         "id": 5
-      },
-      {
-        "name": "🚫",
-        "id": 9
       }
     ],
     "connections": [
@@ -664,34 +626,21 @@
         }
       },
       {
-        "dir": 1,
+        "dir": 2,
+        "source_port": "",
+        "target_port": "",
+        "source": {
+          "name": ":$ _/indent",
+          "id": 5
+        }
+      },
+      {
+        "dir": 2,
         "source_port": "✗",
-        "target_port": "",
-        "source": {
-          "name": ":$ _/indent",
-          "id": 5
-        },
-        "target": {
-          "name": "🚫",
-          "id": 9
-        }
-      },
-      {
-        "dir": 2,
-        "source_port": "",
-        "target_port": "",
-        "source": {
-          "name": ":$ _/indent",
-          "id": 5
-        }
-      },
-      {
-        "dir": 2,
-        "source_port": "",
         "target_port": "✗",
         "source": {
-          "name": "🚫",
-          "id": 9
+          "name": ":$ _/indent",
+          "id": 5
         }
       }
     ],
@@ -703,10 +652,6 @@
       {
         "name": ":$ _/errgrep",
         "id": 5
-      },
-      {
-        "name": "🚫",
-        "id": 9
       }
     ],
     "connections": [
@@ -720,34 +665,21 @@
         }
       },
       {
-        "dir": 1,
+        "dir": 2,
+        "source_port": "",
+        "target_port": "",
+        "source": {
+          "name": ":$ _/errgrep",
+          "id": 5
+        }
+      },
+      {
+        "dir": 2,
         "source_port": "✗",
-        "target_port": "",
-        "source": {
-          "name": ":$ _/errgrep",
-          "id": 5
-        },
-        "target": {
-          "name": "🚫",
-          "id": 9
-        }
-      },
-      {
-        "dir": 2,
-        "source_port": "",
-        "target_port": "",
-        "source": {
-          "name": ":$ _/errgrep",
-          "id": 5
-        }
-      },
-      {
-        "dir": 2,
-        "source_port": "",
         "target_port": "✗",
         "source": {
-          "name": "🚫",
-          "id": 9
+          "name": ":$ _/errgrep",
+          "id": 5
         }
       }
     ],
@@ -759,10 +691,6 @@
       {
         "name": ":$ _/t2t preopt",
         "id": 5
-      },
-      {
-        "name": "🚫",
-        "id": 9
       }
     ],
     "connections": [
@@ -776,34 +704,21 @@
         }
       },
       {
-        "dir": 1,
+        "dir": 2,
+        "source_port": "",
+        "target_port": "",
+        "source": {
+          "name": ":$ _/t2t preopt",
+          "id": 5
+        }
+      },
+      {
+        "dir": 2,
         "source_port": "✗",
-        "target_port": "",
-        "source": {
-          "name": ":$ _/t2t preopt",
-          "id": 5
-        },
-        "target": {
-          "name": "🚫",
-          "id": 9
-        }
-      },
-      {
-        "dir": 2,
-        "source_port": "",
-        "target_port": "",
-        "source": {
-          "name": ":$ _/t2t preopt",
-          "id": 5
-        }
-      },
-      {
-        "dir": 2,
-        "source_port": "",
         "target_port": "✗",
         "source": {
-          "name": "🚫",
-          "id": 9
+          "name": ":$ _/t2t preopt",
+          "id": 5
         }
       }
     ],
@@ -815,10 +730,6 @@
       {
         "name": ":$ _//t2t peephole_py",
         "id": 5
-      },
-      {
-        "name": "🚫",
-        "id": 9
       }
     ],
     "connections": [
@@ -832,34 +743,21 @@
         }
       },
       {
-        "dir": 1,
+        "dir": 2,
+        "source_port": "",
+        "target_port": "",
+        "source": {
+          "name": ":$ _//t2t peephole_py",
+          "id": 5
+        }
+      },
+      {
+        "dir": 2,
         "source_port": "✗",
-        "target_port": "",
-        "source": {
-          "name": ":$ _//t2t peephole_py",
-          "id": 5
-        },
-        "target": {
-          "name": "🚫",
-          "id": 9
-        }
-      },
-      {
-        "dir": 2,
-        "source_port": "",
-        "target_port": "",
-        "source": {
-          "name": ":$ _//t2t peephole_py",
-          "id": 5
-        }
-      },
-      {
-        "dir": 2,
-        "source_port": "",
         "target_port": "✗",
         "source": {
-          "name": "🚫",
-          "id": 9
+          "name": ":$ _//t2t peephole_py",
+          "id": 5
         }
       }
     ],

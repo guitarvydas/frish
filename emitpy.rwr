@@ -1,6 +1,6 @@
 % rewrite emitPython {
 
-Main [f s i] = ‛
+Main [sf i] = ‛
 import re
 
 class Stack(list):⤷
@@ -21,12 +21,10 @@ class StateClass:⤷
 
 State = StateClass ()
 
-«f»
-«s»
+«sf»
 «i»’
 
-FunctionsSection [n1 _functions n2 lb n3 def* rb n4] = ‛«n1»«def»«n4»’
-SubroutinesSection [n1 _subroutines n2 lb n3 def* rb n4] = ‛def _walk ():⤷\nglobal State\nopcode = State.R.pop ()\nmatch opcode:⤷«n1»«def»«n4»⤶⤶\n’
+SubrOrFunction [sf] = ‛«sf»’
 InvokeSection [n1 _invoke n2 lb n3 _lambda id lp rp n4 rb n5] = ‛«n1»«n2»«n3»«id» ()«n4»«n5»’
 
 FunctionDefinition [_function token formals block noise] = ‛def «token» «formals»:⤷\nglobal State«block»⤶\n«noise»’

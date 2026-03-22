@@ -1,8 +1,9 @@
-Error: Line 1, col 1:
-> 1 | ⎩1⎭
-      ^
-  2 | functions { ⎩2⎭
-Expected FunctionSection
+Error: Line 18, col 3:
+  17 | ⎩17⎭
+> 18 |   function doword () {⎩18⎭
+         ^
+  19 |   ⌈⎩19⎭
+Expected InvokeSection
 
 grammar = "frish
 "

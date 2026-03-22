@@ -1,5 +1,4 @@
 
-functions { 
   ⌈ fvget and fvset assume that the forth object (word) is a set of contiguous slots, each 1 machine word wide
     these functions use direct integer offsets to access the fields of the fojbect, whereas in higher level languages
     we'd use class fields instead - todo: fix this in the future (or not? at what point is customization better than
@@ -200,9 +199,6 @@ functions {
 	     %runsubr ("dot")
 	     %runsubr ("dots")
   }
-}
-
-subroutines {
 
  subr create {
       defsynonym blank ≡ 32
@@ -672,7 +668,6 @@ subroutines {
         
     }
     
-}
 
 invoke {
   λok ()

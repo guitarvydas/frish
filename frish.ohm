@@ -1,15 +1,14 @@
 frish {
 
-  Main = FunctionsSection SubroutinesSection InvokeSection
+  Main = SubrOrFunction+ InvokeSection
 
-  FunctionsSection (FunctionSection) = #noise "functions" #noise "{" #noise FunctionDefinition* "}" #noise
-  SubroutinesSection (SubroutineSection) = #noise "subroutines" #noise "{" #noise SubroutineDefinition* "}" #noise
+  SubrOrFunction = SubroutineDefinition | FunctionDefinition
   InvokeSection (InvokeSection) = #noise "invoke" #noise "{" #noise "λ" ident "(" ")" #noise "}" #noise
 
-  FunctionDefinition = "function" token Formals StatementBlock #noise
-  SubroutineDefinition =
-    | "subr" "%immediate" spaces #token StatementBlock #noise -- immediate
-    | "subr"              spaces #token StatementBlock #noise -- normal
+  FunctionDefinition (FunctionDefinition) = #noise "function" token Formals StatementBlock #noise
+  SubroutineDefinition (SubroutineDefinition) =
+    | #noise "subr" "%immediate" spaces #token StatementBlock #noise -- immediate
+    | #noise "subr"              spaces #token StatementBlock #noise -- normal
 
    StatementBlock = #noise "{" Rec_Statement "}" #noise
 
