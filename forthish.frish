@@ -131,13 +131,19 @@ functions {
       %ram+ (%pop)             ⌈ # Compile literal value. ⌉
   }
 
+  xinterpret () {
+    %rpush ("interpret")
+    %funcall _walk ()
+    return %pop
+  }
+  
   ok () {
       ⌈ ( --) Interaction loop -- REPL ⌉
       defsynonym blank ≡ 32
       while ⊤ {
 	  %input
 	  while not %empty-input {
-	     %interpret
+	     %funcall xinterpret ()
 	  }
       }
   }
@@ -184,7 +190,7 @@ functions {
       defsynonym blank ≡ 32
 	  %debuginput
 	  while not %empty-input {
-	     if (%interpret) {
+	     if (%funcall interpret ()) {
 		     %print (" ok")
 		     %eol
 	     }

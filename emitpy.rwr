@@ -121,7 +121,7 @@ BuiltinPhrase_ramappend [_ lp exp rp] = ‛\nState.RAM.append («exp»)’
 BuiltinPhrase_returnTrue [_] = ‛ State.S.append (True) ’
 BuiltinPhrase_returnFalse [_] = ‛ State.S.append (False) ’
 BuiltinPhrase_next [_] = ‛’
-BuiltinPhrase_interpret [_] = ‛\nState.R.push ("interpret")\n_walk ()’
+BuiltinPhrase_runsubr [_ lp s rp] = ‛\nState.R.push («s»)\n_walk ()’
 
 BuiltinPhrase_unrecognized [_ ident args?] = ‛«_» ⎝ error - unrecognized builtin "«ident»" (with given arguments) ⎠ «args» ’
 

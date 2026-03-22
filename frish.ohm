@@ -6,10 +6,10 @@ frish {
   SubroutinesSection (SubroutineSection) = #noise "subroutines" #noise "{" #noise SubroutineDefinition* "}" #noise
   InvokeSection (InvokeSection) = #noise "invoke" #noise "{" #noise "@" ident #noise "}" #noise
 
-  FunctionDefinition = token Formals StatementBlock #noise
+  FunctionDefinition = "function" token Formals StatementBlock #noise
   SubroutineDefinition =
-    | "%immediate" spaces #token StatementBlock #noise -- immediate
-    |              spaces #token StatementBlock #noise -- normal
+    | "subr" "%immediate" spaces #token StatementBlock #noise -- immediate
+    | "subr"              spaces #token StatementBlock #noise -- normal
 
    StatementBlock = #noise "{" Rec_Statement "}" #noise
 
@@ -84,7 +84,7 @@ frish {
      | "%returnTrue" -- returnTrue
      | "%returnFalse" -- returnFalse
      | "%next" -- next
-     | "%interpret" -- interpret
+     | "%runsubr" "(" string ")" -- runsubr
 
      | "%" #ident Args? -- unrecognized
 
