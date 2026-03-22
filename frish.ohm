@@ -4,7 +4,7 @@ frish {
 
   FunctionsSection (FunctionSection) = #noise "functions" #noise "{" #noise FunctionDefinition* "}" #noise
   SubroutinesSection (SubroutineSection) = #noise "subroutines" #noise "{" #noise SubroutineDefinition* "}" #noise
-  InvokeSection (InvokeSection) = #noise "invoke" #noise "{" #noise "@" ident #noise "}" #noise
+  InvokeSection (InvokeSection) = #noise "invoke" #noise "{" #noise "λ" ident "(" ")" #noise "}" #noise
 
   FunctionDefinition = "function" token Formals StatementBlock #noise
   SubroutineDefinition =
@@ -28,11 +28,11 @@ frish {
      | Synonym -- synonym
      | Assignment -- assignment
      | "@@" Lval Rec_Statement? -- callindirect
-     | Call -- call
+     | CallSubr -- callsubr
      | spaces #comment? line Rec_Statement? -- line
    CommaIdent = Comma ident
 
-   Call = "@" Lval Rec_Statement?
+   CallSubr = "@" ident Rec_Statement?
 
    Builtin = BuiltinPhrase #noise
    BuiltinPhrase =
@@ -84,7 +84,6 @@ frish {
      | "%returnTrue" -- returnTrue
      | "%returnFalse" -- returnFalse
      | "%next" -- next
-     | "%runsubr" "(" string ")" -- runsubr
 
      | "%" #ident Args? -- unrecognized
 
@@ -163,7 +162,7 @@ frish {
 
     Atom =
       | Builtin -- builtin
-      | Call -- call
+      | CallSubr -- callsubr
       | "[" "]" -- emptylistconst
       | "{" "}" -- emptydict
       | "(" Exp ")" -- paren

@@ -27,7 +27,7 @@ State = StateClass ()
 
 FunctionsSection [n1 _functions n2 lb n3 def* rb n4] = ‛«n1»«def»«n4»’
 SubroutinesSection [n1 _subroutines n2 lb n3 def* rb n4] = ‛def _walk ():⤷\nglobal State\nopcode = State.R.pop ()\nmatch opcode:⤷«n1»«def»«n4»⤶⤶\n’
-InvokeSection [n1 _invoke n2 lb n3 _at id n4 rb n5] = ‛«n1»«n2»«n3»«id» ()«n4»«n5»’
+InvokeSection [n1 _invoke n2 lb n3 _lambda id lp rp n4 rb n5] = ‛«n1»«n2»«n3»«id» ()«n4»«n5»’
 
 FunctionDefinition [_function token formals block noise] = ‛def «token» «formals»:⤷\nglobal State«block»⤶\n«noise»’
 SubroutineDefinition_immediate [_subr _imm ws token block n] =
@@ -53,7 +53,7 @@ R_Statement_call [c] =‛\n«c»’
 R_Statement_line [ws comment? line rec?] = ‛«ws»«comment»«n»«rec»’
 CommaIdent [_comma ident] = ‛, «ident»’
 
-Call [_ lval rec?] = ‛«lval»()«rec»’
+CallSubr [_ id rec?] = ‛\nState.R.push ("«id»")\n_walk ()«rec»’
 
 Builtin [x n] = ‛«x»«n»’
 BuiltinPhrase_popchar [_] = ‛chr(State.S.pop ())’
@@ -121,7 +121,6 @@ BuiltinPhrase_ramappend [_ lp exp rp] = ‛\nState.RAM.append («exp»)’
 BuiltinPhrase_returnTrue [_] = ‛ State.S.append (True) ’
 BuiltinPhrase_returnFalse [_] = ‛ State.S.append (False) ’
 BuiltinPhrase_next [_] = ‛’
-BuiltinPhrase_runsubr [_ lp s rp] = ‛\nState.R.push («s»)\n_walk ()’
 
 BuiltinPhrase_unrecognized [_ ident args?] = ‛«_» ⎝ error - unrecognized builtin "«ident»" (with given arguments) ⎠ «args» ’
 
@@ -182,7 +181,7 @@ PrimaryIndexed_nthslice [p lb ds+ _colon rb] = ‛«p» [«ds»:]’
 PrimaryIndexed_atom [a] = ‛«a»’
 
 Atom_builtin [x] = ‛«x»’
-Atom_call [c] = ‛«c»’
+Atom_callsubr [c] = ‛State.R.push ("«c»")\nwalk ()’
 Atom_emptylistconst [ _72 _73] =‛«_72»«_73»’
 Atom_emptydict [ _76 _77] =‛«_76»«_77»’
 Atom_paren [ _70 Exp _71] =‛«_70»«Exp»«_71»’

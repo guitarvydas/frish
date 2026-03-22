@@ -701,7 +701,7 @@
     "name": "Grep for Errors",
     "children": [
       {
-        "name": ":$ _/check-for-errors",
+        "name": ":$ _/errgrep",
         "id": 5
       },
       {
@@ -715,7 +715,7 @@
         "source_port": "",
         "target_port": "",
         "target": {
-          "name": ":$ _/check-for-errors",
+          "name": ":$ _/errgrep",
           "id": 5
         }
       },
@@ -724,7 +724,7 @@
         "source_port": "✗",
         "target_port": "",
         "source": {
-          "name": ":$ _/check-for-errors",
+          "name": ":$ _/errgrep",
           "id": 5
         },
         "target": {
@@ -737,7 +737,7 @@
         "source_port": "",
         "target_port": "",
         "source": {
-          "name": ":$ _/check-for-errors",
+          "name": ":$ _/errgrep",
           "id": 5
         }
       },

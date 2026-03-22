@@ -18,7 +18,7 @@ if (found) {
             if (%isfloat(item)) {
                 λcompilefloat(item)
             } else {
-                @returnFalse
+                %returnFalse
             }
             
         }
@@ -30,7 +30,7 @@ if (found) {
             if (%isfloat(item)) {
                 λpushasfloat(item)
             } else {
-                @returnFalse
+                %returnFalse
             }
             
         }
