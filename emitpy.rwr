@@ -1,6 +1,6 @@
 % rewrite emitPython {
 
-Main [TopLevel+] = ‛
+Main [_functions lb1 f* rb1 _subrs lb2 s+ rb2  i] = ‛
 import re
 
 class Stack(list):⤷
@@ -17,31 +17,26 @@ class StateClass:⤷
         self.W = None;
         self.BUFF = ""
         self.BUFP = 0
-	self.compiling = False⤶⤶
+	self.compiling = [False]⤶⤶
 
 State = StateClass ()
 
-«TopLevel»’
+«f»
 
-TopLevel_defvar [ Defvar] =‛«Defvar»’
-TopLevel_defsynonym [ Defsynonym] =‛«Defsynonym»’
-TopLevel_defsubr [ Defsubr] =‛«Defsubr»’
-TopLevel_defimmediatesubr [ defimmediatesubr] =‛«defimmediatesubr»’
-TopLevel_deffunction [ Deffn] =‛«Deffn»’
-TopLevel_defobj [ Defobj] =‛«Defobj»’
-TopLevel_builtin [x] =‛«x»’
-TopLevel_call [x] =‛«x»’
-TopLevel_comment [s line?] =‛\n«s»«line»’
-TopLevel_line [line] =‛«line»’
+def _walk ():⤷\nglobal State\nopcode = State.R.pop ()\nmatch opcode:⤷«s»⤶⤶\n
 
-Defvar [ __ lval _eq e line?] = ‛\n«lval» = «e»«line»’
-Defsubr [ _4 ident str StatementBlock line?] = ‛\ndef «ident» ():⤷\nglobal State⤶«StatementBlock»«line»\ncode(«str»,0,  «ident»)\n’
-Defimmediatesubr [ _4 ident str StatementBlock line?] = ‛\ndef «ident» ():⤷\nglobal State⤶«StatementBlock»«line»\ncode(«str», 1, «ident»)\n’
-Deffunction [ _4 ident formals StatementBlock line?] = ‛\ndef «ident» «formals»:⤷\nglobal State⤶«StatementBlock»«line»\n’
-Defobj [ _defobj ident Formals line1? lb line2? init+ rb line3?] = ‛\nclass «ident»:⤷\ndef __init__ (self,«Formals»):«line1»⤷«line2»«init»«line3»⤶⤶\n’
-StatementBlock [ line1? lb line2? Statement     line3? rb  line4?] = ‛«line1»«line2»⤷«Statement»«line3»«line4»⤶’
+«i»’
 
-Rec_Statement [line1? R_Statement line2?] = ‛«line1»«R_Statement»«line2»’
+InitializeSection [n1 _initialize block] = ‛«n1»«block»’
+
+FunctionDefinition [noise1 _function token formals block noise2] = ‛«noise1»def «token» «formals»:⤷\nglobal State«block»⤶\n«noise2»’
+SubroutineDefinition_immediate [noise1 _subr _imm ws token block noise2] =
+‛case "«token»":⤷«noise1»\nState.compiling.push (False)\nState.compiling = False«block»\nState.compiling = State.compiling.pop () «noise2»⤶\n’
+SubroutineDefinition_normal [noise1 _subr ws token block noise2] = ‛\ncase "«token»":⤷«noise1»«block» «noise2»⤶\n’
+
+StatementBlock [nleft lb Statement rb nright] = ‛«nleft»«Statement»\n«nright»’
+
+Rec_Statement [n1 R_Statement n2] = ‛«n1»«R_Statement»«n2»’
 R_Statement_comment [s rec?] =‛\n«s»«rec»’
 R_Statement_builtin [x rec?] = ‛\n«x»«rec»’
 R_Statement_deftemp [x] = ‛\n«x»’
@@ -53,14 +48,14 @@ R_Statement_return [ _29 ReturnExp] =‛\nreturn «ReturnExp»’
 R_Statement_for [ ForStatement] =‛«ForStatement»’
 R_Statement_while [ WhileStatement] =‛«WhileStatement»’
 R_Statement_assignment [ Assignment] =‛«Assignment»’
-R_Statement_callindirect [_ lval rec?] =‛\n«lval»()«rec»’
-R_Statement_call [c] =‛\n«c»’
-R_Statement_line [ws comment? line rec?] = ‛«ws»«comment»«line»«rec»’
+R_Statement_executesubrindirect [_ lval rec?] =‛\nState.R.push («lval»)\n_walk ()«rec»’
+R_Statement_executesubr [x] =‛«x»’
+R_Statement_line [ws comment? line rec?] = ‛«ws»«comment»«n»«rec»’
 CommaIdent [_comma ident] = ‛, «ident»’
 
-Call [_ lval rec?] = ‛«lval»()«rec»’
+ExecuteSubr [_ id rec?] = ‛\nState.R.push ("«id»")\n_walk ()«rec»’
 
-Builtin [x line?] = ‛«x»«line»’
+Builtin [x n] = ‛«x»«n»’
 BuiltinPhrase_popchar [_] = ‛chr(State.S.pop ())’
 BuiltinPhrase_pop [_] = ‛State.S.pop ()’
 BuiltinPhrase_push [_ lp exp rp] = ‛State.S.push («exp»)’
@@ -116,15 +111,16 @@ BuiltinPhrase_rthird [_] = ‛State.R [-3]’
 BuiltinPhrase_toboolean [_ lp exp rp] = ‛bool («exp»)’
 
 BuiltinPhrase_funcall [_ f actuals] = ‛«f»«actuals»’
-BuiltinPhrase_incompilingstate [_] = ‛State.compiling’
-BuiltinPhrase_setcompilingstate [_] = ‛State.compiling = True’
-BuiltinPhrase_setnotcompilingstate [_] = ‛State.compiling = False’
-BuiltinPhrase_immediate [_] = ‛State.compiling = False’
+BuiltinPhrase_incompilingstate [_] = ‛State.compiling [-1]’
+BuiltinPhrase_setcompilingstate [_] = ‛State.compiling [-1] = True’
+BuiltinPhrase_setnotcompilingstate [_] = ‛State.compiling [-1] = False’
 
 BuiltinPhrase_ramnext [_] = ‛len (Stack.RAM)’
 BuiltinPhrase_ramappend [_ lp exp rp] = ‛\nState.RAM.append («exp»)’
  
-BuiltinPhrase_returnFalse [_] = ‛return False’
+BuiltinPhrase_returnTrue [_] = ‛ State.S.append (True) ’
+BuiltinPhrase_returnFalse [_] = ‛ State.S.append (False) ’
+BuiltinPhrase_next [_] = ‛’
 
 BuiltinPhrase_unrecognized [_ ident args?] = ‛«_» ⎝ error - unrecognized builtin "«ident»" (with given arguments) ⎠ «args» ’
 
@@ -137,11 +133,11 @@ Defsyn_legal [id _eqv e rec?] = ‛\n«id» = «e»«rec»’
 
 
 InitStatement [ _mark ident _33 Exp fluff*] = ‛\nself.«ident» = «Exp» «fluff»’
-IfStatement [ _35 Exp StatementBlock ElifStatement* ElseStatement? rec?] = ‛\nif «Exp»:«StatementBlock»«ElifStatement»«ElseStatement»«rec»’
-ElifStatement [ _37 Exp StatementBlock] = ‛\nelif «Exp»:«StatementBlock»’
-ElseStatement [ _39 StatementBlock] = ‛\nelse:«StatementBlock»’
-ForStatement [ _41 ident _43 Exp StatementBlock rec?] = ‛\nfor «ident» in «Exp»:«StatementBlock»«rec»’
-WhileStatement [ _45 Exp StatementBlock rec?] = ‛\nwhile «Exp»:«StatementBlock»«rec»’
+IfStatement [ _35 Exp StatementBlock ElifStatement* ElseStatement? rec?] = ‛\nif «Exp»:⤷\n«StatementBlock»⤶\n«ElifStatement»«ElseStatement»«rec»’
+ElifStatement [ _37 Exp StatementBlock] = ‛\nelif «Exp»:⤷\n«StatementBlock»⤶\n’
+ElseStatement [ _39 StatementBlock] = ‛\nelse:⤷\n«StatementBlock»⤶\n’
+ForStatement [ _41 ident _43 Exp StatementBlock rec?] = ‛\nfor «ident» in «Exp»:⤷\n«StatementBlock»⤶\n«rec»’
+WhileStatement [ _45 Exp StatementBlock rec?] = ‛\nwhile «Exp»:⤷\n«StatementBlock»⤶\n«rec»’
 
 Synonym [ Lval _59 Exp rec?] =‛\n«Lval» = «Exp»«rec»’
 
@@ -185,12 +181,12 @@ PrimaryIndexed_nthslice [p lb ds+ _colon rb] = ‛«p» [«ds»:]’
 PrimaryIndexed_atom [a] = ‛«a»’
 
 Atom_builtin [x] = ‛«x»’
-Atom_call [c] = ‛«c»’
+Atom_executesubr [c] = ‛State.R.push ("«c»")\nwalk ()’
 Atom_emptylistconst [ _72 _73] =‛«_72»«_73»’
 Atom_emptydict [ _76 _77] =‛«_76»«_77»’
 Atom_paren [ _70 Exp _71] =‛«_70»«Exp»«_71»’
-Atom_listconst [ lb line1? PrimaryComma+ line2? rb] =‛«lb»«PrimaryComma»«rb»«line2»’
-Atom_dict [ _78 line1? PairComma+ line2? _79] =‛«_78»«line1»«PairComma»«line2»«_79»’
+Atom_listconst [ lb n1 PrimaryComma+ n2 rb] =‛«lb»«PrimaryComma»«rb»«n2»’
+Atom_dict [ _78 n1 PairComma+ n2 _79] =‛«_78»«n1»«PairComma»«n2»«_79»’
 Atom_phi [ phi] =‛ None’
 Atom_true [ _88] =‛ True’
 Atom_false [ _89] =‛ False’
@@ -201,7 +197,7 @@ Atom_number [ number] =‛ «number»’
 Atom_ident [ ident ] =‛ «ident»’
 
 Subraddress [_ ident] = ‛ «ident»’
-PrimaryComma [ Primary _94? line?] = ‛«Primary»«_94»«line»’
+PrimaryComma [ Primary _94? n] = ‛«Primary»«_94»«n»’
 PairComma [ Pair _95?] = ‛«Pair»«_95»’
 
 StuffInsideParentheses_rec [lp stuff* rp] = ‛«lp»«stuff»«rp»’
@@ -216,9 +212,9 @@ Formal [ ident] = ‛«ident»’
 FormalComma [Formal comma?] =‛«Formal»«comma»’
 
 Actuals_noactuals [ _154 _155] =‛«_154»«_155»’
-Actuals_actuals [ _156 ActualComma* _157 line?] =‛«_156»«ActualComma»«_157»«line»’
+Actuals_actuals [ _156 ActualComma* _157 n] =‛«_156»«ActualComma»«_157»«n»’
 Actual [Exp] = ‛«Exp»’
-ActualComma [comment? Actual comma? line?] = ‛«Actual»«comma»«line»’
+ActualComma [comment? Actual comma? n] = ‛«Actual»«comma»«n»’
 
 number_fract [ num* _160 den+] =‛«num»«_160»«den»’
 number_whole [ digit+] =‛«digit»’
@@ -242,6 +238,10 @@ stringchar_other [c] = ‛«c»’
 
 keyword [w] = ‛«w»’
 phi [ _192] = ‛ None’
+
+token_bracketed [lb cs+ rb] = ‛«cs»’
+token_raw [cs+] = ‛«cs»’
+
 ident [cs*] = ‛«cs»’
 idchar_rec [lb cs* rb] = ‛«lb»«cs»«rb»’
 idchar_other [c] = ‛«c»’
@@ -257,4 +257,7 @@ errorchar_other [ any] =‛«any»’
 
 line [lb cs* rb] = ‛«lb»«cs»«rb»’
 Comma [line1? _comma line2?] = ‛«_comma»’
+noise [ws1 line* ws2 n1* ws3 n2* ws4] = ‛«ws1»«line»«ws2»«n1»«ws3»«n2»«ws4»’
+noi [x] = ‛«x»’
+spaces [s?] = ‛«s»’
 }

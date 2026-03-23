@@ -387,12 +387,64 @@
     "name": "Transpile to Python",
     "children": [
       {
-        "name": ":$ _/t2t frish emitpy",
+        "name": ":$ _/t2t splitter functionsonly",
         "id": 5
       },
       {
-        "name": "🚫",
+        "name": ":$ _/t2t splitter subrsonly",
         "id": 9
+      },
+      {
+        "name": "String Concat",
+        "id": 13
+      },
+      {
+        "name": ":functions {",
+        "id": 19
+      },
+      {
+        "name": ":}",
+        "id": 22
+      },
+      {
+        "name": "String Concat",
+        "id": 25
+      },
+      {
+        "name": "String Concat",
+        "id": 31
+      },
+      {
+        "name": ":subroutines {",
+        "id": 37
+      },
+      {
+        "name": ":}",
+        "id": 40
+      },
+      {
+        "name": "String Concat",
+        "id": 43
+      },
+      {
+        "name": "String Concat",
+        "id": 49
+      },
+      {
+        "name": ":$ _/t2t frish emitpy",
+        "id": 55
+      },
+      {
+        "name": "🚫",
+        "id": 59
+      },
+      {
+        "name": ":$ _/t2t splitter initializeonly",
+        "id": 62
+      },
+      {
+        "name": "String Concat",
+        "id": 66
       }
     ],
     "connections": [
@@ -401,8 +453,200 @@
         "source_port": "",
         "target_port": "",
         "target": {
-          "name": ":$ _/t2t frish emitpy",
+          "name": ":$ _/t2t splitter functionsonly",
           "id": 5
+        }
+      },
+      {
+        "dir": 0,
+        "source_port": "",
+        "target_port": "",
+        "target": {
+          "name": ":$ _/t2t splitter subrsonly",
+          "id": 9
+        }
+      },
+      {
+        "dir": 0,
+        "source_port": "",
+        "target_port": "",
+        "target": {
+          "name": ":functions {",
+          "id": 19
+        }
+      },
+      {
+        "dir": 0,
+        "source_port": "",
+        "target_port": "",
+        "target": {
+          "name": ":subroutines {",
+          "id": 37
+        }
+      },
+      {
+        "dir": 0,
+        "source_port": "",
+        "target_port": "",
+        "target": {
+          "name": ":$ _/t2t splitter initializeonly",
+          "id": 62
+        }
+      },
+      {
+        "dir": 1,
+        "source_port": "",
+        "target_port": "",
+        "source": {
+          "name": ":$ _/t2t splitter functionsonly",
+          "id": 5
+        },
+        "target": {
+          "name": ":}",
+          "id": 22
+        }
+      },
+      {
+        "dir": 1,
+        "source_port": "",
+        "target_port": "1",
+        "source": {
+          "name": ":$ _/t2t splitter functionsonly",
+          "id": 5
+        },
+        "target": {
+          "name": "String Concat",
+          "id": 13
+        }
+      },
+      {
+        "dir": 1,
+        "source_port": "",
+        "target_port": "2",
+        "source": {
+          "name": ":}",
+          "id": 22
+        },
+        "target": {
+          "name": "String Concat",
+          "id": 13
+        }
+      },
+      {
+        "dir": 1,
+        "source_port": "",
+        "target_port": "1",
+        "source": {
+          "name": ":functions {",
+          "id": 19
+        },
+        "target": {
+          "name": "String Concat",
+          "id": 25
+        }
+      },
+      {
+        "dir": 1,
+        "source_port": "",
+        "target_port": "2",
+        "source": {
+          "name": "String Concat",
+          "id": 13
+        },
+        "target": {
+          "name": "String Concat",
+          "id": 25
+        }
+      },
+      {
+        "dir": 1,
+        "source_port": "",
+        "target_port": "2",
+        "source": {
+          "name": ":}",
+          "id": 40
+        },
+        "target": {
+          "name": "String Concat",
+          "id": 31
+        }
+      },
+      {
+        "dir": 1,
+        "source_port": "",
+        "target_port": "1",
+        "source": {
+          "name": ":subroutines {",
+          "id": 37
+        },
+        "target": {
+          "name": "String Concat",
+          "id": 43
+        }
+      },
+      {
+        "dir": 1,
+        "source_port": "",
+        "target_port": "2",
+        "source": {
+          "name": "String Concat",
+          "id": 31
+        },
+        "target": {
+          "name": "String Concat",
+          "id": 43
+        }
+      },
+      {
+        "dir": 1,
+        "source_port": "",
+        "target_port": "1",
+        "source": {
+          "name": "String Concat",
+          "id": 25
+        },
+        "target": {
+          "name": "String Concat",
+          "id": 49
+        }
+      },
+      {
+        "dir": 1,
+        "source_port": "",
+        "target_port": "2",
+        "source": {
+          "name": "String Concat",
+          "id": 43
+        },
+        "target": {
+          "name": "String Concat",
+          "id": 49
+        }
+      },
+      {
+        "dir": 1,
+        "source_port": "",
+        "target_port": "1",
+        "source": {
+          "name": ":$ _/t2t splitter subrsonly",
+          "id": 9
+        },
+        "target": {
+          "name": "String Concat",
+          "id": 31
+        }
+      },
+      {
+        "dir": 1,
+        "source_port": "",
+        "target_port": "",
+        "source": {
+          "name": ":$ _/t2t splitter subrsonly",
+          "id": 9
+        },
+        "target": {
+          "name": ":}",
+          "id": 40
         }
       },
       {
@@ -411,20 +655,154 @@
         "target_port": "",
         "source": {
           "name": ":$ _/t2t frish emitpy",
+          "id": 55
+        },
+        "target": {
+          "name": "🚫",
+          "id": 59
+        }
+      },
+      {
+        "dir": 1,
+        "source_port": "✗",
+        "target_port": "",
+        "source": {
+          "name": "String Concat",
+          "id": 49
+        },
+        "target": {
+          "name": "🚫",
+          "id": 59
+        }
+      },
+      {
+        "dir": 1,
+        "source_port": "✗",
+        "target_port": "",
+        "source": {
+          "name": "String Concat",
+          "id": 25
+        },
+        "target": {
+          "name": "🚫",
+          "id": 59
+        }
+      },
+      {
+        "dir": 1,
+        "source_port": "✗",
+        "target_port": "",
+        "source": {
+          "name": "String Concat",
+          "id": 43
+        },
+        "target": {
+          "name": "🚫",
+          "id": 59
+        }
+      },
+      {
+        "dir": 1,
+        "source_port": "✗",
+        "target_port": "",
+        "source": {
+          "name": "String Concat",
+          "id": 13
+        },
+        "target": {
+          "name": "🚫",
+          "id": 59
+        }
+      },
+      {
+        "dir": 1,
+        "source_port": "✗",
+        "target_port": "",
+        "source": {
+          "name": "String Concat",
+          "id": 31
+        },
+        "target": {
+          "name": "🚫",
+          "id": 59
+        }
+      },
+      {
+        "dir": 1,
+        "source_port": "✗",
+        "target_port": "",
+        "source": {
+          "name": ":$ _/t2t splitter functionsonly",
           "id": 5
         },
         "target": {
           "name": "🚫",
-          "id": 9
+          "id": 59
         }
       },
       {
-        "dir": 2,
+        "dir": 1,
+        "source_port": "✗",
+        "target_port": "",
+        "source": {
+          "name": ":$ _/t2t splitter subrsonly",
+          "id": 9
+        },
+        "target": {
+          "name": "🚫",
+          "id": 59
+        }
+      },
+      {
+        "dir": 1,
+        "source_port": "",
+        "target_port": "1",
+        "source": {
+          "name": "String Concat",
+          "id": 49
+        },
+        "target": {
+          "name": "String Concat",
+          "id": 66
+        }
+      },
+      {
+        "dir": 1,
+        "source_port": "",
+        "target_port": "2",
+        "source": {
+          "name": ":$ _/t2t splitter initializeonly",
+          "id": 62
+        },
+        "target": {
+          "name": "String Concat",
+          "id": 66
+        }
+      },
+      {
+        "dir": 1,
+        "source_port": "✗",
+        "target_port": "",
+        "source": {
+          "name": ":$ _/t2t splitter initializeonly",
+          "id": 62
+        },
+        "target": {
+          "name": "🚫",
+          "id": 59
+        }
+      },
+      {
+        "dir": 1,
         "source_port": "",
         "target_port": "",
         "source": {
+          "name": "String Concat",
+          "id": 66
+        },
+        "target": {
           "name": ":$ _/t2t frish emitpy",
-          "id": 5
+          "id": 55
         }
       },
       {
@@ -433,7 +811,16 @@
         "target_port": "✗",
         "source": {
           "name": "🚫",
-          "id": 9
+          "id": 59
+        }
+      },
+      {
+        "dir": 2,
+        "source_port": "",
+        "target_port": "",
+        "source": {
+          "name": ":$ _/t2t frish emitpy",
+          "id": 55
         }
       }
     ],
@@ -591,10 +978,6 @@
       {
         "name": ":$ _/t2t pydecode",
         "id": 5
-      },
-      {
-        "name": "🚫",
-        "id": 9
       }
     ],
     "connections": [
@@ -608,34 +991,21 @@
         }
       },
       {
-        "dir": 1,
+        "dir": 2,
+        "source_port": "",
+        "target_port": "",
+        "source": {
+          "name": ":$ _/t2t pydecode",
+          "id": 5
+        }
+      },
+      {
+        "dir": 2,
         "source_port": "✗",
-        "target_port": "",
-        "source": {
-          "name": ":$ _/t2t pydecode",
-          "id": 5
-        },
-        "target": {
-          "name": "🚫",
-          "id": 9
-        }
-      },
-      {
-        "dir": 2,
-        "source_port": "",
-        "target_port": "",
-        "source": {
-          "name": ":$ _/t2t pydecode",
-          "id": 5
-        }
-      },
-      {
-        "dir": 2,
-        "source_port": "",
         "target_port": "✗",
         "source": {
-          "name": "🚫",
-          "id": 9
+          "name": ":$ _/t2t pydecode",
+          "id": 5
         }
       }
     ],
@@ -647,10 +1017,6 @@
       {
         "name": ":$ _/indent",
         "id": 5
-      },
-      {
-        "name": "🚫",
-        "id": 9
       }
     ],
     "connections": [
@@ -664,34 +1030,21 @@
         }
       },
       {
-        "dir": 1,
+        "dir": 2,
+        "source_port": "",
+        "target_port": "",
+        "source": {
+          "name": ":$ _/indent",
+          "id": 5
+        }
+      },
+      {
+        "dir": 2,
         "source_port": "✗",
-        "target_port": "",
-        "source": {
-          "name": ":$ _/indent",
-          "id": 5
-        },
-        "target": {
-          "name": "🚫",
-          "id": 9
-        }
-      },
-      {
-        "dir": 2,
-        "source_port": "",
-        "target_port": "",
-        "source": {
-          "name": ":$ _/indent",
-          "id": 5
-        }
-      },
-      {
-        "dir": 2,
-        "source_port": "",
         "target_port": "✗",
         "source": {
-          "name": "🚫",
-          "id": 9
+          "name": ":$ _/indent",
+          "id": 5
         }
       }
     ],
@@ -701,12 +1054,8 @@
     "name": "Grep for Errors",
     "children": [
       {
-        "name": ":$ _/check-for-errors",
+        "name": ":$ _/errgrep",
         "id": 5
-      },
-      {
-        "name": "🚫",
-        "id": 9
       }
     ],
     "connections": [
@@ -715,39 +1064,26 @@
         "source_port": "",
         "target_port": "",
         "target": {
-          "name": ":$ _/check-for-errors",
+          "name": ":$ _/errgrep",
           "id": 5
         }
       },
       {
-        "dir": 1,
+        "dir": 2,
+        "source_port": "",
+        "target_port": "",
+        "source": {
+          "name": ":$ _/errgrep",
+          "id": 5
+        }
+      },
+      {
+        "dir": 2,
         "source_port": "✗",
-        "target_port": "",
-        "source": {
-          "name": ":$ _/check-for-errors",
-          "id": 5
-        },
-        "target": {
-          "name": "🚫",
-          "id": 9
-        }
-      },
-      {
-        "dir": 2,
-        "source_port": "",
-        "target_port": "",
-        "source": {
-          "name": ":$ _/check-for-errors",
-          "id": 5
-        }
-      },
-      {
-        "dir": 2,
-        "source_port": "",
         "target_port": "✗",
         "source": {
-          "name": "🚫",
-          "id": 9
+          "name": ":$ _/errgrep",
+          "id": 5
         }
       }
     ],
@@ -759,10 +1095,6 @@
       {
         "name": ":$ _/t2t preopt",
         "id": 5
-      },
-      {
-        "name": "🚫",
-        "id": 9
       }
     ],
     "connections": [
@@ -776,34 +1108,21 @@
         }
       },
       {
-        "dir": 1,
+        "dir": 2,
+        "source_port": "",
+        "target_port": "",
+        "source": {
+          "name": ":$ _/t2t preopt",
+          "id": 5
+        }
+      },
+      {
+        "dir": 2,
         "source_port": "✗",
-        "target_port": "",
-        "source": {
-          "name": ":$ _/t2t preopt",
-          "id": 5
-        },
-        "target": {
-          "name": "🚫",
-          "id": 9
-        }
-      },
-      {
-        "dir": 2,
-        "source_port": "",
-        "target_port": "",
-        "source": {
-          "name": ":$ _/t2t preopt",
-          "id": 5
-        }
-      },
-      {
-        "dir": 2,
-        "source_port": "",
         "target_port": "✗",
         "source": {
-          "name": "🚫",
-          "id": 9
+          "name": ":$ _/t2t preopt",
+          "id": 5
         }
       }
     ],
@@ -815,10 +1134,6 @@
       {
         "name": ":$ _//t2t peephole_py",
         "id": 5
-      },
-      {
-        "name": "🚫",
-        "id": 9
       }
     ],
     "connections": [
@@ -832,34 +1147,21 @@
         }
       },
       {
-        "dir": 1,
+        "dir": 2,
+        "source_port": "",
+        "target_port": "",
+        "source": {
+          "name": ":$ _//t2t peephole_py",
+          "id": 5
+        }
+      },
+      {
+        "dir": 2,
         "source_port": "✗",
-        "target_port": "",
-        "source": {
-          "name": ":$ _//t2t peephole_py",
-          "id": 5
-        },
-        "target": {
-          "name": "🚫",
-          "id": 9
-        }
-      },
-      {
-        "dir": 2,
-        "source_port": "",
-        "target_port": "",
-        "source": {
-          "name": ":$ _//t2t peephole_py",
-          "id": 5
-        }
-      },
-      {
-        "dir": 2,
-        "source_port": "",
         "target_port": "✗",
         "source": {
-          "name": "🚫",
-          "id": 9
+          "name": ":$ _//t2t peephole_py",
+          "id": 5
         }
       }
     ],

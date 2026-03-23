@@ -1,0 +1,36 @@
+splitter {
+
+  main = subrOrFunction+ initializeSection
+
+  subrOrFunction = subroutineDefinition | functionDefinition
+  initializeSection (initializeSection) = noise "initialize" noise "{" noise "λ" ident noise "(" noise ")" noise "}" noise
+
+  functionDefinition (functionDefinition) = noise "function" noise token noise formals noise statementBlock noise
+  subroutineDefinition (subroutineDefinition) =
+    | noise "subr" noise "%immediate" noise token noise statementBlock noise -- immediate
+    | noise "subr"                    noise token noise statementBlock noise -- normal
+
+  statementBlock = noise "{" blockInnard+ "}" noise
+  blockInnard =
+    | "{" blockInnard+ "}" blockInnard+ -- rec
+    | ~"}" any -- other
+
+  formals (formals) = "(" (~")" any)* ")"
+  token = spaces (~space any)+
+  ident  = idchar+
+  idchar =
+    | "❲" idchar+ "❳" -- rec
+    | ~"❲" ~"❳" idch -- other
+
+  idch = letter | digit | "_" | "-"
+
+  comment = "⌈" commentchar* "⌉"
+  commentchar = 
+    | "⌈" commentchar* "⌉" -- rec
+    | ~"⌈" ~"⌉" any -- other
+
+  line = "⎩" (~"⎩" ~"⎭" any)* "⎭"
+
+  noise = spaces line* spaces noi* spaces noi* spaces
+  noi = line | comment | space
+}

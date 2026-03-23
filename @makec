@@ -8,9 +8,9 @@ ${PBP}/resetlog
 ${dtree_tool}/@make ${dtree_tool} "xinterpret" $(pwd)
 
 # insert generated code (`xinterpret.frish`) into forthish.frish
-m4 forthish.frish.m4 | tr -d '\r' > forthish.frish
+${PBP}/include forthish.frish.inc | tr -d '\r' > forthish.frish
 
 # transmogrify `forthish.frish` into `forthish.py`
 ${PBP}/das2json frish.drawio
 python main.py forthish.frish main frish.drawio.json | ${PBP}/splitoutputs
-	 
+

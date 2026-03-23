@@ -662,46 +662,7 @@
 								      defsynonym notfound ≡ (result = 0)
 								      defsynonym found ≡ (foundimmediate or foundnormal)
 
-      if (found) {
-          if (%incompilingstate) {
-              if (foundimmediate) {
-                  λexec(item)
-              } else {
-                  λcompileword(item)
-              }
-        
-          } else {
-              λexec(item)
-          }
-    
-      } else {
-          if (%incompilingstate) {
-              if (%isinteger(item)) {
-                  λcompileinteger(item)
-              } else {
-                  if (%isfloat(item)) {
-                      λcompilefloat(item)
-                  } else {
-                      %returnFalse
-                  }
-            
-              }
-        
-          } else {
-              if (%isinteger(item)) {
-                  λpushasinteger(item)
-              } else {
-                  if (%isfloat(item)) {
-                      λpushasfloat(item)
-                  } else {
-                      %returnFalse
-                  }
-            
-              }
-        
-          }
-    
-      }
+      ⊕⟨xinterpret.frish⟩
 
       %returnTrue
         

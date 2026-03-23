@@ -1,0 +1,33 @@
+%rewrite subrsonly {
+
+  main [SubrOrFunction+ InitializeSection] = ‛«SubrOrFunction»«InitializeSection»’
+
+  subrOrFunction [sf] = ‛«sf»’
+  initializeSection [noise1 _initialize noise2 lb noise3 _lambda ident noise4 lp noise5 lr noise6 rb noise7] = ‛’
+
+  functionDefinition [noise1 _function noise2 token noise3 formals noise4 block noise5] = ‛’
+  subroutineDefinition_immediate [noise1 _subr noise2 _immediate noise3 token noise4 block noise5] =
+    ‛ «noise1» «_subr» «noise2» «_immediate» «noise3» «token» «noise4» «block» «noise5»’
+  subroutineDefinition_normal [noise1 _subr noise2 token noise3 block noise4] =
+    ‛ «noise1» «_subr» «noise2» «token» «noise3» «block» «noise4» ’
+
+  statementBlock [noise1 lb BlockInnard+ rb noise2] = ‛«noise1»«lb»«BlockInnard»«rb»«noise2»’
+  blockInnard_rec [lb BlockInnard1+ rb BlockInnard2+] = ‛«lb»«BlockInnard1»«rb»«BlockInnard2»’
+  blockInnard_other [c] = ‛«c»’
+
+  formals [lp cs* rp] = ‛«lp»«cs»«rp»’
+  token [spaces cs+] = ‛«spaces»«cs»’
+  ident [idchar+] = ‛«idchar»’
+  idchar_rec [lb cs+ rb] = ‛«lb»«cs»«rb»’
+  idchar_other [c] = ‛«c»’
+  idch [c] = ‛«c»’
+
+  comment [lb commentchar* rb] = ‛«lb»«commentchar»«rb»’
+  commentchar_rec [lb cs* rb] = ‛«lb»«cs»«rb»’
+  commentchar_other [c] = ‛«c»’
+
+  line [lb cs* rb] = ‛«lb»«cs»«rb»’
+  noise [ws1 line* ws2 n1* ws3 n2* ws4] = ‛«ws1»«line»«ws2»«n1»«ws3»«n2»«ws4»’
+  noi [x] = ‛«x»’
+  spaces [s?] = ‛«s»’
+}

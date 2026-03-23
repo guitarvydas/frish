@@ -1,0 +1,12 @@
+edbug {
+    Pair = string ":" Comma?
+  Comma = #noise? "," #noise?
+
+  noise = spaces line? spaces comment? spaces line? spaces
+  line = "⎩" (~"⎩" ~"⎭" any)* "⎭"
+  comment = "⌈" commentchar* "⌉"
+  commentchar = 
+    | "⌈" commentchar* "⌉" -- rec
+    | ~"⌈" ~"⌉" any -- other
+  strng = "\"" (~"\"" any)* "\""
+}
