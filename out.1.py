@@ -106,7 +106,7 @@ def doword ():
 
         State.IP =  State.IP+ 1                        #line 66
 
-        Stack.R.push ( State.RAM [ State.W])
+        State.R.push ( State.RAM [ State.W])
         _walk ()                                       #line 67
 
                                                        #line 68
@@ -144,7 +144,7 @@ def exec (xt):
 
     State.IP =  -1# Dummy to hold place in return stack. 	#line 84
 
-    Stack.R.push ( State.RAM [ xt])
+    State.R.push ( State.RAM [ xt])
     _walk ()  # Execute code.                          #line 85
 
                                                        #line 86
@@ -158,7 +158,7 @@ def compile_word (xt):
 
     State.IP =  -1# Dummy to hold place in return stack. 	#line 91
 
-    Stack.R.push ( State.RAM [ xt])
+    State.R.push ( State.RAM [ xt])
     _walk ()  # Execute code.                          #line 92
 
                                                        #line 93
@@ -440,7 +440,6 @@ def _walk ():
                                                        #line 209
                                                        #line 210
 
-        code("create", 1, "create")
 
         case "drop":                                   #line 211
             # ( a -- )                                 #line 212
@@ -450,7 +449,6 @@ def _walk ():
                                                        #line 214
                                                        #line 215
 
-        code("drop", 1, "drop")
 
         case "dup":                                    #line 216
             # ( a -- a a )                             #line 217
@@ -465,7 +463,6 @@ def _walk ():
                                                        #line 221
                                                        #line 222
 
-        code("dup", 1, "dup")
 
         case "negate":                                 #line 223
             # ( n -- (-n) )                            #line 224
@@ -478,7 +475,6 @@ def _walk ():
                                                        #line 227
                                                        #line 228
 
-        code("negate", 1, "negate")
 
         case "emit":                                   #line 229
             # ( c -- ) emit specified character        #line 230
@@ -491,20 +487,17 @@ def _walk ():
                                                        #line 233
                                                        #line 234
 
-        code("emit", 1, "emit")
 
         case "cr":
             print ()
                                                        #line 235
 
-        code("cr", 1, "cr")
 
         case ".":# ( n --) Print TOS
             print (State.S.pop (), end="")
             print ()
                                                        #line 236
 
-        code(".", 1, ".")
 
         case ".s":# ( --) Print stack contents
             print (State.S, end="")
@@ -512,7 +505,6 @@ def _walk ():
                                                        #line 237
                                                        #line 238
 
-        code(".s", 1, ".s")
 
         case "+":                                      #line 239
             # ( a b -- sum)                            #line 240
@@ -528,7 +520,6 @@ def _walk ():
                                                        #line 244
                                                        #line 245
 
-        code("+", 1, "+")
 
         case "*":                                      #line 246
             # ( a b -- product )                       #line 247
@@ -544,7 +535,6 @@ def _walk ():
                                                        #line 251
                                                        #line 252
 
-        code("*", 1, "*")
 
         case "=":                                      #line 253
             # ( a b -- bool )                          #line 254
@@ -560,7 +550,6 @@ def _walk ():
                                                        #line 258
                                                        #line 259
 
-        code("=", 1, "=")
 
         case "<":                                      #line 260
             # ( a b -- bool )                          #line 261
@@ -576,7 +565,6 @@ def _walk ():
                                                        #line 265
                                                        #line 266
 
-        code("<", 1, "<")
 
         case ">":                                      #line 267
             # ( a b -- bool )                          #line 268
@@ -592,7 +580,6 @@ def _walk ():
                                                        #line 272
                                                        #line 273
 
-        code(">", 1, ">")
 
         case "0=":                                     #line 274
             # ( a -- bool )                            #line 275
@@ -605,7 +592,6 @@ def _walk ():
                                                        #line 278
                                                        #line 279
 
-        code("0=", 1, "0=")
 
         case "0<":                                     #line 280
             # ( a -- bool )                            #line 281
@@ -618,7 +604,6 @@ def _walk ():
                                                        #line 284
                                                        #line 285
 
-        code("0<", 1, "0<")
 
         case "0>":                                     #line 286
             # ( a -- bool )                            #line 287
@@ -631,7 +616,6 @@ def _walk ():
                                                        #line 290
                                                        #line 291
 
-        code("0>", 1, "0>")
 
         case "not":                                    #line 292
             # ( a -- bool )                            #line 293
@@ -644,7 +628,6 @@ def _walk ():
                                                        #line 296
                                                        #line 297
 
-        code("not", 1, "not")
 
         case "and":                                    #line 298
             # ( a b -- bool )                          #line 299
@@ -660,7 +643,6 @@ def _walk ():
                                                        #line 303
                                                        #line 304
 
-        code("and", 1, "and")
 
         case "or":                                     #line 305
             # ( a b -- bool )                          #line 306
@@ -676,7 +658,6 @@ def _walk ():
                                                        #line 310
                                                        #line 311
 
-        code("or", 1, "or")
 
         case ">r":                                     #line 312
             # ( a --  )                                #line 313
@@ -689,7 +670,6 @@ def _walk ():
                                                        #line 316
                                                        #line 317
 
-        code(">r", 1, ">r")
 
         case "r>":                                     #line 318
             # ( -- x )                                 #line 319
@@ -702,7 +682,6 @@ def _walk ():
                                                        #line 322
                                                        #line 323
 
-        code("r>", 1, "r>")
 
         case "i":                                      #line 324
             # ( -- i ) get current loop index from R stack #line 325
@@ -715,7 +694,6 @@ def _walk ():
                                                        #line 328
                                                        #line 329
 
-        code("i", 1, "i")
 
         case "i'":                                     #line 330
             # ( -- i ) get outer loop limit from R stack #line 331
@@ -728,7 +706,6 @@ def _walk ():
                                                        #line 334
                                                        #line 335
 
-        code("i'", 1, "i'")
 
         case "j":                                      #line 336
             # ( -- j ) get outer loop index from R stack #line 337
@@ -741,7 +718,6 @@ def _walk ():
                                                        #line 340
                                                        #line 341
 
-        code("j", 1, "j")
 
         case "swap":                                   #line 342
             # ( a b -- b a)                            #line 343
@@ -749,7 +725,6 @@ def _walk ():
             Stack [-1] = Stack [-2]
             Stack [-2] = x                             #line 344#line 348
 
-        code("swap", 1, "swap")
 
         case "-":                                      #line 349
             # ( a b -- diff)                           #line 350
@@ -764,7 +739,6 @@ def _walk ():
 
                                                        #line 354
 
-        code("-", 1, "-")
 
         case "/":                                      #line 355
             # ( a b -- div)                            #line 356
@@ -783,7 +757,6 @@ def _walk ():
                                                        #line 361
                                                        #line 362
 
-        code("/", 1, "/")
 
         case "word":                                   #line 363
             # (char -- string) Read in string delimited by char #line 364
@@ -811,7 +784,6 @@ def _walk ():
             # Example of state-smart word, which Brodie sez not to do. Sorry, Leo... #line 369
             # This sin allows it to be used the same way compiling or interactive. #line 370
 
-        code("word", 1, "word")
 
         case "'":                                      #line 371
             # ( -- string) Read up to closing dquote, push to stack #line 372
@@ -837,7 +809,6 @@ def _walk ():
                                                        #line 381
                                                        #line 382
 
-        code("'", 1, "'")
 
         case ".'":                                     #line 383
             # ( --) Print string.                      #line 384
@@ -852,7 +823,6 @@ def _walk ():
                                                        #line 389
                                                        #line 390
 
-        code(".'", 1, ".'")
 
         case "(literal)":                              #line 391
             #⎩392⎭
@@ -885,7 +855,6 @@ def _walk ():
                                                        #line 414
                                                        #line 415
 
-        code("(literal)", 1, "(literal)")
 
         case "branch":                                 #line 416
             # This instruction appears only inside subroutine sequences, jump to address in next cell #line 417
@@ -898,7 +867,6 @@ def _walk ():
                                                        #line 422
                                                        #line 423
 
-        code("branch", 1, "branch")
 
         case "0branch":                                #line 424
             # This instruction appears only inside subroutine sequences, jump on false to address in next cell #line 425
@@ -935,7 +903,6 @@ def _walk ():
                                                        #line 443
             # see diagram compiling-IF-THEN.drawio.png #line 444
 
-        code("0branch", 1, "0branch")
         case "if":
             State.compiling.push (False)
             State.compiling = False                    #line 445
@@ -963,7 +930,6 @@ def _walk ():
             # see diagram compiling-IF-ELSE-THEN.drawio.png #line 457
 
             State.compiling = State.compiling.pop ()
-        code("if", 0, "if")
         case "else":
             State.compiling.push (False)
             State.compiling = False                    #line 458
@@ -993,7 +959,6 @@ def _walk ():
             # see diagrams compiling-IF-THEN.drawio.png and compiling-IF-ELSE-THEN.drawio.png #line 471
 
             State.compiling = State.compiling.pop ()
-        code("else", 0, "else")
         case "then":
             State.compiling.push (False)
             State.compiling = False                    #line 472
@@ -1008,7 +973,6 @@ def _walk ():
                                                        #line 477
 
             State.compiling = State.compiling.pop ()
-        code("then", 0, "then")
 
         case "(do)":                                   #line 478
             # ( limit index --) Puts limit and index on return stack. #line 479
@@ -1029,7 +993,6 @@ def _walk ():
                                                        #line 485
                                                        #line 486
 
-        code("(do)", 1, "(do)")
         case "do":
             State.compiling.push (False)
             State.compiling = False                    #line 487
@@ -1044,7 +1007,6 @@ def _walk ():
                                                        #line 492
 
             State.compiling = State.compiling.pop ()
-        code("do", 0, "do")
 
         case "(loop)":                                 #line 493
             # (  -- f) Determine if loop is done.      #line 494
@@ -1073,7 +1035,6 @@ def _walk ():
                                                        #line 503
                                                        #line 504
 
-        code("(loop)", 1, "(loop)")
         case "+loop":
             State.compiling.push (False)
             State.compiling = False                    #line 505
@@ -1092,7 +1053,6 @@ def _walk ():
                                                        #line 511
 
             State.compiling = State.compiling.pop ()
-        code("+loop", 0, "+loop")
         case "loop":
             State.compiling.push (False)
             State.compiling = False                    #line 512
@@ -1116,7 +1076,6 @@ def _walk ():
                                                        #line 520
 
             State.compiling = State.compiling.pop ()
-        code("loop", 0, "loop")
         case "begin":
             State.compiling.push (False)
             State.compiling = False                    #line 521
@@ -1127,7 +1086,6 @@ def _walk ():
                                                        #line 524
 
             State.compiling = State.compiling.pop ()
-        code("begin", 0, "begin")
         case "until":
             State.compiling.push (False)
             State.compiling = False                    #line 525
@@ -1150,7 +1108,6 @@ def _walk ():
             #       gets 123 from its PFA and pushes it onto the stack #line 537
 
             State.compiling = State.compiling.pop ()
-        code("until", 0, "until")
 
         case "const":                                  #line 538
             #  get next word - the name - from BUFF    #line 539
@@ -1182,7 +1139,6 @@ def _walk ():
                                                        #line 549
                                                        #line 550
 
-        code("const", 1, "const")
 
         case ",":                                      #line 551
 
@@ -1191,7 +1147,6 @@ def _walk ():
                                                        #line 553
                                                        #line 554
 
-        code(",", 1, ",")
 
         case "variable":                               #line 555
 
@@ -1214,7 +1169,6 @@ def _walk ():
                                                        #line 562
                                                        #line 563
 
-        code("variable", 1, "variable")
 
         case "dump":                                   #line 564
 
@@ -1249,7 +1203,6 @@ def _walk ():
                                                        #line 576
                                                        #line 577
 
-        code("dump", 1, "dump")
 
         case "!":                                      #line 578
 
@@ -1264,7 +1217,6 @@ def _walk ():
                                                        #line 582
                                                        #line 583
 
-        code("!", 1, "!")
 
         case "bye":# ( --) Leave interpreter
 
@@ -1273,7 +1225,6 @@ def _walk ():
                                                        #line 585
                                                        #line 586
 
-        code("bye", 1, "bye")
 
         case "find":                                   #line 587
             # "( name | -- (name 0)|(xt 1)|(xt -1)) Search for word name." #line 588
@@ -1318,7 +1269,6 @@ def _walk ():
                                                        #line 602
                                                        #line 603
 
-        code("find", 1, "find")
 
         case "'":                                      #line 604
             # "( name -- xt|-1) Search for execution token of word name." #line 605
@@ -1339,7 +1289,6 @@ def _walk ():
                                                        #line 611
                                                        #line 612
 
-        code("'", 1, "'")
 
         case "None":                                   #line 613
 
@@ -1349,7 +1298,6 @@ def _walk ():
                                                        #line 615
                                                        #line 616
 
-        code("None", 1, "None")
 
         case "words":                                  #line 617
             # print words in dictionary                #line 618
@@ -1373,7 +1321,6 @@ def _walk ():
                                                        #line 626
                                                        #line 627
 
-        code("words", 1, "words")
 
         case "execute":                                #line 628
             # invoke given word                        #line 629
@@ -1381,14 +1328,13 @@ def _walk ():
 
             wordAddress = State.S.pop ()               #line 630
 
-            Stack.R.push ( wordAddress)
+            State.R.push ( wordAddress)
             _walk ()                                   #line 631
 
                                                        #line 632
                                                        #line 633
                                                        #line 634
 
-        code("execute", 1, "execute")
 
         case ":":                                      #line 635
             # ( name | --) Start compilation.          #line 636
@@ -1411,7 +1357,6 @@ def _walk ():
                                                        #line 643
                                                        #line 644
 
-        code(":", 1, ":")
         case ";":
             State.compiling.push (False)
             State.compiling = False                    #line 645
@@ -1427,7 +1372,6 @@ def _walk ():
                                                        #line 651
 
             State.compiling = State.compiling.pop ()
-        code(";", 0, ";")
 
         case "interpret":                              #line 652
             # ( string --) Execute word.               #line 653
@@ -1577,10 +1521,123 @@ def _walk ():
                                                        #line 708
                                                        #line 709
                                                        #line 710
-        code("interpret", 1, "interpret")
 
 
 
-                                                       #line 711
-ok ()                                                  #line 712
+
+code( "create",  0,  "create")
+
+code( "drop",  0,  "drop")
+
+code( "dup",  0,  "dup")
+
+code( "negate",  0,  "negate")
+
+code( "emit",  0,  "emit")
+
+code( "cr",  0,  "cr")
+
+code( ".",  0,  ".")
+
+code( ".s",  0,  ".s")
+
+code( "+",  0,  "+")
+
+code( "*",  0,  "*")
+
+code( "=",  0,  "=")
+
+code( "<",  0,  "<")
+
+code( ">",  0,  ">")
+
+code( "0=",  0,  "0=")
+
+code( "0<",  0,  "0<")
+
+code( "0>",  0,  "0>")
+
+code( "not",  0,  "not")
+
+code( "and",  0,  "and")
+
+code( "or",  0,  "or")
+
+code( ">r",  0,  ">r")
+
+code( "r>",  0,  "r>")
+
+code( "i",  0,  "i")
+
+code( "i'",  0,  "i'")
+
+code( "j",  0,  "j")
+
+code( "swap",  0,  "swap")
+
+code( "-",  0,  "-")
+
+code( "/",  0,  "/")
+
+code( "word",  0,  "word")
+
+code( "'",  0,  "'")
+
+code( ".'",  0,  ".'")
+
+code( "(literal)",  0,  "(literal)")
+
+code( "branch",  0,  "branch")
+
+code( "0branch",  0,  "0branch")
+
+code( "if",  1,  "if")
+
+code( "else",  1,  "else")
+
+code( "then",  1,  "then")
+
+code( "(do)",  0,  "(do)")
+
+code( "do",  1,  "do")
+
+code( "(loop)",  0,  "(loop)")
+
+code( "+loop",  1,  "+loop")
+
+code( "loop",  1,  "loop")
+
+code( "begin",  1,  "begin")
+
+code( "until",  1,  "until")
+
+code( "const",  0,  "const")
+
+code( ",",  0,  ",")
+
+code( "variable",  0,  "variable")
+
+code( "dump",  0,  "dump")
+
+code( "!",  0,  "!")
+
+code( "bye",  0,  "bye")
+
+code( "find",  0,  "find")
+
+code( "'",  0,  "'")
+
+code( "None",  0,  "None")
+
+code( "words",  0,  "words")
+
+code( "execute",  0,  "execute")
+
+code( ":",  0,  ":")
+
+code( ";",  1,  ";")
+
+code( "interpret",  0,  "interpret")                   #line 711
+
+ok()                                                   #line 712
                                                        #line 713

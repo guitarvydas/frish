@@ -2,7 +2,7 @@ frish {
 
   Main = "functions" "{" FunctionDefinition+ "}" "subroutines" "{" SubroutineDefinition+ "}" InitializeSection
 
-  InitializeSection (InitializeSection) = #noise "initialize" #noise "{" #noise "λ" ident "(" ")" #noise "}" #noise
+  InitializeSection (InitializeSection) = #noise "initialize" StatementBlock
 
   FunctionDefinition (FunctionDefinition) = #noise "function" token Formals StatementBlock #noise
   SubroutineDefinition (SubroutineDefinition) =
