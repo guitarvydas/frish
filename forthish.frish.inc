@@ -669,6 +669,6 @@
     }
     
 
-invoke {
+initialize {
   λok ()
 }

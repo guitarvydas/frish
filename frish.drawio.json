@@ -439,7 +439,7 @@
         "id": 59
       },
       {
-        "name": ":$ _/t2t splitter invokeonly",
+        "name": ":$ _/t2t splitter initializeonly",
         "id": 62
       },
       {
@@ -489,7 +489,7 @@
         "source_port": "",
         "target_port": "",
         "target": {
-          "name": ":$ _/t2t splitter invokeonly",
+          "name": ":$ _/t2t splitter initializeonly",
           "id": 62
         }
       },
@@ -771,7 +771,7 @@
         "source_port": "",
         "target_port": "2",
         "source": {
-          "name": ":$ _/t2t splitter invokeonly",
+          "name": ":$ _/t2t splitter initializeonly",
           "id": 62
         },
         "target": {
@@ -784,7 +784,7 @@
         "source_port": "✗",
         "target_port": "",
         "source": {
-          "name": ":$ _/t2t splitter invokeonly",
+          "name": ":$ _/t2t splitter initializeonly",
           "id": 62
         },
         "target": {

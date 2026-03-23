@@ -22,15 +22,17 @@ class StateClass:⤷
 State = StateClass ()
 
 «f»
-«s»
+
+def _walk ():⤷\nglobal State\nopcode = State.R.pop ()\nmatch opcode:⤷«s»⤶⤶\n
+
 «i»’
 
-InvokeSection [n1 _invoke n2 lb n3 _lambda id lp rp n4 rb n5] = ‛«n1»«n2»«n3»«id» ()«n4»«n5»’
+InitializeSection [n1 _initialize n2 lb n3 _lambda id lp rp n4 rb n5] = ‛«n1»«n2»«n3»«id» ()«n4»«n5»’
 
 FunctionDefinition [noise1 _function token formals block noise2] = ‛«noise1»def «token» «formals»:⤷\nglobal State«block»⤶\n«noise2»’
 SubroutineDefinition_immediate [noise1 _subr _imm ws token block noise2] =
-‛case "«token»":⤷«noise1»\nState.compiling.push (False)\nState.compiling = False«block»\nState.compiling = State.compiling.pop ()⤶\ncode(«str»,0,  "«ident»")«noise2»\n’
-SubroutineDefinition_normal [noise1 _subr ws token block noise2] = ‛\ncase "«token»":⤷«noise1»«block»⤶\ncode(«str», 1, "«ident»")«noise2»\n’
+‛case "«token»":⤷«noise1»\nState.compiling.push (False)\nState.compiling = False«block»\nState.compiling = State.compiling.pop ()⤶\ncode("«token»", 0, "«token»")«noise2»\n’
+SubroutineDefinition_normal [noise1 _subr ws token block noise2] = ‛\ncase "«token»":⤷«noise1»«block»⤶\ncode("«token»", 1, "«token»")«noise2»\n’
 
 StatementBlock [nleft lb Statement rb nright] = ‛«nleft»«Statement»\n«nright»’
 

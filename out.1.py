@@ -418,414 +418,418 @@ def debugok ():
                                                        #line 202
 
 
-case "create":                                         #line 203
+def _walk ():
+    global State
+    opcode = State.R.pop ()
+    match opcode:
+        case "create":                                 #line 203
 
 
-    blank =  32                                        #line 204
+            blank =  32                                #line 204
 
-    State.S.push ( blank)                              #line 205
+            State.S.push ( blank)                      #line 205
 
-    State.R.push ("word")
-    _walk ()                                           #line 206
+            State.R.push ("word")
+            _walk ()                                   #line 206
 
 
-    name = State.S.pop ()                              #line 207
+            name = State.S.pop ()                      #line 207
 
-    create( name)                                      #line 208
+            create( name)                              #line 208
 
                                                        #line 209
                                                        #line 210
 
-code(undefined, 1, "undefined")
+        code("create", 1, "create")
 
-case "drop":                                           #line 211
-    # ( a -- )                                         #line 212
+        case "drop":                                   #line 211
+            # ( a -- )                                 #line 212
 
-    State.S.pop ()                                     #line 213
+            State.S.pop ()                             #line 213
 
                                                        #line 214
                                                        #line 215
 
-code(undefined, 1, "undefined")
+        code("drop", 1, "drop")
 
-case "dup":                                            #line 216
-    # ( a -- a a )                                     #line 217
+        case "dup":                                    #line 216
+            # ( a -- a a )                             #line 217
 
 
-    A = State.S.pop ()                                 #line 218
+            A = State.S.pop ()                         #line 218
 
-    State.S.push ( A)                                  #line 219
+            State.S.push ( A)                          #line 219
 
-    State.S.push ( A)                                  #line 220
+            State.S.push ( A)                          #line 220
 
                                                        #line 221
                                                        #line 222
 
-code(undefined, 1, "undefined")
+        code("dup", 1, "dup")
 
-case "negate":                                         #line 223
-    # ( n -- (-n) )                                    #line 224
+        case "negate":                                 #line 223
+            # ( n -- (-n) )                            #line 224
 
 
-    n = State.S.pop ()                                 #line 225
+            n = State.S.pop ()                         #line 225
 
-    State.S.push ( -n)                                 #line 226
+            State.S.push ( -n)                         #line 226
 
                                                        #line 227
                                                        #line 228
 
-code(undefined, 1, "undefined")
+        code("negate", 1, "negate")
 
-case "emit":                                           #line 229
-    # ( c -- ) emit specified character                #line 230
+        case "emit":                                   #line 229
+            # ( c -- ) emit specified character        #line 230
 
 
-    c = State.S.pop ()                                 #line 231
+            c = State.S.pop ()                         #line 231
 
-    print (chr (int ( c)), end="")                     #line 232
+            print (chr (int ( c)), end="")             #line 232
 
                                                        #line 233
                                                        #line 234
 
-code(undefined, 1, "undefined")
+        code("emit", 1, "emit")
 
-case "cr":
-    print ()
+        case "cr":
+            print ()
                                                        #line 235
 
-code(undefined, 1, "undefined")
+        code("cr", 1, "cr")
 
-case ".":# ( n --) Print TOS
-    print (State.S.pop (), end="")
-    print ()
+        case ".":# ( n --) Print TOS
+            print (State.S.pop (), end="")
+            print ()
                                                        #line 236
 
-code(undefined, 1, "undefined")
+        code(".", 1, ".")
 
-case ".s":# ( --) Print stack contents
-    print (State.S, end="")
-    print ()
+        case ".s":# ( --) Print stack contents
+            print (State.S, end="")
+            print ()
                                                        #line 237
                                                        #line 238
 
-code(undefined, 1, "undefined")
+        code(".s", 1, ".s")
 
-case "+":                                              #line 239
-    # ( a b -- sum)                                    #line 240
-
-
-    B = State.S.pop ()                                 #line 241
+        case "+":                                      #line 239
+            # ( a b -- sum)                            #line 240
 
 
-    A = State.S.pop ()                                 #line 242
+            B = State.S.pop ()                         #line 241
 
-    State.S.push ( A+ B)                               #line 243
+
+            A = State.S.pop ()                         #line 242
+
+            State.S.push ( A+ B)                       #line 243
 
                                                        #line 244
                                                        #line 245
 
-code(undefined, 1, "undefined")
+        code("+", 1, "+")
 
-case "*":                                              #line 246
-    # ( a b -- product )                               #line 247
-
-
-    B = State.S.pop ()                                 #line 248
+        case "*":                                      #line 246
+            # ( a b -- product )                       #line 247
 
 
-    A = State.S.pop ()                                 #line 249
+            B = State.S.pop ()                         #line 248
 
-    State.S.push ( A* B)                               #line 250
+
+            A = State.S.pop ()                         #line 249
+
+            State.S.push ( A* B)                       #line 250
 
                                                        #line 251
                                                        #line 252
 
-code(undefined, 1, "undefined")
+        code("*", 1, "*")
 
-case "=":                                              #line 253
-    # ( a b -- bool )                                  #line 254
-
-
-    B = State.S.pop ()                                 #line 255
+        case "=":                                      #line 253
+            # ( a b -- bool )                          #line 254
 
 
-    A = State.S.pop ()                                 #line 256
+            B = State.S.pop ()                         #line 255
 
-    State.S.push ( A ==  B)                            #line 257
+
+            A = State.S.pop ()                         #line 256
+
+            State.S.push ( A ==  B)                    #line 257
 
                                                        #line 258
                                                        #line 259
 
-code(undefined, 1, "undefined")
+        code("=", 1, "=")
 
-case "<":                                              #line 260
-    # ( a b -- bool )                                  #line 261
-
-
-    B = State.S.pop ()                                 #line 262
+        case "<":                                      #line 260
+            # ( a b -- bool )                          #line 261
 
 
-    A = State.S.pop ()                                 #line 263
+            B = State.S.pop ()                         #line 262
 
-    State.S.push ( A <  B)                             #line 264
+
+            A = State.S.pop ()                         #line 263
+
+            State.S.push ( A <  B)                     #line 264
 
                                                        #line 265
                                                        #line 266
 
-code(undefined, 1, "undefined")
+        code("<", 1, "<")
 
-case ">":                                              #line 267
-    # ( a b -- bool )                                  #line 268
-
-
-    B = State.S.pop ()                                 #line 269
+        case ">":                                      #line 267
+            # ( a b -- bool )                          #line 268
 
 
-    A = State.S.pop ()                                 #line 270
+            B = State.S.pop ()                         #line 269
 
-    State.S.push ( A >  B)                             #line 271
+
+            A = State.S.pop ()                         #line 270
+
+            State.S.push ( A >  B)                     #line 271
 
                                                        #line 272
                                                        #line 273
 
-code(undefined, 1, "undefined")
+        code(">", 1, ">")
 
-case "0=":                                             #line 274
-    # ( a -- bool )                                    #line 275
+        case "0=":                                     #line 274
+            # ( a -- bool )                            #line 275
 
 
-    a = State.S.pop ()                                 #line 276
+            a = State.S.pop ()                         #line 276
 
-    State.S.push ( a ==  0)                            #line 277
+            State.S.push ( a ==  0)                    #line 277
 
                                                        #line 278
                                                        #line 279
 
-code(undefined, 1, "undefined")
+        code("0=", 1, "0=")
 
-case "0<":                                             #line 280
-    # ( a -- bool )                                    #line 281
+        case "0<":                                     #line 280
+            # ( a -- bool )                            #line 281
 
 
-    a = State.S.pop ()                                 #line 282
+            a = State.S.pop ()                         #line 282
 
-    State.S.push ( 0 <  a)                             #line 283
+            State.S.push ( 0 <  a)                     #line 283
 
                                                        #line 284
                                                        #line 285
 
-code(undefined, 1, "undefined")
+        code("0<", 1, "0<")
 
-case "0>":                                             #line 286
-    # ( a -- bool )                                    #line 287
+        case "0>":                                     #line 286
+            # ( a -- bool )                            #line 287
 
 
-    a = State.S.pop ()                                 #line 288
+            a = State.S.pop ()                         #line 288
 
-    State.S.push ( 0 >  a)                             #line 289
+            State.S.push ( 0 >  a)                     #line 289
 
                                                        #line 290
                                                        #line 291
 
-code(undefined, 1, "undefined")
+        code("0>", 1, "0>")
 
-case "not":                                            #line 292
-    # ( a -- bool )                                    #line 293
+        case "not":                                    #line 292
+            # ( a -- bool )                            #line 293
 
 
-    a = State.S.pop ()                                 #line 294
+            a = State.S.pop ()                         #line 294
 
-    State.S.push (not  a)                              #line 295
+            State.S.push (not  a)                      #line 295
 
                                                        #line 296
                                                        #line 297
 
-code(undefined, 1, "undefined")
+        code("not", 1, "not")
 
-case "and":                                            #line 298
-    # ( a b -- bool )                                  #line 299
-
-
-    b = State.S.pop ()                                 #line 300
+        case "and":                                    #line 298
+            # ( a b -- bool )                          #line 299
 
 
-    a = State.S.pop ()                                 #line 301
+            b = State.S.pop ()                         #line 300
 
-    State.S.push ( a and  b)                           #line 302
+
+            a = State.S.pop ()                         #line 301
+
+            State.S.push ( a and  b)                   #line 302
 
                                                        #line 303
                                                        #line 304
 
-code(undefined, 1, "undefined")
+        code("and", 1, "and")
 
-case "or":                                             #line 305
-    # ( a b -- bool )                                  #line 306
-
-
-    b = State.S.pop ()                                 #line 307
+        case "or":                                     #line 305
+            # ( a b -- bool )                          #line 306
 
 
-    a = State.S.pop ()                                 #line 308
+            b = State.S.pop ()                         #line 307
 
-    State.S.push ( a or  b)                            #line 309
+
+            a = State.S.pop ()                         #line 308
+
+            State.S.push ( a or  b)                    #line 309
 
                                                        #line 310
                                                        #line 311
 
-code(undefined, 1, "undefined")
+        code("or", 1, "or")
 
-case ">r":                                             #line 312
-    # ( a --  )                                        #line 313
+        case ">r":                                     #line 312
+            # ( a --  )                                #line 313
 
 
-    a = State.S.pop ()                                 #line 314
+            a = State.S.pop ()                         #line 314
 
-    State.R.append ( a)                                #line 315
+            State.R.append ( a)                        #line 315
 
                                                        #line 316
                                                        #line 317
 
-code(undefined, 1, "undefined")
+        code(">r", 1, ">r")
 
-case "r>":                                             #line 318
-    # ( -- x )                                         #line 319
+        case "r>":                                     #line 318
+            # ( -- x )                                 #line 319
 
 
-    x = State.R.pop ()                                 #line 320
+            x = State.R.pop ()                         #line 320
 
-    State.S.push ( x)                                  #line 321
+            State.S.push ( x)                          #line 321
 
                                                        #line 322
                                                        #line 323
 
-code(undefined, 1, "undefined")
+        code("r>", 1, "r>")
 
-case "i":                                              #line 324
-    # ( -- i ) get current loop index from R stack     #line 325
+        case "i":                                      #line 324
+            # ( -- i ) get current loop index from R stack #line 325
 
 
-    i = State.R [-1]                                   #line 326
+            i = State.R [-1]                           #line 326
 
-    State.S.push ( i)                                  #line 327
+            State.S.push ( i)                          #line 327
 
                                                        #line 328
                                                        #line 329
 
-code(undefined, 1, "undefined")
+        code("i", 1, "i")
 
-case "i'":                                             #line 330
-    # ( -- i ) get outer loop limit from R stack       #line 331
+        case "i'":                                     #line 330
+            # ( -- i ) get outer loop limit from R stack #line 331
 
 
-    i = State.R [-2]                                   #line 332
+            i = State.R [-2]                           #line 332
 
-    State.S.push ( i)                                  #line 333
+            State.S.push ( i)                          #line 333
 
                                                        #line 334
                                                        #line 335
 
-code(undefined, 1, "undefined")
+        code("i'", 1, "i'")
 
-case "j":                                              #line 336
-    # ( -- j ) get outer loop index from R stack       #line 337
+        case "j":                                      #line 336
+            # ( -- j ) get outer loop index from R stack #line 337
 
 
-    j = State.R [-3]                                   #line 338
+            j = State.R [-3]                           #line 338
 
-    State.S.push ( j)                                  #line 339
+            State.S.push ( j)                          #line 339
 
                                                        #line 340
                                                        #line 341
 
-code(undefined, 1, "undefined")
+        code("j", 1, "j")
 
-case "swap":                                           #line 342
-    # ( a b -- b a)                                    #line 343
-    x = Stack [-1]
-    Stack [-1] = Stack [-2]
-    Stack [-2] = x                                     #line 344#line 348
+        case "swap":                                   #line 342
+            # ( a b -- b a)                            #line 343
+            x = Stack [-1]
+            Stack [-1] = Stack [-2]
+            Stack [-2] = x                             #line 344#line 348
 
-code(undefined, 1, "undefined")
+        code("swap", 1, "swap")
 
-case "-":                                              #line 349
-    # ( a b -- diff)                                   #line 350
-
-
-    B = State.S.pop ()                                 #line 351
+        case "-":                                      #line 349
+            # ( a b -- diff)                           #line 350
 
 
-    A = State.S.pop ()                                 #line 352
+            B = State.S.pop ()                         #line 351
 
-    State.S.push ( A- B)                               #line 353
+
+            A = State.S.pop ()                         #line 352
+
+            State.S.push ( A- B)                       #line 353
 
                                                        #line 354
 
-code(undefined, 1, "undefined")
+        code("-", 1, "-")
 
-case "/":                                              #line 355
-    # ( a b -- div)                                    #line 356
+        case "/":                                      #line 355
+            # ( a b -- div)                            #line 356
 
-    State.R.push ("swap")
-    _walk ()                                           #line 357
-
-
-    B = State.S.pop ()                                 #line 358
+            State.R.push ("swap")
+            _walk ()                                   #line 357
 
 
-    A = State.S.pop ()                                 #line 359
+            B = State.S.pop ()                         #line 358
 
-    State.S.push ( B [A])                              #line 360
+
+            A = State.S.pop ()                         #line 359
+
+            State.S.push ( B [A])                      #line 360
 
                                                        #line 361
                                                        #line 362
 
-code(undefined, 1, "undefined")
+        code("/", 1, "/")
 
-case "word":                                           #line 363
-    # (char -- string) Read in string delimited by char #line 364
-
-
-    wanted = chr(State.S.pop ())                       #line 365
+        case "word":                                   #line 363
+            # (char -- string) Read in string delimited by char #line 364
 
 
-    found = ""
-    while State.BUFP < len(State.BUFF):
-        x = State.BUFF[State.BUFP]
-        State.BUFP += 1
-        if wanted == x:
-            if 0 == len(found):
-                continue
-            else:
-                break
-        else:
-            found += x
-    State.S.append(found)
+            wanted = chr(State.S.pop ())               #line 365
+
+
+            found = ""
+            while State.BUFP < len(State.BUFF):
+                x = State.BUFF[State.BUFP]
+                State.BUFP += 1
+                if wanted == x:
+                    if 0 == len(found):
+                        continue
+                    else:
+                        break
+                else:
+                    found += x
+            State.S.append(found)
                                                        #line 366
 
                                                        #line 367
                                                        #line 368
-    # Example of state-smart word, which Brodie sez not to do. Sorry, Leo... #line 369
-    # This sin allows it to be used the same way compiling or interactive. #line 370
+            # Example of state-smart word, which Brodie sez not to do. Sorry, Leo... #line 369
+            # This sin allows it to be used the same way compiling or interactive. #line 370
 
-code(undefined, 1, "undefined")
+        code("word", 1, "word")
 
-case "'":                                              #line 371
-    # ( -- string) Read up to closing dquote, push to stack #line 372
-    # A string in Forth begins with the word " (followed by a space) then all characters up to the next " #line 373
-    # E.G. " abc"                                      #line 374
+        case "'":                                      #line 371
+            # ( -- string) Read up to closing dquote, push to stack #line 372
+            # A string in Forth begins with the word " (followed by a space) then all characters up to the next " #line 373
+            # E.G. " abc"                              #line 374
 
 
-    DQ =  34                                           #line 375
+            DQ =  34                                   #line 375
 
-    State.S.push ( DQ)                                 #line 376
+            State.S.push ( DQ)                         #line 376
 
-    State.R.push ("word")
-    _walk ()                                           #line 377
+            State.R.push ("word")
+            _walk ()                                   #line 377
 
-    if State.compiling [-1] :
+            if State.compiling [-1] :
                                                        #line 378
 
-        literalize()                                   #line 379
+                literalize()                           #line 379
 
                                                        #line 380
 
@@ -833,86 +837,86 @@ case "'":                                              #line 371
                                                        #line 381
                                                        #line 382
 
-code(undefined, 1, "undefined")
+        code("'", 1, "'")
 
-case ".'":                                             #line 383
-    # ( --) Print string.                              #line 384
+        case ".'":                                     #line 383
+            # ( --) Print string.                      #line 384
 
-    State.R.push ("quote")
-    _walk ()                                           #line 385
+            State.R.push ("quote")
+            _walk ()                                   #line 385
 
-    print (State.S.pop (), end="")                     #line 386
+            print (State.S.pop (), end="")             #line 386
 
                                                        #line 387
                                                        #line 388
                                                        #line 389
                                                        #line 390
 
-code(undefined, 1, "undefined")
+        code(".'", 1, ".'")
 
-case "(literal)":                                      #line 391
-    #⎩392⎭
-    #   Inside definitions only, pushes compiled literal to stack ⎩393⎭
-    #⎩394⎭
-    #       Certain Forth words are only applicable inside compiled sequences of subroutines ⎩395⎭
-    #       Literals are handled in different ways when interpreted when in the REPL vs⎩396⎭
-    #       compiled into sequences of subrs ⎩397⎭
-    #       In the REPL, when we encounter a literal, we simply push it onto the stack ⎩398⎭
-    #       In the compiler, though, we have to create an instruction that pushes ⎩399⎭
-    #	 the literal onto the stack. ⎩400⎭
-    #	 Compiled code doesn't do what the REPL does, we have to hard-wire and ⎩401⎭
-    #	 bake in code that pushes the literal when the time comes to run the sequence. ⎩402⎭
-    #⎩403⎭
-    #       This word - "(literal)" - is a simple case and one could actually type this ⎩404⎭
-    #	 instruction into the REPL, but, that would be redundant.  Other kinds of words, ⎩405⎭
-    #	 e.g. some control-flow words, tend to be messier and the code below only handles ⎩406⎭
-    #	 the compiled aspects and ignores the REPL aspects ⎩407⎭
-    #⎩408⎭
-    #       "IP" is the current word index in a sequence of words being compiled. ⎩409⎭
-    #                                                  #line 410
+        case "(literal)":                              #line 391
+            #⎩392⎭
+            #   Inside definitions only, pushes compiled literal to stack ⎩393⎭
+            #⎩394⎭
+            #       Certain Forth words are only applicable inside compiled sequences of subroutines ⎩395⎭
+            #       Literals are handled in different ways when interpreted when in the REPL vs⎩396⎭
+            #       compiled into sequences of subrs ⎩397⎭
+            #       In the REPL, when we encounter a literal, we simply push it onto the stack ⎩398⎭
+            #       In the compiler, though, we have to create an instruction that pushes ⎩399⎭
+            #	 the literal onto the stack. ⎩400⎭
+            #	 Compiled code doesn't do what the REPL does, we have to hard-wire and ⎩401⎭
+            #	 bake in code that pushes the literal when the time comes to run the sequence. ⎩402⎭
+            #⎩403⎭
+            #       This word - "(literal)" - is a simple case and one could actually type this ⎩404⎭
+            #	 instruction into the REPL, but, that would be redundant.  Other kinds of words, ⎩405⎭
+            #	 e.g. some control-flow words, tend to be messier and the code below only handles ⎩406⎭
+            #	 the compiled aspects and ignores the REPL aspects ⎩407⎭
+            #⎩408⎭
+            #       "IP" is the current word index in a sequence of words being compiled. ⎩409⎭
+            #                                          #line 410
 
 
-    lit =  State.RAM [ State.IP]                       #line 411
+            lit =  State.RAM [ State.IP]               #line 411
 
-    State.S.push ( lit)                                #line 412
+            State.S.push ( lit)                        #line 412
 
-    State.IP =  State.IP+ 1 # move past this item (the literal) - we're done with it #line 413
+            State.IP =  State.IP+ 1 # move past this item (the literal) - we're done with it #line 413
 
                                                        #line 414
                                                        #line 415
 
-code(undefined, 1, "undefined")
+        code("(literal)", 1, "(literal)")
 
-case "branch":                                         #line 416
-    # This instruction appears only inside subroutine sequences, jump to address in next cell #line 417
-    # This instruction is inserted into a subr sequence when compiling control-flow words, like "else" see below) #line 418
+        case "branch":                                 #line 416
+            # This instruction appears only inside subroutine sequences, jump to address in next cell #line 417
+            # This instruction is inserted into a subr sequence when compiling control-flow words, like "else" see below) #line 418
 
-    State.IP =  State.RAM [ State.IP]                  #line 419
-    # normally, we just execute an instruction then move the IP sequentially forward by 1 unit, i.e. IP ⇐ IP + 1 #line 420
-    #   in this case, though, we explicitly change the IP to some other value and don't just increment it #line 421
+            State.IP =  State.RAM [ State.IP]          #line 419
+            # normally, we just execute an instruction then move the IP sequentially forward by 1 unit, i.e. IP ⇐ IP + 1 #line 420
+            #   in this case, though, we explicitly change the IP to some other value and don't just increment it #line 421
 
                                                        #line 422
                                                        #line 423
 
-code(undefined, 1, "undefined")
+        code("branch", 1, "branch")
 
-case "0branch":                                        #line 424
-    # This instruction appears only inside subroutine sequences, jump on false to address in next cell #line 425
+        case "0branch":                                #line 424
+            # This instruction appears only inside subroutine sequences, jump on false to address in next cell #line 425
 
 
-    test = bool (State.S.pop ())                       #line 426
+            test = bool (State.S.pop ())               #line 426
 
-    if ( test):
+            if ( test):
                                                        #line 427
 
-        State.IP =  State.IP+ 1                        #line 428
+                State.IP =  State.IP+ 1                #line 428
 
 
 
-    else:
+            else:
                                                        #line 429
 
-        State.IP =  State.RAM [ State.IP]              #line 430
+                State.IP =  State.RAM [ State.IP]      #line 430
 
                                                        #line 431
 
@@ -920,148 +924,148 @@ case "0branch":                                        #line 424
                                                        #line 432
                                                        #line 433
                                                        #line 434
-    # "immediate" words are fully operational even when in compile mode. Some (not all) of these words are meant to⎩435⎭
-    #      work /only/ in compile mode. At the REPL prompt ("interpret" mode), they produce unwanted results.⎩436⎭
-    #    immediate words: xif, xelse, xthen, xquote, xcomment, xsemi⎩437⎭
-    #    immediate words that only have meaning in compile mode: xif, xelse, xthen, xsemi⎩438⎭
-    #                                                  #line 439
+            # "immediate" words are fully operational even when in compile mode. Some (not all) of these words are meant to⎩435⎭
+            #      work /only/ in compile mode. At the REPL prompt ("interpret" mode), they produce unwanted results.⎩436⎭
+            #    immediate words: xif, xelse, xthen, xquote, xcomment, xsemi⎩437⎭
+            #    immediate words that only have meaning in compile mode: xif, xelse, xthen, xsemi⎩438⎭
+            #                                          #line 439
                                                        #line 440
                                                        #line 441
-    # IF, ELSE and THEN are "immediate" words - they should only be used inside of ":" (colon compiler) #line 442
+            # IF, ELSE and THEN are "immediate" words - they should only be used inside of ":" (colon compiler) #line 442
                                                        #line 443
-    # see diagram compiling-IF-THEN.drawio.png         #line 444
+            # see diagram compiling-IF-THEN.drawio.png #line 444
 
-code(undefined, 1, "undefined")
-case "if":
-    State.compiling.push (False)
-    State.compiling = False                            #line 445
-    # This instruction appears only inside subroutine sequences, ( f -- ) compile if test and branchFalse  #line 446
-    # Step. 1: generate conditional branch to yet-unknown target1  #line 447
-
-
-    branchFalseAddress =  _find( "0branch")            #line 448
+        code("0branch", 1, "0branch")
+        case "if":
+            State.compiling.push (False)
+            State.compiling = False                    #line 445
+            # This instruction appears only inside subroutine sequences, ( f -- ) compile if test and branchFalse  #line 446
+            # Step. 1: generate conditional branch to yet-unknown target1  #line 447
 
 
-    State.RAM.append ( branchFalseAddress) # insert branch-if-false opcode (word)  #line 449
-
-    State.R.append (len (Stack.RAM)) # target1 onto r-stack as memo for later fixup  #line 450
+            branchFalseAddress =  _find( "0branch")    #line 448
 
 
-    target1 =  -1                                      #line 451
+            State.RAM.append ( branchFalseAddress) # insert branch-if-false opcode (word)  #line 449
+
+            State.R.append (len (Stack.RAM)) # target1 onto r-stack as memo for later fixup  #line 450
 
 
-    State.RAM.append ( target1) # branch target will be fixed up later  #line 452
-    # Step. 2: generate code for true branch - return to compiler which will compile the following words  #line 453
-    # THEN or ELSE will do the fixup of target1        #line 454
+            target1 =  -1                              #line 451
+
+
+            State.RAM.append ( target1) # branch target will be fixed up later  #line 452
+            # Step. 2: generate code for true branch - return to compiler which will compile the following words  #line 453
+            # THEN or ELSE will do the fixup of target1  #line 454
 
                                                        #line 455
                                                        #line 456
-    # see diagram compiling-IF-ELSE-THEN.drawio.png    #line 457
+            # see diagram compiling-IF-ELSE-THEN.drawio.png #line 457
 
-    State.compiling = State.compiling.pop ()
-code(undefined,0,  "undefined")
-case "else":
-    State.compiling.push (False)
-    State.compiling = False                            #line 458
-    # Step. 1: fixup target1 from IF-true, retrieving memo from R-stack #line 459
-
-
-    target1 = State.R.pop ()                           #line 460
-
-    State.RAM [ target1] = len (Stack.RAM)             #line 461
-    # Step. 2: generate unconditional branch for preceding IF, creating new memo for target2 on R-stack #line 462
+            State.compiling = State.compiling.pop ()
+        code("if", 0, "if")
+        case "else":
+            State.compiling.push (False)
+            State.compiling = False                    #line 458
+            # Step. 1: fixup target1 from IF-true, retrieving memo from R-stack #line 459
 
 
-    brAddress =  _find( "branch")                      #line 463
+            target1 = State.R.pop ()                   #line 460
 
-    State.R.append (len (Stack.RAM)) # target2 address on R-stack as memo for later fixup #line 464
-
-
-    target2 =  -1                                      #line 465
+            State.RAM [ target1] = len (Stack.RAM)     #line 461
+            # Step. 2: generate unconditional branch for preceding IF, creating new memo for target2 on R-stack #line 462
 
 
-    State.RAM.append ( target2) # branch target will be fixed up later #line 466
-    # Step. 3: generate code for false branch - return to compiler which will compile the following words #line 467
-    # THEN will do the fixup of target2                #line 468
+            brAddress =  _find( "branch")              #line 463
+
+            State.R.append (len (Stack.RAM)) # target2 address on R-stack as memo for later fixup #line 464
+
+
+            target2 =  -1                              #line 465
+
+
+            State.RAM.append ( target2) # branch target will be fixed up later #line 466
+            # Step. 3: generate code for false branch - return to compiler which will compile the following words #line 467
+            # THEN will do the fixup of target2        #line 468
 
                                                        #line 469
                                                        #line 470
-    # see diagrams compiling-IF-THEN.drawio.png and compiling-IF-ELSE-THEN.drawio.png #line 471
+            # see diagrams compiling-IF-THEN.drawio.png and compiling-IF-ELSE-THEN.drawio.png #line 471
 
-    State.compiling = State.compiling.pop ()
-code(undefined,0,  "undefined")
-case "then":
-    State.compiling.push (False)
-    State.compiling = False                            #line 472
-    # Step. 1: fixup target (from IF or from ELSE, above), retrieving memo from R-stack #line 473
+            State.compiling = State.compiling.pop ()
+        code("else", 0, "else")
+        case "then":
+            State.compiling.push (False)
+            State.compiling = False                    #line 472
+            # Step. 1: fixup target (from IF or from ELSE, above), retrieving memo from R-stack #line 473
 
 
-    target = State.R.pop ()                            #line 474
+            target = State.R.pop ()                    #line 474
 
-    State.RAM [ target] = len (Stack.RAM)              #line 475
+            State.RAM [ target] = len (Stack.RAM)      #line 475
 
                                                        #line 476
                                                        #line 477
 
-    State.compiling = State.compiling.pop ()
-code(undefined,0,  "undefined")
+            State.compiling = State.compiling.pop ()
+        code("then", 0, "then")
 
-case "(do)":                                           #line 478
-    # ( limit index --) Puts limit and index on return stack. #line 479
+        case "(do)":                                   #line 478
+            # ( limit index --) Puts limit and index on return stack. #line 479
 
-    State.R.push ("swap")
-    _walk ()                                           #line 480
-
-
-    index = State.S.pop ()                             #line 481
+            State.R.push ("swap")
+            _walk ()                                   #line 480
 
 
-    limit = State.S.pop ()                             #line 482
+            index = State.S.pop ()                     #line 481
 
-    State.R.append ( index)                            #line 483
 
-    State.R.append ( limit)                            #line 484
+            limit = State.S.pop ()                     #line 482
+
+            State.R.append ( index)                    #line 483
+
+            State.R.append ( limit)                    #line 484
 
                                                        #line 485
                                                        #line 486
 
-code(undefined, 1, "undefined")
-case "do":
-    State.compiling.push (False)
-    State.compiling = False                            #line 487
-    # (  limit index --) Begin counted loop.           #line 488
+        code("(do)", 1, "(do)")
+        case "do":
+            State.compiling.push (False)
+            State.compiling = False                    #line 487
+            # (  limit index --) Begin counted loop.   #line 488
 
 
-    State.RAM.append ( _find( "(do)"))  # Push do loop handler. #line 489
+            State.RAM.append ( _find( "(do)"))  # Push do loop handler. #line 489
 
-    State.R.append (len (Stack.RAM))           # Push address to jump back to. #line 490
+            State.R.append (len (Stack.RAM))           # Push address to jump back to. #line 490
 
                                                        #line 491
                                                        #line 492
 
-    State.compiling = State.compiling.pop ()
-code(undefined,0,  "undefined")
+            State.compiling = State.compiling.pop ()
+        code("do", 0, "do")
 
-case "(loop)":                                         #line 493
-    # (  -- f) Determine if loop is done.              #line 494
-
-
-    index = State.R.pop ()                             #line 495
+        case "(loop)":                                 #line 493
+            # (  -- f) Determine if loop is done.      #line 494
 
 
-    limit = State.R.pop ()                             #line 496
+            index = State.R.pop ()                     #line 495
 
 
-    cond = ( index >=  limit)                          #line 497
+            limit = State.R.pop ()                     #line 496
 
-    State.S.push ( cond)                               #line 498
 
-    if ( cond):
-        # clean up rstack if index >= limit            #line 499
+            cond = ( index >=  limit)                  #line 497
 
-        State.R.pop ()                                 #line 500
+            State.S.push ( cond)                       #line 498
 
-        State.R.pop ()                                 #line 501
+            if ( cond):
+                # clean up rstack if index >= limit    #line 499
+
+                State.R.pop ()                         #line 500
+
+                State.R.pop ()                         #line 501
 
                                                        #line 502
 
@@ -1069,175 +1073,175 @@ case "(loop)":                                         #line 493
                                                        #line 503
                                                        #line 504
 
-code(undefined, 1, "undefined")
-case "+loop":
-    State.compiling.push (False)
-    State.compiling = False                            #line 505
-    # ( --) Close counted loop.                        #line 506
+        code("(loop)", 1, "(loop)")
+        case "+loop":
+            State.compiling.push (False)
+            State.compiling = False                    #line 505
+            # ( --) Close counted loop.                #line 506
 
 
-    State.RAM.append ( _find( "(loop)"))   # Compile in loop test. #line 507
+            State.RAM.append ( _find( "(loop)"))   # Compile in loop test. #line 507
 
 
-    State.RAM.append ( _find( "0branch"))  # Compile in branch check. #line 508
+            State.RAM.append ( _find( "0branch"))  # Compile in branch check. #line 508
 
 
-    State.RAM.append (State.R.pop ())           # Address to jump back to. #line 509
+            State.RAM.append (State.R.pop ())           # Address to jump back to. #line 509
 
                                                        #line 510
                                                        #line 511
 
-    State.compiling = State.compiling.pop ()
-code(undefined,0,  "undefined")
-case "loop":
-    State.compiling.push (False)
-    State.compiling = False                            #line 512
-    # (  --) Close counted loop.                       #line 513
+            State.compiling = State.compiling.pop ()
+        code("+loop", 0, "+loop")
+        case "loop":
+            State.compiling.push (False)
+            State.compiling = False                    #line 512
+            # (  --) Close counted loop.               #line 513
 
-    State.S.push ( 1)                                  #line 514
+            State.S.push ( 1)                          #line 514
 
-    State.R.push ("literalize")
-    _walk ()# Default loop increment for x_loop.       #line 515
-
-
-    State.RAM.append ( _find( "(loop)"))   # Compile in loop test. #line 516
+            State.R.push ("literalize")
+            _walk ()# Default loop increment for x_loop. #line 515
 
 
-    State.RAM.append ( _find( "0branch"))  # Compile in branch check. #line 517
+            State.RAM.append ( _find( "(loop)"))   # Compile in loop test. #line 516
 
 
-    State.RAM.append (State.R.pop ())           # Address to jump back to. #line 518
+            State.RAM.append ( _find( "0branch"))  # Compile in branch check. #line 517
+
+
+            State.RAM.append (State.R.pop ())           # Address to jump back to. #line 518
 
                                                        #line 519
                                                        #line 520
 
-    State.compiling = State.compiling.pop ()
-code(undefined,0,  "undefined")
-case "begin":
-    State.compiling.push (False)
-    State.compiling = False                            #line 521
+            State.compiling = State.compiling.pop ()
+        code("loop", 0, "loop")
+        case "begin":
+            State.compiling.push (False)
+            State.compiling = False                    #line 521
 
-    State.R.append (len (Stack.RAM))  # ( --) Start indefinite loop. #line 522
+            State.R.append (len (Stack.RAM))  # ( --) Start indefinite loop. #line 522
 
                                                        #line 523
                                                        #line 524
 
-    State.compiling = State.compiling.pop ()
-code(undefined,0,  "undefined")
-case "until":
-    State.compiling.push (False)
-    State.compiling = False                            #line 525
-    # (  f --) Close indefinite loop with test.        #line 526
+            State.compiling = State.compiling.pop ()
+        code("begin", 0, "begin")
+        case "until":
+            State.compiling.push (False)
+            State.compiling = False                    #line 525
+            # (  f --) Close indefinite loop with test. #line 526
 
 
-    State.RAM.append ( _find( "0branch"))  # Expects result of test on stack. #line 527
+            State.RAM.append ( _find( "0branch"))  # Expects result of test on stack. #line 527
 
 
-    State.RAM.append (State.R.pop ())           # Address to jump back to. #line 528
+            State.RAM.append (State.R.pop ())           # Address to jump back to. #line 528
 
                                                        #line 529
                                                        #line 530
                                                        #line 531
                                                        #line 532
-    #  "... 123 constant K ..."                        #line 533
-    #  at interpretation time: 123 is on the Stack, we have consumed "constant" from BUFF, BUFF now contains "K ..." #line 534
-    #  invoke 'word' which parses "K" and pushed it. The stack becomes [... 123 "K"] #line 535
-    #  pop "K", pop 123, create a new word called 'K' with its PFA set to 123 and its CFA set to a subr that⎩536⎭
-    #       gets 123 from its PFA and pushes it onto the stack #line 537
+            #  "... 123 constant K ..."                #line 533
+            #  at interpretation time: 123 is on the Stack, we have consumed "constant" from BUFF, BUFF now contains "K ..." #line 534
+            #  invoke 'word' which parses "K" and pushed it. The stack becomes [... 123 "K"] #line 535
+            #  pop "K", pop 123, create a new word called 'K' with its PFA set to 123 and its CFA set to a subr that⎩536⎭
+            #       gets 123 from its PFA and pushes it onto the stack #line 537
 
-    State.compiling = State.compiling.pop ()
-code(undefined,0,  "undefined")
+            State.compiling = State.compiling.pop ()
+        code("until", 0, "until")
 
-case "const":                                          #line 538
-    #  get next word - the name - from BUFF            #line 539
-
-
-    blank =  32                                        #line 540
-
-    State.S.push ( blank)                              #line 541
-
-    State.R.push ("word")
-    _walk ()                                           #line 542
-    #  stack is now: ( NNNN name -- )                  #line 543
+        case "const":                                  #line 538
+            #  get next word - the name - from BUFF    #line 539
 
 
-    name = State.S.pop ()                              #line 544
+            blank =  32                                #line 540
+
+            State.S.push ( blank)                      #line 541
+
+            State.R.push ("word")
+            _walk ()                                   #line 542
+            #  stack is now: ( NNNN name -- )          #line 543
 
 
-    value = State.S.pop ()                             #line 545
+            name = State.S.pop ()                      #line 544
 
 
-    normal =  0                                        #line 546
+            value = State.S.pop ()                     #line 545
 
 
-    fobj =  code( name,  normal,  doconst)             #line 547
+            normal =  0                                #line 546
 
 
-    State.RAM.append ( value)                          #line 548
+            fobj =  code( name,  normal,  doconst)     #line 547
+
+
+            State.RAM.append ( value)                  #line 548
 
                                                        #line 549
                                                        #line 550
 
-code(undefined, 1, "undefined")
+        code("const", 1, "const")
 
-case ",":                                              #line 551
+        case ",":                                      #line 551
 
-    comma(State.S.pop ())                              #line 552
+            comma(State.S.pop ())                      #line 552
 
                                                        #line 553
                                                        #line 554
 
-code(undefined, 1, "undefined")
+        code(",", 1, ",")
 
-case "variable":                                       #line 555
-
-
-    blank =  32                                        #line 556
-
-    State.S.push ( blank)                              #line 557
-
-    State.R.push ("word")
-    _walk ()                                           #line 558
+        case "variable":                               #line 555
 
 
-    name = State.S.pop ()                              #line 559
+            blank =  32                                #line 556
+
+            State.S.push ( blank)                      #line 557
+
+            State.R.push ("word")
+            _walk ()                                   #line 558
 
 
-    value = State.S.pop ()                             #line 560
+            name = State.S.pop ()                      #line 559
 
-    fvar( name,  value)                                #line 561
+
+            value = State.S.pop ()                     #line 560
+
+            fvar( name,  value)                        #line 561
 
                                                        #line 562
                                                        #line 563
 
-code(undefined, 1, "undefined")
+        code("variable", 1, "variable")
 
-case "dump":                                           #line 564
-
-
-    n = int (State.S.pop ())                           #line 565
+        case "dump":                                   #line 564
 
 
-    start = int (State.S.pop ())                       #line 566
-
-    print ( "----------------------------------------------------------------", end="")#line 567
+            n = int (State.S.pop ())                   #line 565
 
 
-    a =  start                                         #line 568
+            start = int (State.S.pop ())               #line 566
 
-    while ( a <  start+( min( n, ( len( State.RAM) - start)))):
+            print ( "----------------------------------------------------------------", end="")#line 567
+
+
+            a =  start                                 #line 568
+
+            while ( a <  start+( min( n, ( len( State.RAM) - start)))):
                                                        #line 569
 
-        print ( a, end="")                             #line 570
+                print ( a, end="")                     #line 570
 
-        print ( ": ", end="")                          #line 571
+                print ( ": ", end="")                  #line 571
 
-        print ( State.RAM [ a], end="")                #line 572
+                print ( State.RAM [ a], end="")        #line 572
 
-        print ()                                       #line 573
+                print ()                               #line 573
 
 
-        a =  a+ 1                                      #line 574
+                a =  a+ 1                              #line 574
 
                                                        #line 575
 
@@ -1245,68 +1249,68 @@ case "dump":                                           #line 564
                                                        #line 576
                                                        #line 577
 
-code(undefined, 1, "undefined")
+        code("dump", 1, "dump")
 
-case "!":                                              #line 578
-
-
-    b = State.S.pop ()                                 #line 579
+        case "!":                                      #line 578
 
 
-    a = State.S.pop ()                                 #line 580
+            b = State.S.pop ()                         #line 579
 
-    State.RAM [ b] =  a                                #line 581
+
+            a = State.S.pop ()                         #line 580
+
+            State.RAM [ b] =  a                        #line 581
 
                                                        #line 582
                                                        #line 583
 
-code(undefined, 1, "undefined")
+        code("!", 1, "!")
 
-case "bye":# ( --) Leave interpreter
+        case "bye":# ( --) Leave interpreter
 
-    raise SystemExit
+            raise SystemExit
                                                        #line 584
                                                        #line 585
                                                        #line 586
 
-code(undefined, 1, "undefined")
+        code("bye", 1, "bye")
 
-case "find":                                           #line 587
-    # "( name | -- (name 0)|(xt 1)|(xt -1)) Search for word name." #line 588
-    # 3 possible results: 1. (name 0) if not found, 2. (xt 1) if found and word is immediate, 3. (xt -1) if found and word is normal #line 589
+        case "find":                                   #line 587
+            # "( name | -- (name 0)|(xt 1)|(xt -1)) Search for word name." #line 588
+            # 3 possible results: 1. (name 0) if not found, 2. (xt 1) if found and word is immediate, 3. (xt -1) if found and word is normal #line 589
 
-    State.S.push ( 32)                                 #line 590
+            State.S.push ( 32)                         #line 590
 
-    State.R.push ("word")
-    _walk ()                                           #line 591
+            State.R.push ("word")
+            _walk ()                                   #line 591
 
 
-    found =  _find(State.S[-1])                        #line 592
+            found =  _find(State.S[-1])                #line 592
 
-    if ( 0 ==  found):
+            if ( 0 ==  found):
                                                        #line 593
 
-        State.S.push ( 0)                              #line 594
+                State.S.push ( 0)                      #line 594
 
 
 
-    else:
+            else:
                                                        #line 595
 
-        State.S.pop ()  # # Get rid of name on stack.  #line 596
+                State.S.pop ()  # # Get rid of name on stack. #line 596
 
-        State.S.push ( found)                          #line 597
+                State.S.push ( found)                  #line 597
 
 
-        immediate =  -1                                #line 598
+                immediate =  -1                        #line 598
 
-        if ( State.RAM [State.S[-1] - 1] &  1):
+                if ( State.RAM [State.S[-1] - 1] &  1):
 
-            immediate =  1
+                    immediate =  1
                                                        #line 599
 
 
-        State.S.push ( immediate)                      #line 600
+                State.S.push ( immediate)              #line 600
 
                                                        #line 601
 
@@ -1314,162 +1318,162 @@ case "find":                                           #line 587
                                                        #line 602
                                                        #line 603
 
-code(undefined, 1, "undefined")
+        code("find", 1, "find")
 
-case "'":                                              #line 604
-    # "( name -- xt|-1) Search for execution token of word name." #line 605
+        case "'":                                      #line 604
+            # "( name -- xt|-1) Search for execution token of word name." #line 605
 
-    State.S.push ( 32)                                 #line 606
+            State.S.push ( 32)                         #line 606
 
-    State.R.push ("word")
-    _walk ()                                           #line 607
-
-
-    name = State.S.pop ()                              #line 608
+            State.R.push ("word")
+            _walk ()                                   #line 607
 
 
-    found =  _find( name)                              #line 609
+            name = State.S.pop ()                      #line 608
 
-    State.S.push ( found)                              #line 610
+
+            found =  _find( name)                      #line 609
+
+            State.S.push ( found)                      #line 610
 
                                                        #line 611
                                                        #line 612
 
-code(undefined, 1, "undefined")
+        code("'", 1, "'")
 
-case "None":                                           #line 613
+        case "None":                                   #line 613
 
 
-    State.S.append (None)                              #line 614
+            State.S.append (None)                      #line 614
 
                                                        #line 615
                                                        #line 616
 
-code(undefined, 1, "undefined")
+        code("None", 1, "None")
 
-case "words":                                          #line 617
-    # print words in dictionary                        #line 618
+        case "words":                                  #line 617
+            # print words in dictionary                #line 618
 
 
-    x =  State.LAST                                    #line 619
+            x =  State.LAST                            #line 619
 
-    while ( x >  -1):
+            while ( x >  -1):
                                                        #line 620
 
-        print ( State.RAM [ x+ 1], end="")             #line 621
+                print ( State.RAM [ x+ 1], end="")     #line 621
 
-        print ( " ", end="")                           #line 622
+                print ( " ", end="")                   #line 622
 
                                                        #line 623
 
 
-    print ()                                           #line 624
+            print ()                                   #line 624
 
                                                        #line 625
                                                        #line 626
                                                        #line 627
 
-code(undefined, 1, "undefined")
+        code("words", 1, "words")
 
-case "execute":                                        #line 628
-    # invoke given word                                #line 629
+        case "execute":                                #line 628
+            # invoke given word                        #line 629
 
 
-    wordAddress = State.S.pop ()                       #line 630
+            wordAddress = State.S.pop ()               #line 630
 
-    Stack.R.push ( wordAddress)
-    _walk ()                                           #line 631
+            Stack.R.push ( wordAddress)
+            _walk ()                                   #line 631
 
                                                        #line 632
                                                        #line 633
                                                        #line 634
 
-code(undefined, 1, "undefined")
+        code("execute", 1, "execute")
 
-case ":":                                              #line 635
-    # ( name | --) Start compilation.                  #line 636
-
-
-    blank =  32                                        #line 637
-
-    State.S.push ( blank)                              #line 638
-
-    State.R.push ("word")
-    _walk ()                                           #line 639
+        case ":":                                      #line 635
+            # ( name | --) Start compilation.          #line 636
 
 
-    name = State.S.pop ()                              #line 640
+            blank =  32                                #line 637
 
-    code( name,  0,  doword)                           #line 641
+            State.S.push ( blank)                      #line 638
 
-    State.compiling [-1] = True                        #line 642
+            State.R.push ("word")
+            _walk ()                                   #line 639
+
+
+            name = State.S.pop ()                      #line 640
+
+            code( name,  0,  doword)                   #line 641
+
+            State.compiling [-1] = True                #line 642
 
                                                        #line 643
                                                        #line 644
 
-code(undefined, 1, "undefined")
-case ";":
-    State.compiling.push (False)
-    State.compiling = False                            #line 645
-    # ( --) Finish definition.                         #line 646
+        code(":", 1, ":")
+        case ";":
+            State.compiling.push (False)
+            State.compiling = False                    #line 645
+            # ( --) Finish definition.                 #line 646
                                                        #line 647
 
 
-    State.RAM.append ( -1)  # Marker for end of definition. #line 648
+            State.RAM.append ( -1)  # Marker for end of definition. #line 648
 
-    State.compiling [-1] = False                       #line 649
+            State.compiling [-1] = False               #line 649
 
                                                        #line 650
                                                        #line 651
 
-    State.compiling = State.compiling.pop ()
-code(undefined,0,  "undefined")
+            State.compiling = State.compiling.pop ()
+        code(";", 0, ";")
 
-case "interpret":                                      #line 652
-    # ( string --) Execute word.                       #line 653
+        case "interpret":                              #line 652
+            # ( string --) Execute word.               #line 653
                                                        #line 654
 
-    State.R.push ("find")
-    _walk ()                                           #line 655
-    # 3 possible results from find:⎩656⎭
-    #	  1. (name 0) if not found,⎩657⎭
-    #	  2. (xt 1) if found and word is immediate,⎩658⎭
-    #	  3. (xt -1) if found and word is normal         #line 659
+            State.R.push ("find")
+            _walk ()                                   #line 655
+            # 3 possible results from find:⎩656⎭
+            #	  1. (name 0) if not found,⎩657⎭
+            #	  2. (xt 1) if found and word is immediate,⎩658⎭
+            #	  3. (xt -1) if found and word is normal #line 659
 
 
-    result = State.S.pop ()
+            result = State.S.pop ()
 
-    foundimmediate = ( result ==  1)                   #line 660
-
-
-    item = State.S.pop ()
-
-    foundnormal = ( result ==  -1)                     #line 661
+            foundimmediate = ( result ==  1)           #line 660
 
 
-    notfound = ( result ==  0)                         #line 662
+            item = State.S.pop ()
+
+            foundnormal = ( result ==  -1)             #line 661
 
 
-    found = ( foundimmediate or  foundnormal)          #line 663
+            notfound = ( result ==  0)                 #line 662
+
+
+            found = ( foundimmediate or  foundnormal)  #line 663
                                                        #line 664
 
-    if ( found):
+            if ( found):
                                                        #line 665
 
-        if (State.compiling [-1]):
+                if (State.compiling [-1]):
                                                        #line 666
 
-            if ( foundimmediate):
+                    if ( foundimmediate):
                                                        #line 667
 
-                exec( item)                            #line 668
+                        exec( item)                    #line 668
 
 
 
-            else:
+                    else:
                                                        #line 669
 
-                compileword( item)                     #line 670
+                        compileword( item)             #line 670
 
                                                        #line 671
                                                        #line 672
@@ -1477,10 +1481,10 @@ case "interpret":                                      #line 652
 
 
 
-        else:
+                else:
                                                        #line 673
 
-            exec( item)                                #line 674
+                    exec( item)                        #line 674
 
                                                        #line 675
                                                        #line 676
@@ -1488,33 +1492,33 @@ case "interpret":                                      #line 652
 
 
 
-    else:
+            else:
                                                        #line 677
 
-        if (State.compiling [-1]):
+                if (State.compiling [-1]):
                                                        #line 678
 
-            if (re.match(r"^-?\d*$",  item)):
+                    if (re.match(r"^-?\d*$",  item)):
                                                        #line 679
 
-                compileinteger( item)                  #line 680
+                        compileinteger( item)          #line 680
 
 
 
-            else:
+                    else:
                                                        #line 681
 
-                if (re.match(r"^-?d*\.?\d*$",  item)):
+                        if (re.match(r"^-?d*\.?\d*$",  item)):
                                                        #line 682
 
-                    compilefloat( item)                #line 683
+                            compilefloat( item)        #line 683
 
 
 
-                else:
+                        else:
                                                        #line 684
 
-                    State.S.append (False)             #line 685
+                            State.S.append (False)     #line 685
 
                                                        #line 686
                                                        #line 687
@@ -1526,30 +1530,30 @@ case "interpret":                                      #line 652
 
 
 
-        else:
+                else:
                                                        #line 690
 
-            if (re.match(r"^-?\d*$",  item)):
+                    if (re.match(r"^-?\d*$",  item)):
                                                        #line 691
 
-                pushasinteger( item)                   #line 692
+                        pushasinteger( item)           #line 692
 
 
 
-            else:
+                    else:
                                                        #line 693
 
-                if (re.match(r"^-?d*\.?\d*$",  item)):
+                        if (re.match(r"^-?d*\.?\d*$",  item)):
                                                        #line 694
 
-                    pushasfloat( item)                 #line 695
+                            pushasfloat( item)         #line 695
 
 
 
-                else:
+                        else:
                                                        #line 696
 
-                    State.S.append (False)             #line 697
+                            State.S.append (False)     #line 697
 
                                                        #line 698
                                                        #line 699
@@ -1567,13 +1571,15 @@ case "interpret":                                      #line 652
                                                        #line 705
 
 
-    State.S.append (True)                              #line 706
+            State.S.append (True)                      #line 706
                                                        #line 707
 
                                                        #line 708
                                                        #line 709
                                                        #line 710
-code(undefined, 1, "undefined")
+        code("interpret", 1, "interpret")
+
+
 
                                                        #line 711
 ok ()                                                  #line 712
