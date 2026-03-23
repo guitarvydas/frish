@@ -1,6 +1,6 @@
 splitter {
 
-  main = noise subrOrFunction+ invokeSection
+  main = subrOrFunction+ invokeSection
 
   subrOrFunction = subroutineDefinition | functionDefinition
   invokeSection (invokeSection) = noise "invoke" noise "{" noise "λ" ident noise "(" noise ")" noise "}" noise

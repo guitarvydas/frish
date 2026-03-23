@@ -449,6 +449,10 @@
       {
         "name": "String Concat",
         "id": 68
+      },
+      {
+        "name": "🗑️",
+        "id": 74
       }
     ],
     "connections": [
@@ -659,7 +663,7 @@
         "target_port": "",
         "source": {
           "name": "String Concat",
-          "id": 68
+          "id": 43
         },
         "target": {
           "name": ":?A",
@@ -807,6 +811,19 @@
         "target": {
           "name": "🚫",
           "id": 59
+        }
+      },
+      {
+        "dir": 1,
+        "source_port": "",
+        "target_port": "",
+        "source": {
+          "name": "String Concat",
+          "id": 68
+        },
+        "target": {
+          "name": "🗑️",
+          "id": 74
         }
       },
       {

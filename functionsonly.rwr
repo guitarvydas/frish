@@ -1,11 +1,11 @@
 %rewrite functionsonly {
 
-  main [noise SubrOrFunction+ InvokeSection] = ‛ «noise» «SubrOrFunction»«InvokeSection»’
+  main [SubrOrFunction+ InvokeSection] = ‛ «SubrOrFunction»«InvokeSection»’
 
   subrOrFunction [sf] = ‛«sf»’
   invokeSection [noise1 _invoke noise2 lb noise3 _lambda ident noise4 lp noise5 lr noise6 rb noise7] = ‛’
 
-  functionDefinition [noise1 _function noise2 token noise3 formals noise4 block noise5] = ‛«noise1» «noise2» «token»«noise3»«formals»«noise4»«block»«noise5»’
+  functionDefinition [noise1 _function noise2 token noise3 formals noise4 block noise5] = ‛«noise1» «_function» «noise2» «token»«noise3»«formals»«noise4»«block»«noise5»’
   subroutineDefinition_immediate [noise1 _subr noise2 _immediate noise3 token noise4 block noise5] = ‛’
   subroutineDefinition_normal [noise1 _subr noise2 token noise3 block noise4] = ‛’
 

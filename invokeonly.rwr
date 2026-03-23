@@ -1,6 +1,6 @@
 %rewrite invokeonly {
 
-  main [noise SubrOrFunction+ InvokeSection] = ‛ «noise» «SubrOrFunction»«InvokeSection»’
+  main [SubrOrFunction+ InvokeSection] = ‛«InvokeSection»’
 
   subrOrFunction [sf] = ‛’
   invokeSection [noise1 _invoke noise2 lb noise3 _lambda ident noise4 lp noise5 lr noise6 rb noise7] =
