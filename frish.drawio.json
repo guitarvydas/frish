@@ -387,8 +387,68 @@
     "name": "Transpile to Python",
     "children": [
       {
-        "name": ":$ _/t2t frish emitpy",
+        "name": ":$ _/t2t splitter functionsonly",
         "id": 5
+      },
+      {
+        "name": ":$ _/t2t splitter subrsonly",
+        "id": 9
+      },
+      {
+        "name": "String Concat",
+        "id": 13
+      },
+      {
+        "name": ":functions {",
+        "id": 19
+      },
+      {
+        "name": ":}",
+        "id": 22
+      },
+      {
+        "name": "String Concat",
+        "id": 25
+      },
+      {
+        "name": "String Concat",
+        "id": 31
+      },
+      {
+        "name": ":subroutines {",
+        "id": 37
+      },
+      {
+        "name": ":}",
+        "id": 40
+      },
+      {
+        "name": "String Concat",
+        "id": 43
+      },
+      {
+        "name": "String Concat",
+        "id": 49
+      },
+      {
+        "name": ":$ _/t2t frish emitpy",
+        "id": 55
+      },
+      {
+        "name": "🚫",
+        "id": 59
+      },
+      {
+        "name": ":?A",
+        "id": 62
+      },
+      {
+        "name": ":$ _/t2t splitter invokeonly",
+        "id": 64
+      },
+      {
+        "name": "String Concat",
+        "id": 68
       }
     ],
     "connections": [
@@ -397,8 +457,365 @@
         "source_port": "",
         "target_port": "",
         "target": {
-          "name": ":$ _/t2t frish emitpy",
+          "name": ":$ _/t2t splitter functionsonly",
           "id": 5
+        }
+      },
+      {
+        "dir": 0,
+        "source_port": "",
+        "target_port": "",
+        "target": {
+          "name": ":$ _/t2t splitter subrsonly",
+          "id": 9
+        }
+      },
+      {
+        "dir": 0,
+        "source_port": "",
+        "target_port": "",
+        "target": {
+          "name": ":functions {",
+          "id": 19
+        }
+      },
+      {
+        "dir": 0,
+        "source_port": "",
+        "target_port": "",
+        "target": {
+          "name": ":subroutines {",
+          "id": 37
+        }
+      },
+      {
+        "dir": 0,
+        "source_port": "",
+        "target_port": "",
+        "target": {
+          "name": ":$ _/t2t splitter invokeonly",
+          "id": 64
+        }
+      },
+      {
+        "dir": 1,
+        "source_port": "",
+        "target_port": "",
+        "source": {
+          "name": ":$ _/t2t splitter functionsonly",
+          "id": 5
+        },
+        "target": {
+          "name": ":}",
+          "id": 22
+        }
+      },
+      {
+        "dir": 1,
+        "source_port": "",
+        "target_port": "1",
+        "source": {
+          "name": ":$ _/t2t splitter functionsonly",
+          "id": 5
+        },
+        "target": {
+          "name": "String Concat",
+          "id": 13
+        }
+      },
+      {
+        "dir": 1,
+        "source_port": "",
+        "target_port": "2",
+        "source": {
+          "name": ":}",
+          "id": 22
+        },
+        "target": {
+          "name": "String Concat",
+          "id": 13
+        }
+      },
+      {
+        "dir": 1,
+        "source_port": "",
+        "target_port": "1",
+        "source": {
+          "name": ":functions {",
+          "id": 19
+        },
+        "target": {
+          "name": "String Concat",
+          "id": 25
+        }
+      },
+      {
+        "dir": 1,
+        "source_port": "",
+        "target_port": "2",
+        "source": {
+          "name": "String Concat",
+          "id": 13
+        },
+        "target": {
+          "name": "String Concat",
+          "id": 25
+        }
+      },
+      {
+        "dir": 1,
+        "source_port": "",
+        "target_port": "2",
+        "source": {
+          "name": ":}",
+          "id": 40
+        },
+        "target": {
+          "name": "String Concat",
+          "id": 31
+        }
+      },
+      {
+        "dir": 1,
+        "source_port": "",
+        "target_port": "1",
+        "source": {
+          "name": ":subroutines {",
+          "id": 37
+        },
+        "target": {
+          "name": "String Concat",
+          "id": 43
+        }
+      },
+      {
+        "dir": 1,
+        "source_port": "",
+        "target_port": "2",
+        "source": {
+          "name": "String Concat",
+          "id": 31
+        },
+        "target": {
+          "name": "String Concat",
+          "id": 43
+        }
+      },
+      {
+        "dir": 1,
+        "source_port": "",
+        "target_port": "1",
+        "source": {
+          "name": "String Concat",
+          "id": 25
+        },
+        "target": {
+          "name": "String Concat",
+          "id": 49
+        }
+      },
+      {
+        "dir": 1,
+        "source_port": "",
+        "target_port": "2",
+        "source": {
+          "name": "String Concat",
+          "id": 43
+        },
+        "target": {
+          "name": "String Concat",
+          "id": 49
+        }
+      },
+      {
+        "dir": 1,
+        "source_port": "",
+        "target_port": "1",
+        "source": {
+          "name": ":$ _/t2t splitter subrsonly",
+          "id": 9
+        },
+        "target": {
+          "name": "String Concat",
+          "id": 31
+        }
+      },
+      {
+        "dir": 1,
+        "source_port": "",
+        "target_port": "",
+        "source": {
+          "name": ":$ _/t2t splitter subrsonly",
+          "id": 9
+        },
+        "target": {
+          "name": ":}",
+          "id": 40
+        }
+      },
+      {
+        "dir": 1,
+        "source_port": "",
+        "target_port": "",
+        "source": {
+          "name": "String Concat",
+          "id": 68
+        },
+        "target": {
+          "name": ":?A",
+          "id": 62
+        }
+      },
+      {
+        "dir": 1,
+        "source_port": "✗",
+        "target_port": "",
+        "source": {
+          "name": ":$ _/t2t frish emitpy",
+          "id": 55
+        },
+        "target": {
+          "name": "🚫",
+          "id": 59
+        }
+      },
+      {
+        "dir": 1,
+        "source_port": "✗",
+        "target_port": "",
+        "source": {
+          "name": "String Concat",
+          "id": 49
+        },
+        "target": {
+          "name": "🚫",
+          "id": 59
+        }
+      },
+      {
+        "dir": 1,
+        "source_port": "✗",
+        "target_port": "",
+        "source": {
+          "name": "String Concat",
+          "id": 25
+        },
+        "target": {
+          "name": "🚫",
+          "id": 59
+        }
+      },
+      {
+        "dir": 1,
+        "source_port": "✗",
+        "target_port": "",
+        "source": {
+          "name": "String Concat",
+          "id": 43
+        },
+        "target": {
+          "name": "🚫",
+          "id": 59
+        }
+      },
+      {
+        "dir": 1,
+        "source_port": "✗",
+        "target_port": "",
+        "source": {
+          "name": "String Concat",
+          "id": 13
+        },
+        "target": {
+          "name": "🚫",
+          "id": 59
+        }
+      },
+      {
+        "dir": 1,
+        "source_port": "✗",
+        "target_port": "",
+        "source": {
+          "name": "String Concat",
+          "id": 31
+        },
+        "target": {
+          "name": "🚫",
+          "id": 59
+        }
+      },
+      {
+        "dir": 1,
+        "source_port": "✗",
+        "target_port": "",
+        "source": {
+          "name": ":$ _/t2t splitter functionsonly",
+          "id": 5
+        },
+        "target": {
+          "name": "🚫",
+          "id": 59
+        }
+      },
+      {
+        "dir": 1,
+        "source_port": "✗",
+        "target_port": "",
+        "source": {
+          "name": ":$ _/t2t splitter subrsonly",
+          "id": 9
+        },
+        "target": {
+          "name": "🚫",
+          "id": 59
+        }
+      },
+      {
+        "dir": 1,
+        "source_port": "",
+        "target_port": "1",
+        "source": {
+          "name": "String Concat",
+          "id": 49
+        },
+        "target": {
+          "name": "String Concat",
+          "id": 68
+        }
+      },
+      {
+        "dir": 1,
+        "source_port": "",
+        "target_port": "2",
+        "source": {
+          "name": ":$ _/t2t splitter invokeonly",
+          "id": 64
+        },
+        "target": {
+          "name": "String Concat",
+          "id": 68
+        }
+      },
+      {
+        "dir": 1,
+        "source_port": "✗",
+        "target_port": "",
+        "source": {
+          "name": ":$ _/t2t splitter invokeonly",
+          "id": 64
+        },
+        "target": {
+          "name": "🚫",
+          "id": 59
+        }
+      },
+      {
+        "dir": 2,
+        "source_port": "",
+        "target_port": "✗",
+        "source": {
+          "name": "🚫",
+          "id": 59
         }
       },
       {
@@ -407,16 +824,7 @@
         "target_port": "",
         "source": {
           "name": ":$ _/t2t frish emitpy",
-          "id": 5
-        }
-      },
-      {
-        "dir": 2,
-        "source_port": "✗",
-        "target_port": "✗",
-        "source": {
-          "name": ":$ _/t2t frish emitpy",
-          "id": 5
+          "id": 55
         }
       }
     ],

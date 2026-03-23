@@ -1,0 +1,31 @@
+%rewrite functionsonly {
+
+  Main [SubrOrFunction+ InvokeSection] = ‛«SubrOrFunction»«InvokeSection»’
+
+  SubrOrFunction [sf] = ‛«sf»’
+  InvokeSection [noise1 _invoke noise2 lb noise3 _lambda ident lp lr noise4 rb noise5] = ‛’
+
+  FunctionDefinition [noise1 _function token formals block noise2] = ‛«noise1»«token»«formals»«block»«noise2»’
+  SubroutineDefinition_immediate [noise1 _subr _immediate spaces token block noise2] = ‛’
+  SubroutineDefinition_normal [noise1 _subr spaces token block noise2] = ‛’
+
+  StatementBlock [noise1 lb BlockInnard+ rb noise2] = ‛«noise1»«lb»«BlockInnard»«rb»«noise2»’
+  BlockInnard_rec [lb BlockInnard1+ rb BlockInnard2+] = ‛«lb»«BlockInnard1»«rb»«BlockInnard2»’
+  BlockInnard_other [c] = ‛«c»’
+
+  Formals [lp cs* rp] = ‛«lp»«cs»«rp»’
+  token [spaces cs+] = ‛«spaces»«cs»’
+  ident [idchar+] = ‛«idchar»’
+  idchar_rec [lb cs+ rb] = ‛«lb»«cs»«rb»’
+  idchar_other [c] = ‛«c»’
+  idch [c] = ‛«c»’
+
+  comment [lb commentchar* rb] = ‛«lb»«commentchar»«rb»’
+  commentchar_rec [lb cs* rb] = ‛«lb»«cs»«rb»’
+  commentchar_other [c] = ‛«c»’
+
+  line [lb cs* rb] = ‛«lb»«cs»«rb»’
+  noise [ws1 line* ws2 n1* ws3 n2* ws4] = ‛«ws1»«line»«ws2»«n1»«ws3»«n2»«ws4»’
+  noi [x] = ‛«x»’
+  spaces [s?] = ‛«s»’
+}
