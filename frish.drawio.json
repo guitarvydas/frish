@@ -229,6 +229,45 @@
     "file": "frish.drawio"
   },
   {
+    "name": "Pre Optimize",
+    "children": [
+      {
+        "name": ":$ _/t2t preopt",
+        "id": 5
+      }
+    ],
+    "connections": [
+      {
+        "dir": 0,
+        "source_port": "",
+        "target_port": "",
+        "target": {
+          "name": ":$ _/t2t preopt",
+          "id": 5
+        }
+      },
+      {
+        "dir": 2,
+        "source_port": "",
+        "target_port": "",
+        "source": {
+          "name": ":$ _/t2t preopt",
+          "id": 5
+        }
+      },
+      {
+        "dir": 2,
+        "source_port": "✗",
+        "target_port": "✗",
+        "source": {
+          "name": ":$ _/t2t preopt",
+          "id": 5
+        }
+      }
+    ],
+    "file": "frish.drawio"
+  },
+  {
     "name": "Generate Python",
     "children": [
       {
@@ -1083,45 +1122,6 @@
         "target_port": "✗",
         "source": {
           "name": ":$ _/errgrep",
-          "id": 5
-        }
-      }
-    ],
-    "file": "frish.drawio"
-  },
-  {
-    "name": "Pre Optimize",
-    "children": [
-      {
-        "name": ":$ _/t2t preopt",
-        "id": 5
-      }
-    ],
-    "connections": [
-      {
-        "dir": 0,
-        "source_port": "",
-        "target_port": "",
-        "target": {
-          "name": ":$ _/t2t preopt",
-          "id": 5
-        }
-      },
-      {
-        "dir": 2,
-        "source_port": "",
-        "target_port": "",
-        "source": {
-          "name": ":$ _/t2t preopt",
-          "id": 5
-        }
-      },
-      {
-        "dir": 2,
-        "source_port": "✗",
-        "target_port": "✗",
-        "source": {
-          "name": ":$ _/t2t preopt",
           "id": 5
         }
       }
