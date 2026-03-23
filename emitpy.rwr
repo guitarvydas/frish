@@ -1,6 +1,6 @@
 % rewrite emitPython {
 
-Main [sf+ i] = ‛
+Main [_functions lb1 f* rb1 _subrs lb2 s+ rb2  i] = ‛
 import re
 
 class Stack(list):⤷
@@ -21,10 +21,10 @@ class StateClass:⤷
 
 State = StateClass ()
 
-«sf»
+«f»
+«s»
 «i»’
 
-SubrOrFunction [sf] = ‛«sf»’
 InvokeSection [n1 _invoke n2 lb n3 _lambda id lp rp n4 rb n5] = ‛«n1»«n2»«n3»«id» ()«n4»«n5»’
 
 FunctionDefinition [noise1 _function token formals block noise2] = ‛«noise1»def «token» «formals»:⤷\nglobal State«block»⤶\n«noise2»’

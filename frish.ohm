@@ -1,8 +1,7 @@
 frish {
 
-  Main = SubrOrFunction+ InvokeSection
+  Main = "functions" "{" FunctionDefinition+ "}" "subroutines" "{" SubroutineDefinition+ "}" InvokeSection
 
-  SubrOrFunction = SubroutineDefinition | FunctionDefinition
   InvokeSection (InvokeSection) = #noise "invoke" #noise "{" #noise "λ" ident "(" ")" #noise "}" #noise
 
   FunctionDefinition (FunctionDefinition) = #noise "function" token Formals StatementBlock #noise
