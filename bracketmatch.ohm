@@ -1,0 +1,7 @@
+bracketmatch {
+  main = char+
+  char =
+    | "{" char* "}" -- braces
+    | "(" char* ")" -- parens
+    | ~")" ~"}" any -- other
+}

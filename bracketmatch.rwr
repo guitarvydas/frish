@@ -1,0 +1,6 @@
+%rewrite bracketmatch {
+  main [cs+] = ‛«cs»’
+  char_braces [left cs* right] = ‛’
+  char_parens [left cs* right] = ‛’
+  char_other [c] = ‛’
+}
