@@ -234,6 +234,10 @@
       {
         "name": ":$ _/t2t preopt",
         "id": 5
+      },
+      {
+        "name": ":?A",
+        "id": 9
       }
     ],
     "connections": [
@@ -244,6 +248,15 @@
         "target": {
           "name": ":$ _/t2t preopt",
           "id": 5
+        }
+      },
+      {
+        "dir": 0,
+        "source_port": "",
+        "target_port": "",
+        "target": {
+          "name": ":?A",
+          "id": 9
         }
       },
       {

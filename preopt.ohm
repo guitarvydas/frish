@@ -1,15 +1,18 @@
 pretransmogrifier {
   code = item+
   item =
-    | applySyntactic<ScopedSubr> -- scopedsubr
+    | applySyntactic<Scope> -- scope
     | any -- other
-    
-  ScopedSubr = "defsubr" subrname str "{" #subrinnards+ "}"
-  subrinnards =
-    | "{" subrinnards+ "}" subrinnards?     -- rec
-    | applySyntactic<Pattern> subrinnards? -- pattern
-    | name subrinnards? -- name
-    | (~"}" ~"defsynonym" ~name any)+  subrinnards?            -- other
+
+  Scope =
+    | "function" name "(" (~")" any)* ")" Block -- functionblock
+    | "subr" name Block -- subrblock
+
+  Block = "{" blockInnards "}"
+  blockInnards =
+    | "{" blockInnards "}" blockInnards?    -- rec
+    | applySyntactic<Pattern> blockInnards? -- pattern
+    | (~"}" any)+ blockInnards?             -- other
 
   Pattern =
     | "defsynonym" name "≡" PureExpression -- memomacro

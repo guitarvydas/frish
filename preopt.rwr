@@ -3,9 +3,9 @@
   item_scopedsubr [s] = ‛«s»’
   item_other [c] = ‛«c»’
 
-  ScopedSubr [_def name str lb innards rb] = 
-    ⎡ ⎨resetmacros⎬
-      ‛\ndefsubr «name» «str» { «innards» } ’
+  Scope [_def name str lb innards rb] = 
+    ⎡ ⎨pushnewmacroscope⎬
+      ‛\ndefsubr «name» «str» { «innards» } ⎨popmacroscope⎬’
     ⎦
 
   subrinnards_rec [lb innards* rb rec?] = ‛{«innards»}«rec»’
