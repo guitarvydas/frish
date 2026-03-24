@@ -1,6 +1,5 @@
 #!/bin/bash
 set -eE
-trap '[ -f "out.✗" ] && cat "out.✗"' ERR
 export dtree_tool=${HOME}/projects/dtree
 ${PBP}/resetlog
 
