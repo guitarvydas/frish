@@ -415,7 +415,7 @@
 
   subr branch {
       ⌈ This instruction appears only inside subroutine sequences, jump to address in next cell ⌉
-      ⌈ This instruction is inserted into a subr sequence when compiling control-flow words, like "else" (see below) ⌉
+      ⌈ This instruction is inserted into a subr sequence when compiling control-flow words, like "else" see below) ⌉
       State.IP ⇐ State.RAM [State.IP]
       ⌈ normally, we just execute an instruction then move the IP sequentially forward by 1 unit, i.e. IP ⇐ IP + 1 ⌉
       ⌈   in this case, though, we explicitly change the IP to some other value and don't just increment it ⌉

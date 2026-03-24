@@ -1,9 +1,4 @@
-Error: Line 713, col 7:
-  712 |   λok ()⎩712⎭
-> 713 | }⎩713⎭
-              ^
-Expected "}"
-
-grammar = "splitter
-"
 Error: Command failed with exit code 1
+Error: ENOENT: no such file or directory, open '/Users/paultarvydas/projects/frish/subrssonly.rwr'
+
+grammar = "t2t"

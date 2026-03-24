@@ -1,6 +1,9 @@
 %rewrite bracketmatch {
-  main [cs+ _] = ‛«cs»’
-  char_braces [left cs* right] = ‛’
-  char_parens [left cs* right] = ‛’
+  main [cs+ _] = ‛«cs» braces=⎨reportbraces⎬ parens=⎨reportparens⎬’
+  char_line [lb ds+ rb] = ‛⎨setline ‛«ds»’⎬’
+  char_leftbrace [_] = ‛⎨incbrace⎬’
+  char_leftparen [_] = ‛⎨incparen⎬’
+  char_rightbrace [_] = ‛⎨decbrace⎬’
+  char_rightparen [_] = ‛⎨decparen⎬’
   char_other [c] = ‛’
 }

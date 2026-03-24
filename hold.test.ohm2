@@ -173,7 +173,6 @@ function _find (name) {⎩172⎭
       ⌈ "( name -- cfa|0) Find CFA of word name." ⌉⎩173⎭
       deftemp x ⇐ State.LAST⎩174⎭
       while (x >= 0) {⎩175⎭
-	  ⌈ ## print(f"-- {x : {RAM[x]}, {RAM[x + 1]}")  # Debug. ⌉⎩176⎭
 	  if (name = State.RAM[x + 1]) {  ⌈ # Match! ⌉⎩177⎭
 	      return x + 3⎩178⎭
 	  } else {⎩179⎭

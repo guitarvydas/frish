@@ -515,6 +515,24 @@
         }
       },
       {
+        "dir": 0,
+        "source_port": "",
+        "target_port": "",
+        "target": {
+          "name": "Subrs Only",
+          "id": 9
+        }
+      },
+      {
+        "dir": 0,
+        "source_port": "",
+        "target_port": "",
+        "target": {
+          "name": "Initialize Only",
+          "id": 62
+        }
+      },
+      {
         "dir": 1,
         "source_port": "",
         "target_port": "",
@@ -1155,18 +1173,6 @@
       {
         "name": ":$ _/t2t splitter functionsonly",
         "id": 5
-      },
-      {
-        "name": ":*** Functions",
-        "id": 9
-      },
-      {
-        "name": ":?A",
-        "id": 12
-      },
-      {
-        "name": ":?B",
-        "id": 14
       }
     ],
     "connections": [
@@ -1177,37 +1183,6 @@
         "target": {
           "name": ":$ _/t2t splitter functionsonly",
           "id": 5
-        }
-      },
-      {
-        "dir": 0,
-        "source_port": "",
-        "target_port": "",
-        "target": {
-          "name": ":*** Functions",
-          "id": 9
-        }
-      },
-      {
-        "dir": 0,
-        "source_port": "",
-        "target_port": "",
-        "target": {
-          "name": ":?B",
-          "id": 14
-        }
-      },
-      {
-        "dir": 1,
-        "source_port": "",
-        "target_port": "",
-        "source": {
-          "name": ":*** Functions",
-          "id": 9
-        },
-        "target": {
-          "name": ":?A",
-          "id": 12
         }
       },
       {

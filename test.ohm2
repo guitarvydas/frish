@@ -6,7 +6,7 @@
 function fvget (name) {⎩6⎭
       deftemp fobjaddress ⇐ λ_find(%pop)⎩7⎭
       return State.RAM [fobjaddress + 1]⎩8⎭
-   ⎩9⎭
+}   ⎩9⎭
 ⎩10⎭
 function fvset (name,v) {⎩11⎭
       deftemp fobjaddress ⇐ λ_find(%pop)⎩12⎭

@@ -8,7 +8,7 @@
 
   Block [lb innards rb] = 
     ⎡ ⎨pushnewmacroscope⎬
-      ‛{«innards» ⎨popmacroscope⎬’
+      ‛{«innards»} ⎨popmacroscope⎬’
     ⎦
 
   blockInnards_rec [lb innards rb more?] = ‛{«innards»}rb«more»’

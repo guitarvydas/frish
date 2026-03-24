@@ -1,7 +1,10 @@
 bracketmatch {
   main = char+ end
   char =
-    | "{" char* "}" -- braces
-    | "(" char* ")" -- parens
+    | "⎩" digit+ "⎭" -- line
+    | "{" -- leftbrace
+    | "(" -- leftparen
+    | "}" -- rightbrace
+    | ")" -- rightparen
     | ~"(" ~")" ~"{" ~"}" any -- other
 }
