@@ -3,10 +3,10 @@ splitter {
   main = subrOrFunction+ initializeSection
 
   subrOrFunction = subroutineDefinition | functionDefinition
-  initializeSection (initializeSection) = noise "initialize" noise "{" noise "λ" ident noise "(" noise ")" noise "}" noise
+  initializeSection = noise "initialize" noise "{" noise "λ" ident noise "(" noise ")" noise "}" noise
 
-  functionDefinition (functionDefinition) = noise "function" noise token noise formals noise statementBlock noise
-  subroutineDefinition (subroutineDefinition) =
+  functionDefinition = noise "function" noise token noise formals noise statementBlock noise
+  subroutineDefinition =
     | noise "subr" noise "%immediate" noise token noise statementBlock noise -- immediate
     | noise "subr"                    noise token noise statementBlock noise -- normal
 
