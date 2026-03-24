@@ -234,14 +234,6 @@
       {
         "name": ":$ _/t2t preopt",
         "id": 5
-      },
-      {
-        "name": ":Functions",
-        "id": 9
-      },
-      {
-        "name": ":?A",
-        "id": 12
       }
     ],
     "connections": [
@@ -252,28 +244,6 @@
         "target": {
           "name": ":$ _/t2t preopt",
           "id": 5
-        }
-      },
-      {
-        "dir": 0,
-        "source_port": "",
-        "target_port": "",
-        "target": {
-          "name": ":Functions",
-          "id": 9
-        }
-      },
-      {
-        "dir": 1,
-        "source_port": "",
-        "target_port": "",
-        "source": {
-          "name": ":Functions",
-          "id": 9
-        },
-        "target": {
-          "name": ":?A",
-          "id": 12
         }
       },
       {
@@ -1193,6 +1163,10 @@
       {
         "name": ":?A",
         "id": 12
+      },
+      {
+        "name": ":?B",
+        "id": 14
       }
     ],
     "connections": [
@@ -1212,6 +1186,15 @@
         "target": {
           "name": ":*** Functions",
           "id": 9
+        }
+      },
+      {
+        "dir": 0,
+        "source_port": "",
+        "target_port": "",
+        "target": {
+          "name": ":?B",
+          "id": 14
         }
       },
       {
