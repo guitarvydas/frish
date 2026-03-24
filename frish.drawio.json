@@ -1210,16 +1210,8 @@
     "name": "Subrs Only",
     "children": [
       {
-        "name": ":$ _/t2t splitter subrssonly",
+        "name": ":$ _/t2t splitter subrsonly",
         "id": 5
-      },
-      {
-        "name": ":*** Subrs",
-        "id": 9
-      },
-      {
-        "name": ":?A",
-        "id": 12
       }
     ],
     "connections": [
@@ -1228,30 +1220,8 @@
         "source_port": "",
         "target_port": "",
         "target": {
-          "name": ":$ _/t2t splitter subrssonly",
+          "name": ":$ _/t2t splitter subrsonly",
           "id": 5
-        }
-      },
-      {
-        "dir": 0,
-        "source_port": "",
-        "target_port": "",
-        "target": {
-          "name": ":*** Subrs",
-          "id": 9
-        }
-      },
-      {
-        "dir": 1,
-        "source_port": "",
-        "target_port": "",
-        "source": {
-          "name": ":*** Subrs",
-          "id": 9
-        },
-        "target": {
-          "name": ":?A",
-          "id": 12
         }
       },
       {
@@ -1259,7 +1229,7 @@
         "source_port": "",
         "target_port": "",
         "source": {
-          "name": ":$ _/t2t splitter subrssonly",
+          "name": ":$ _/t2t splitter subrsonly",
           "id": 5
         }
       },
@@ -1268,7 +1238,7 @@
         "source_port": "✗",
         "target_port": "✗",
         "source": {
-          "name": ":$ _/t2t splitter subrssonly",
+          "name": ":$ _/t2t splitter subrsonly",
           "id": 5
         }
       }
@@ -1281,14 +1251,6 @@
       {
         "name": ":$ _/t2t splitter initializesonly",
         "id": 5
-      },
-      {
-        "name": ":*** Initialize",
-        "id": 9
-      },
-      {
-        "name": ":?A",
-        "id": 12
       }
     ],
     "connections": [
@@ -1299,28 +1261,6 @@
         "target": {
           "name": ":$ _/t2t splitter initializesonly",
           "id": 5
-        }
-      },
-      {
-        "dir": 0,
-        "source_port": "",
-        "target_port": "",
-        "target": {
-          "name": ":*** Initialize",
-          "id": 9
-        }
-      },
-      {
-        "dir": 1,
-        "source_port": "",
-        "target_port": "",
-        "source": {
-          "name": ":*** Initialize",
-          "id": 9
-        },
-        "target": {
-          "name": ":?A",
-          "id": 12
         }
       },
       {
