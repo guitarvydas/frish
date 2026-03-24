@@ -1,0 +1,9 @@
+Error: Line 1, col 1:
+> 1 | ⎩1⎭
+      ^
+  2 |   ⌈ fvget and fvset assume that the forth object (word) is a set of contiguous slots, each 1 machine word wide⎩2⎭
+Expected functionDefinition or subroutineDefinition
+
+grammar = "splitter
+"
+Error: Command failed with exit code 1

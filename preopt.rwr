@@ -1,17 +1,19 @@
 % rewrite pretransmogrifier {
   code [item+] = ‛«item»’
-  item_scopedsubr [s] = ‛«s»’
+  item_scope [s] = ‛«s»’
   item_other [c] = ‛«c»’
 
-  Scope [_def name str lb innards rb] = 
+  Scope_functionblock [_func name lb formals* rb block] =       ‛\nfunction «name» («formals») «block»’
+  Scope_subrblock [_subr name block] = ‛\nsubr «name» «block»’
+
+  Block [lb innards rb] = 
     ⎡ ⎨pushnewmacroscope⎬
-      ‛\ndefsubr «name» «str» { «innards» } ⎨popmacroscope⎬’
+      ‛{«innards» ⎨popmacroscope⎬’
     ⎦
 
-  subrinnards_rec [lb innards* rb rec?] = ‛{«innards»}«rec»’
-  subrinnards_name [n rec?] = ‛«n»«rec»’
-  subrinnards_pattern [p rec?] = ‛«p»«rec»’
-  subrinnards_other [c* rec?] = ‛«c»«rec»’
+  blockInnards_rec [lb innards rb more?] = ‛{«innards»}rb«more»’
+  blockInnards_pattern [p more?] = ‛«p»«more»’
+  blockInnards_other [cs+ more?] = ‛«cs»«more»’
   
   Pattern_memomacro [_defsyn name _def e] =
     ⎡ ⎨memomacro ‛«name»’ ‛«e»’⎬
