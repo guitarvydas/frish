@@ -1,9 +1,8 @@
-Error: Line 152, col 2:
-  151 | ⎩154⎭
-> 152 |  function   docreate () {⎩155⎭ (State.RAM) + 4⎩156⎭
-         ^
-  153 |       %push (parameterAddress)⎩157⎭
-Expected "}"
+Error: Line 1, col 55:
+> 1 | functions {function   docreate () {⎩1⎭ (State.RAM) + 4⎩2⎭
+                                                            ^
+  2 |       %push (parameterAddress)⎩3⎭
+Expected "⇐" or "≡"
 
 grammar = "frish
 "

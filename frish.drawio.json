@@ -289,6 +289,14 @@
       {
         "name": "🚫",
         "id": 22
+      },
+      {
+        "name": ":?A",
+        "id": 25
+      },
+      {
+        "name": ":Generate Python",
+        "id": 27
       }
     ],
     "connections": [
@@ -302,6 +310,15 @@
         }
       },
       {
+        "dir": 0,
+        "source_port": "",
+        "target_port": "",
+        "target": {
+          "name": ":Generate Python",
+          "id": 27
+        }
+      },
+      {
         "dir": 1,
         "source_port": "",
         "target_port": "",
@@ -390,6 +407,19 @@
         "target": {
           "name": "🚫",
           "id": 22
+        }
+      },
+      {
+        "dir": 1,
+        "source_port": "",
+        "target_port": "",
+        "source": {
+          "name": ":Generate Python",
+          "id": 27
+        },
+        "target": {
+          "name": ":?A",
+          "id": 25
         }
       },
       {
@@ -484,6 +514,30 @@
       {
         "name": "String Concat",
         "id": 66
+      },
+      {
+        "name": ":?A",
+        "id": 72
+      },
+      {
+        "name": ":Transpile to Python",
+        "id": 74
+      },
+      {
+        "name": ":?A",
+        "id": 77
+      },
+      {
+        "name": ":Emit",
+        "id": 79
+      },
+      {
+        "name": ":?A",
+        "id": 82
+      },
+      {
+        "name": ":after Functions only",
+        "id": 84
       }
     ],
     "connections": [
@@ -533,6 +587,15 @@
         }
       },
       {
+        "dir": 0,
+        "source_port": "",
+        "target_port": "",
+        "target": {
+          "name": ":Transpile to Python",
+          "id": 74
+        }
+      },
+      {
         "dir": 1,
         "source_port": "",
         "target_port": "",
@@ -842,6 +905,71 @@
         "target": {
           "name": ":$ _/t2t frish emitpy",
           "id": 55
+        }
+      },
+      {
+        "dir": 1,
+        "source_port": "",
+        "target_port": "",
+        "source": {
+          "name": ":Transpile to Python",
+          "id": 74
+        },
+        "target": {
+          "name": ":?A",
+          "id": 72
+        }
+      },
+      {
+        "dir": 1,
+        "source_port": "",
+        "target_port": "",
+        "source": {
+          "name": ":Emit",
+          "id": 79
+        },
+        "target": {
+          "name": ":?A",
+          "id": 77
+        }
+      },
+      {
+        "dir": 1,
+        "source_port": "",
+        "target_port": "",
+        "source": {
+          "name": "String Concat",
+          "id": 66
+        },
+        "target": {
+          "name": ":Emit",
+          "id": 79
+        }
+      },
+      {
+        "dir": 1,
+        "source_port": "",
+        "target_port": "",
+        "source": {
+          "name": ":after Functions only",
+          "id": 84
+        },
+        "target": {
+          "name": ":?A",
+          "id": 82
+        }
+      },
+      {
+        "dir": 1,
+        "source_port": "",
+        "target_port": "",
+        "source": {
+          "name": "Functions Only",
+          "id": 5
+        },
+        "target": {
+          "name": ":after Functions only",
+          "id": 84
         }
       },
       {
