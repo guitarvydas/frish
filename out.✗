@@ -1,9 +1,0 @@
-Error: Line 1, col 55:
-> 1 | functions {function   docreate () {⎩1⎭ (State.RAM) + 4⎩2⎭
-                                                            ^
-  2 |       %push (parameterAddress)⎩3⎭
-Expected "⇐" or "≡"
-
-grammar = "frish
-"
-Error: Command failed with exit code 1

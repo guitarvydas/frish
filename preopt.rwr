@@ -31,7 +31,6 @@
   primary [p] = ‛«p»’
   op [x] = ‛«x»’
   int [sign? ds+] = ‛«sign»«ds»’
-  subrname [s] = ‛«s»’
   name [s] = ‛⎨macrolookup ‛«s»’⎬’
   id [c cs*] = ‛«c»«cs»’
   str [lq cs* rq] = ‛"«cs»"’

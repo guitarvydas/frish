@@ -13,4 +13,4 @@ trap cleanup EXIT
 
 cp @makec @hold-makec
 cp @dev-makec @makec
-./@make
+~/.local/bin/@make

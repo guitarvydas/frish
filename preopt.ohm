@@ -31,8 +31,8 @@ pretransmogrifier {
   primary = int | "State.RAM" | "State.IP" | "State.W" | "State.LAST" | "State.BUFFP" | "State.BUFF" |  name
   op = "+" | "-" | "*" | "/" | ">=" | "<=" | "<" | ">" | "and" | "or" | "="
   int = "-"? digit+
-  subrname = id
   name = id
-  id = (letter | "_") (alnum | "_")*
+  id = ~kwletter (letter | "_") (alnum | "_")*
   str = "\"" (~"\"" any)* "\""
+  kwletter = "λ" | "@"
 }
