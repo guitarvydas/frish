@@ -2,8 +2,13 @@
 
 cleanup() {
     mv @hold-makec @makec
-    [ -f out.x ] && cat out.x
+    if [ -f out.✗ ]; then
+        cat out.✗
+    else
+        echo "*** No Errors ***"
+    fi
 }
+
 trap cleanup EXIT
 
 cp @makec @hold-makec

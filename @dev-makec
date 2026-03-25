@@ -1,7 +1,21 @@
 #!/bin/bash
-set -eE
 target=test.frish
+
+set -eE
+export dtree_tool=${HOME}/projects/dtree
 ${PBP}/resetlog
 
-python main.py ${target} main frish.drawio.json | ${PBP}/splitoutputs
+# # create xinterpret.frish from xinterpret.drawio
+# ${dtree_tool}/@make ${dtree_tool} "xinterpret" $(pwd)
 
+# # insert generated code (`xinterpret.frish`) into forthish.frish
+# ${PBP}/include forthish.frish.inc | tr -d '\r' > forthish.frish
+
+# transmogrify `forthish.frish` into `forthish.py`
+${PBP}/das2json frish.drawio
+clear
+echo
+echo "--- using ${target} --------"
+echo
+python main.py ${target} main frish.drawio.json | ${PBP}/splitoutputs
+mv out.1.py forthish.py
