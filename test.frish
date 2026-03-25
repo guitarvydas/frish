@@ -1,20 +1,18 @@
 
-functions { 
-  pushasinteger (word) {
-      %push (%toint (word))
+  function docreate () {
+      defsynonym parameterAddress ≡ λlen (State.RAM) + 4
+      %push (parameterAddress)
   }
-}
+  function create (name) {
+      defsynonym normal ≡ 0
+      λcode (name, normal, ↪︎docreate)
+  }
 
-subroutines {
-
-  drop {
+  subr drop {
+      ⌈ ( a -- ) ⌉
       %pop
   }
-  %immediate updrop {
-      %pop
-  }
+initialize {
+  λok ()
 }
 
-invoke {
-  @ok
-}

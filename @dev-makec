@@ -1,0 +1,7 @@
+#!/bin/bash
+set -eE
+target=test.frish
+${PBP}/resetlog
+
+python main.py ${target} main frish.drawio.json | ${PBP}/splitoutputs
+

@@ -12,7 +12,7 @@ pretransmogrifier {
   blockInnards =
     | "{" blockInnards "}" blockInnards?    -- rec
     | applySyntactic<Pattern> blockInnards? -- pattern
-    | (~"}" any)+ blockInnards?             -- other
+    | (~"}" ~applySyntactic<Pattern> any)+ blockInnards?             -- other
 
   Pattern =
     | "defsynonym" name "≡" PureExpression -- memomacro
