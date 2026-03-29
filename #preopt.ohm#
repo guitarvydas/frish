@@ -8,7 +8,7 @@ pretransmogrifier {
     | "function" id "(" (~")" #any)* ")" Block -- functionblock
     | "subr" id  Block -- subrblock
 
-  Block = "{" blockInnards "}"
+  Block = "{" #blockInnards "}"
   blockInnards =
     | "{" blockInnards "}" blockInnards?    -- rec
     | applySyntactic<Pattern> blockInnards? -- pattern

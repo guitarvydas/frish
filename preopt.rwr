@@ -11,7 +11,7 @@
       ‛{«innards»} ⎨popmacroscope⎬’
     ⎦
 
-  blockInnards_rec [lb innards rb more?] = ‛{«innards»}rb«more»’
+  blockInnards_rec [lb innards rb more?] = ‛{«innards»}«more»’
   blockInnards_pattern [p more?] = ‛«p»«more»’
   blockInnards_other [cs+ more?] = ‛«cs»«more»’
   
@@ -19,6 +19,8 @@
     ⎡ ⎨memomacro ‛«name»’ ‛«e»’⎬
       ‛ ⎨xcontinue⎬’
     ⎦
+  Pattern_nonname [kwl id] = ‛«kwl»«id»’
+  Pattern_name [name] = ‛⎨macrolookup ‛«name»’⎬’
   
   exprCh [c] = ‛«c»’
   bodyCh_recursive [_lb cs+ _rb] = ‛«_lb»«cs»«_rb»’
@@ -31,7 +33,6 @@
   primary [p] = ‛«p»’
   op [x] = ‛«x»’
   int [sign? ds+] = ‛«sign»«ds»’
-  name [s] = ‛⎨macrolookup ‛«s»’⎬’
   id [c cs*] = ‛«c»«cs»’
   str [lq cs* rq] = ‛"«cs»"’
 }

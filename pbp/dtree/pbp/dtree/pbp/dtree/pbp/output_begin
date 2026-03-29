@@ -1,3 +1,0 @@
-#!/bin/bash
-echo '[' >out.json
-echo >>out.json

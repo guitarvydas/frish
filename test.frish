@@ -1,10 +1,6 @@
-  function docreate () {
-      defsynonym parameterAddress ≡ λlen (State.RAM) + 4
-      %push (parameterAddress)
-  }
-  function create (name) {
-      defsynonym normal ≡ 0
-      λcode (name, normal, ↪︎docreate)
+  function create () {
+      defsynonym xxx ≡ 0
+      λcode (xxx)
   }
 
   subr drop {

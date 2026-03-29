@@ -1,7 +1,6 @@
 #!/bin/bash
 set -eE
 export dtree_tool=${HOME}/projects/dtree
-${PBP}/resetlog
 
 # create xinterpret.frish from xinterpret.drawio
 ${dtree_tool}/@make ${dtree_tool} "xinterpret" $(pwd)

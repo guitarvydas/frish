@@ -1,4 +1,18 @@
-//fs.writeFileSync('/tmp/@pbplog.md', new Date().toISOString() + '\n');
+/////// <pbp logging>
+//const fs = require('fs');
+//const path = require('path');
+import * as path from 'path';
+
+function pbplog(message) {
+  const baseDir = process.env.PBPCALLER;
+  if (!baseDir) throw new Error('PBPCALLER env var not set');
+  
+  const logFile = path.join(baseDir, 'pbplog.txt');
+  fs.appendFileSync(logFile, `${message}\n`, 'utf8');
+}
+
+//fs.writeFileSync('/tmp/@pbplog.txt', new Date().toISOString() + '\n');
+/////// </pbp logging>
 
 let linenumber = 0;
 function getlineinc () {
@@ -57,10 +71,12 @@ let macros = new DictStack ();
 
 function pushnewmacroscope () {
     macros.push ({});
+    pbplog (`push new macro scope`);
     return "";
 }
 function popmacroscope () {
     macros.pop ();
+    pbplog (`pop macro scope`);
     return "";
 }
  
@@ -68,9 +84,11 @@ function memomacro (name, s) {
     let topmacroscope = macros.pop ();
     topmacroscope [name] = s;
     macros.push (topmacroscope);
+    pbplog (`  memomacro /${name}/<-/${s}/ ${macros}`);
     return "";
 }
 
 function macrolookup (name) {
+    pbplog (`  macrolookup /${name}/ -> ${macros.lookup (name)}`);
     return macros.lookup (name);
 }

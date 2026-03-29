@@ -1,3 +1,0 @@
-#!/bin/bash
-# send stdin to stdout AND to stderr
-tee >(cat >&2)

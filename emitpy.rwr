@@ -149,25 +149,25 @@ ReturnExp_multiple [ _60 Exps+ _62 rec?] =‛[«Exps»]«rec»’
 ReturnExp_single [ Exp rec?] =‛«Exp»«rec»’
 ExpComma [Exp Comma?] = ‛«Exp»«Comma»’
 Exp [e] = ‛«e»’
-BooleanAndOrIn_andOrIn [e1 op e2] = ‛«e1»«op»«e2»’
+BooleanAndOrIn_andOrIn [e1 op e2] = ‛«e1» «op» «e2»’
 BooleanAndOrIn_default [e] = ‛«e»’
 
-BooleanExp_boolopneq [ BooleanExp boolOp BooleanNot] =‛«BooleanExp»«boolOp»«BooleanNot»’
-BooleanExp_boolop [ BooleanExp boolOp BooleanNot] =‛«BooleanExp»«boolOp»«BooleanNot»’
+BooleanExp_boolopneq [ BooleanExp boolOp BooleanNot] =‛«BooleanExp» «boolOp» «BooleanNot»’
+BooleanExp_boolop [ BooleanExp boolOp BooleanNot] =‛«BooleanExp» «boolOp» «BooleanNot»’
 BooleanExp_basic [ BooleanNot] =‛«BooleanNot»’
 
 BooleanNot_not [ _64 BooleanExp] =‛not «BooleanExp»’
 BooleanNot_basic [ AddExp] =‛«AddExp»’
 
-AddExp_plus [ AddExp _65 MulExp] =‛«AddExp»«_65»«MulExp»’
-AddExp_minus [ AddExp _66 MulExp] =‛«AddExp»«_66»«MulExp»’
+AddExp_plus [ AddExp _65 MulExp] =‛«AddExp» «_65» «MulExp»’
+AddExp_minus [ AddExp _66 MulExp] =‛«AddExp» «_66» «MulExp»’
 AddExp_basic [ MulExp] =‛«MulExp»’
 
-MulExp_times [ MulExp _67 ExpExp] =‛«MulExp»«_67»«ExpExp»’
-MulExp_divide [ MulExp _68 ExpExp] =‛«MulExp»«_68»«ExpExp»’
+MulExp_times [ MulExp _67 ExpExp] =‛«MulExp» «_67» «ExpExp»’
+MulExp_divide [ MulExp _68 ExpExp] =‛«MulExp» «_68» «ExpExp»’
 MulExp_basic [ ExpExp] =‛«ExpExp»’
 
-ExpExp_power [ Primary _69 ExpExp] =‛«Primary»«_69»«ExpExp»’
+ExpExp_power [ Primary _69 ExpExp] =‛«Primary» «_69» «ExpExp»’
 ExpExp_basic [ Primary] =‛«Primary»’
 
 Primary_plain [p] = ‛«p»’
@@ -191,7 +191,7 @@ Atom_phi [ phi] =‛ None’
 Atom_true [ _88] =‛ True’
 Atom_false [ _89] =‛ False’
 Atom_subraddress [x] = ‛«x»’
-Atom_range [ _91 _92 Exp _93] =‛«_91»«_92»«Exp»«_93»’
+Atom_range [ _91 _92 Exp _93] =‛«_91» «_92» «Exp» «_93»’
 Atom_string [ string] =‛ «string»’
 Atom_number [ number] =‛ «number»’
 Atom_ident [ ident ] =‛ «ident»’

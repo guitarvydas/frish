@@ -1,0 +1,9 @@
+Error: Line 564, col 27:
+  563 | 	  3. (xt-1)iffoundandwordisnormal⌉⎩659⎭deftempresult⇐ %pop⎩660⎭deftempitem⇐ %pop⎩661⎭ ⎩662⎭ ⎩663⎭
+> 564 | ⎩664⎭if(((foundimmediateor(foundnormal)))) {⎩665⎭if(%incompilingstate) {⎩666⎭if(((result=(1)))) {⎩667⎭λexec(item)⎩668⎭
+                                  ^
+  565 |               } else {⎩669⎭
+Expected ")"
+
+grammar = "frish
+"
