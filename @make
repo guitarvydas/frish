@@ -16,7 +16,6 @@ if [ "$#" -eq 0 ]; then
     export PBPCALLER=$PBPWD
     fname="<top>"
     "${PBP}"/resetlog
-    echo "in @make resetlog"
 
 elif [ "$#" -eq 3 ]; then
     # exactly three arguments

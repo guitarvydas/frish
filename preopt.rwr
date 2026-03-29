@@ -19,7 +19,7 @@
     ⎡ ⎨memomacro ‛«name»’ ‛«e»’⎬
       ‛ ⎨xcontinue⎬’
     ⎦
-  Pattern_nonname [kwl id] = ‛«kwl»«id»’
+  Pattern_routine [_call id] = ‛«_call»«id»’
   Pattern_name [name] = ‛⎨macrolookup ‛«name»’⎬’
   
   exprCh [c] = ‛«c»’
@@ -27,12 +27,19 @@
   bodyCh_flat [c] =‛«c»’
 
   PureExpression_parenthesized [lp e rp] = ‛(«e»)’
-  PureExpression_indexed [p lb e rb] = ‛«p»[«e»]’
-  PureExpression_op [prim op e] = ‛(«prim»«op»«e»)’
-  PureExpression_primary [prim] = ‛(«prim»)’
+  PureExpression_item [i] = ‛«i»’
+  
+  PureExpressionItem_indexed [p lb e rb] = ‛«p»[«e»]’
+  PureExpressionItem_op [prim op e] = ‛(«prim» «op» «e»)’
+  PureExpressionItem_primary [prim] = ‛(«prim»)’
+
   primary [p] = ‛«p»’
-  op [x] = ‛«x»’
-  int [sign? ds+] = ‛«sign»«ds»’
+  op [x] = ‛ «x»’
+  int [sign? ds+] = ‛ «sign»«ds»’
   id [c cs*] = ‛«c»«cs»’
   str [lq cs* rq] = ‛"«cs»"’
+  Call [_call args] = ‛«_call» «args»’
+  Args [lp innards? rp] = ‛(«innards»)’
+  ArgInnards_rec [lp innards? rp] = ‛(«innards»)’
+  ArgInnards_other [cs+] =‛«cs»’
 }

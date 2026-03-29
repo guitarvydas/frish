@@ -8,7 +8,7 @@ pretransmogrifier {
     | "function" id "(" (~")" #any)* ")" Block -- functionblock
     | "subr" id  Block -- subrblock
 
-  Block = "{" blockInnards "}"
+  Block = "{" #blockInnards "}"
   blockInnards =
     | "{" blockInnards "}" blockInnards?    -- rec
     | applySyntactic<Pattern> blockInnards? -- pattern
@@ -16,7 +16,7 @@ pretransmogrifier {
 
    Pattern =
     | "defsynonym" id "≡" PureExpression -- memomacro
-    | kwletter id -- nonname
+    | call id -- routine
     | id -- name
     
   exprCh = ~"{" any
@@ -26,6 +26,9 @@ pretransmogrifier {
 
   PureExpression =
     | "(" PureExpression ")" -- parenthesized
+    | ~Call PureExpressionItem -- item
+
+  PureExpressionItem =
     | primary "[" PureExpression "]" -- indexed
     | primary op PureExpression -- op
     | primary -- primary
@@ -34,7 +37,11 @@ pretransmogrifier {
   op = "+" | "-" | "*" | "/" | ">=" | "<=" | "<" | ">" | "and" | "or" | "="
   int = "-"? digit+
   name = id
-  id = ~kwletter (letter | "_") (alnum | "_")*
+  id = (letter | "_") (alnum | "_")*
   str = "\"" (~"\"" any)* "\""
-  kwletter = "λ" | "@"
+  Call =  ("%funcall" | "@") Args
+  Args = "(" ArgInnards? ")"
+  ArgInnards =
+    | "(" ArgInnards? ")" -- rec
+    | #(~"(" ~")" any)+ -- other
 }

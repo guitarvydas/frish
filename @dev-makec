@@ -3,7 +3,6 @@ target=test.frish
 
 set -eE
 export dtree_tool=${HOME}/projects/dtree
-${PBP}/resetlog
 export T2TVERBOSE=on
 
 # # create xinterpret.frish from xinterpret.drawio

@@ -1,1480 +1,291 @@
-Sun Mar 29 08:05:40  2026
-push new macro scope
-  macrolookup /deftemp/ -> deftemp
-  macrolookup /fobjaddress/ -> fobjaddress
-  macrolookup /pop/ -> pop
-  macrolookup /return/ -> return
-  macrolookup /State/ -> State
-  macrolookup /RAM/ -> RAM
-  macrolookup /fobjaddress/ -> fobjaddress
-pop macro scope
-push new macro scope
-  macrolookup /deftemp/ -> deftemp
-  macrolookup /fobjaddress/ -> fobjaddress
-  macrolookup /pop/ -> pop
-  memomacro /namefieldaddress/<-/(fobjaddress+(1))/ [object Object]
-  macrolookup /State/ -> State
-  macrolookup /RAM/ -> RAM
-  macrolookup /namefieldaddress/ -> (fobjaddress+(1))
-  macrolookup /v/ -> v
-pop macro scope
-push new macro scope
-  macrolookup /Execute/ -> Execute
-  macrolookup /a/ -> a
-  macrolookup /colon/ -> colon
-  macrolookup /defined/ -> defined
-  macrolookup /word/ -> word
-  macrolookup /using/ -> using
-  macrolookup /indirect/ -> indirect
-  macrolookup /threaded/ -> threaded
-  macrolookup /code/ -> code
-  macrolookup /interpretation/ -> interpretation
-  macrolookup /This/ -> This
-  macrolookup /function/ -> function
-  macrolookup /implements/ -> implements
-  macrolookup /the/ -> the
-  macrolookup /inner/ -> inner
-  macrolookup /interpreter/ -> interpreter
-  macrolookup /for/ -> for
-  macrolookup /threaded/ -> threaded
-  macrolookup /code/ -> code
-  macrolookup /execution/ -> execution
-  macrolookup /Threaded/ -> Threaded
-  macrolookup /code/ -> code
-  macrolookup /words/ -> words
-  macrolookup /store/ -> store
-  macrolookup /their/ -> their
-  macrolookup /definitions/ -> definitions
-  macrolookup /as/ -> as
-  macrolookup /arrays/ -> arrays
-  macrolookup /of/ -> of
-  macrolookup /code/ -> code
-  macrolookup /field/ -> field
-  macrolookup /addresses/ -> addresses
-  macrolookup /CFAs/ -> CFAs
-  macrolookup /in/ -> in
-  macrolookup /the/ -> the
-  macrolookup /parameter/ -> parameter
-  macrolookup /field/ -> field
-  macrolookup /area/ -> area
-  macrolookup /PFA/ -> PFA
-  macrolookup /immediately/ -> immediately
-  macrolookup /following/ -> following
-  macrolookup /the/ -> the
-  macrolookup /word/ -> word
-  macrolookup /header/ -> header
-  macrolookup /The/ -> The
-  macrolookup /execution/ -> execution
-  macrolookup /model/ -> model
-  macrolookup /maintains/ -> maintains
-  macrolookup /two/ -> two
-  macrolookup /critical/ -> critical
-  macrolookup /registers/ -> registers
-  macrolookup /IP/ -> IP
-  macrolookup /Instruction/ -> Instruction
-  macrolookup /Pointer/ -> Pointer
-  macrolookup /References/ -> References
-  macrolookup /the/ -> the
-  macrolookup /current/ -> current
-  macrolookup /position/ -> position
-  macrolookup /within/ -> within
-  macrolookup /the/ -> the
-  macrolookup /threaded/ -> threaded
-  macrolookup /code/ -> code
-  macrolookup /array/ -> array
-  macrolookup /being/ -> being
-  macrolookup /interpreted/ -> interpreted
-  macrolookup /Since/ -> Since
-  macrolookup /threaded/ -> threaded
-  macrolookup /words/ -> words
-  macrolookup /may/ -> may
-  macrolookup /invoke/ -> invoke
-  macrolookup /other/ -> other
-  macrolookup /threaded/ -> threaded
-  macrolookup /words/ -> words
-  macrolookup /IP/ -> IP
-  macrolookup /must/ -> must
-  macrolookup /be/ -> be
-  macrolookup /preserved/ -> preserved
-  macrolookup /in/ -> in
-  macrolookup /a/ -> a
-  macrolookup /reentrant/ -> reentrant
-  macrolookup /manner/ -> manner
-  macrolookup /via/ -> via
-  macrolookup /the/ -> the
-  macrolookup /return/ -> return
-  macrolookup /stack/ -> stack
-  macrolookup /on/ -> on
-  macrolookup /each/ -> each
-  macrolookup /invocation/ -> invocation
-  macrolookup /W/ -> W
-  macrolookup /Word/ -> Word
-  macrolookup /Pointer/ -> Pointer
-  macrolookup /References/ -> References
-  macrolookup /the/ -> the
-  macrolookup /CFA/ -> CFA
-  macrolookup /of/ -> of
-  macrolookup /the/ -> the
-  macrolookup /currently/ -> currently
-  macrolookup /executing/ -> executing
-  macrolookup /primitive/ -> primitive
-  macrolookup /This/ -> This
-  macrolookup /global/ -> global
-  macrolookup /register/ -> register
-  macrolookup /serves/ -> serves
-  macrolookup /an/ -> an
-  macrolookup /analogous/ -> analogous
-  macrolookup /function/ -> function
-  macrolookup /to/ -> to
-  macrolookup /self/ -> self
-  macrolookup /in/ -> in
-  macrolookup /object/ -> object
-  macrolookup /oriented/ -> oriented
-  macrolookup /languages/ -> languages
-  macrolookup /enabling/ -> enabling
-  macrolookup /subroutines/ -> subroutines
-  macrolookup /to/ -> to
-  macrolookup /access/ -> access
-  macrolookup /word/ -> word
-  macrolookup /header/ -> header
-  macrolookup /fields/ -> fields
-  macrolookup /through/ -> through
-  macrolookup /fixed/ -> fixed
-  macrolookup /offsets/ -> offsets
-  macrolookup /from/ -> from
-  macrolookup /the/ -> the
-  macrolookup /CFA/ -> CFA
-  macrolookup /Optimization/ -> Optimization
-  macrolookup /rationale/ -> rationale
-  macrolookup /W/ -> W
-  macrolookup /is/ -> is
-  macrolookup /positioned/ -> positioned
-  macrolookup /to/ -> to
-  macrolookup /reference/ -> reference
-  macrolookup /the/ -> the
-  macrolookup /CFA/ -> CFA
-  macrolookup /rather/ -> rather
-  macrolookup /than/ -> than
-  macrolookup /the/ -> the
-  macrolookup /word/ -> word
-  macrolookup /header/ -> header
-  macrolookup /base/ -> base
-  macrolookup /This/ -> This
-  macrolookup /design/ -> design
-  macrolookup /eliminates/ -> eliminates
-  macrolookup /offset/ -> offset
-  macrolookup /arithmetic/ -> arithmetic
-  macrolookup /for/ -> for
-  macrolookup /CFA/ -> CFA
-  macrolookup /access/ -> access
-  macrolookup /the/ -> the
-  macrolookup /most/ -> most
-  macrolookup /frequent/ -> frequent
-  macrolookup /header/ -> header
-  macrolookup /operation/ -> operation
-  macrolookup /at/ -> at
-  macrolookup /the/ -> the
-  macrolookup /cost/ -> cost
-  macrolookup /of/ -> of
-  macrolookup /requiring/ -> requiring
-  macrolookup /offset/ -> offset
-  macrolookup /adjustments/ -> adjustments
-  macrolookup /for/ -> for
-  macrolookup /other/ -> other
-  macrolookup /header/ -> header
-  macrolookup /fields/ -> fields
-  macrolookup /NFA/ -> NFA
-  macrolookup /W/ -> W
-  macrolookup /flags/ -> flags
-  macrolookup /W/ -> W
-  macrolookup /PFA/ -> PFA
-  macrolookup /W/ -> W
-  macrolookup /This/ -> This
-  macrolookup /represents/ -> represents
-  macrolookup /a/ -> a
-  macrolookup /deliberate/ -> deliberate
-  macrolookup /trade/ -> trade
-  macrolookup /off/ -> off
-  macrolookup /favoring/ -> favoring
-  macrolookup /the/ -> the
-  macrolookup /common/ -> common
-  macrolookup /case/ -> case
-  macrolookup /The/ -> The
-  macrolookup /inner/ -> inner
-  macrolookup /interpreter/ -> interpreter
-  macrolookup /loop/ -> loop
-  macrolookup /performs/ -> performs
-  macrolookup /the/ -> the
-  macrolookup /following/ -> following
-  macrolookup /operations/ -> operations
-  macrolookup /Fetch/ -> Fetch
-  macrolookup /the/ -> the
-  macrolookup /next/ -> next
-  macrolookup /CFA/ -> CFA
-  macrolookup /from/ -> from
-  macrolookup /RAM/ -> RAM
-  macrolookup /IP/ -> IP
-  macrolookup /into/ -> into
-  macrolookup /W/ -> W
-  macrolookup /performing/ -> performing
-  macrolookup /the/ -> the
-  macrolookup /first/ -> first
-  macrolookup /indirection/ -> indirection
-  macrolookup /Increment/ -> Increment
-  macrolookup /IP/ -> IP
-  macrolookup /to/ -> to
-  macrolookup /advance/ -> advance
-  macrolookup /through/ -> through
-  macrolookup /the/ -> the
-  macrolookup /threaded/ -> threaded
-  macrolookup /code/ -> code
-  macrolookup /array/ -> array
-  macrolookup /Execute/ -> Execute
-  macrolookup /the/ -> the
-  macrolookup /primitive/ -> primitive
-  macrolookup /via/ -> via
-  macrolookup /RAM/ -> RAM
-  macrolookup /W/ -> W
-  macrolookup /performing/ -> performing
-  macrolookup /the/ -> the
-  macrolookup /second/ -> second
-  macrolookup /indirection/ -> indirection
-  macrolookup /By/ -> By
-  macrolookup /caching/ -> caching
-  macrolookup /the/ -> the
-  macrolookup /dereferenced/ -> dereferenced
-  macrolookup /CFA/ -> CFA
-  macrolookup /in/ -> in
-  macrolookup /W/ -> W
-  macrolookup /we/ -> we
-  macrolookup /amortize/ -> amortize
-  macrolookup /the/ -> the
-  macrolookup /cost/ -> cost
-  macrolookup /of/ -> of
-  macrolookup /double/ -> double
-  macrolookup /indirection/ -> indirection
-  macrolookup /both/ -> both
-  macrolookup /primitive/ -> primitive
-  macrolookup /execution/ -> execution
-  macrolookup /and/ -> and
-  macrolookup /header/ -> header
-  macrolookup /field/ -> field
-  macrolookup /access/ -> access
-  macrolookup /within/ -> within
-  macrolookup /subroutines/ -> subroutines
-  macrolookup /utilize/ -> utilize
-  macrolookup /the/ -> the
-  macrolookup /same/ -> same
-  macrolookup /cached/ -> cached
-  macrolookup /reference/ -> reference
-  macrolookup /avoiding/ -> avoiding
-  macrolookup /redundant/ -> redundant
-  macrolookup /dereferences/ -> dereferences
-  macrolookup /This/ -> This
-  macrolookup /is/ -> is
-  macrolookup /functionally/ -> functionally
-  macrolookup /equivalent/ -> equivalent
-  macrolookup /to/ -> to
-  macrolookup /parameter/ -> parameter
-  macrolookup /passing/ -> passing
-  macrolookup /in/ -> in
-  macrolookup /object/ -> object
-  macrolookup /oriented/ -> oriented
-  macrolookup /method/ -> method
-  macrolookup /invocation/ -> invocation
-  macrolookup /but/ -> but
-  macrolookup /eliminates/ -> eliminates
-  macrolookup /the/ -> the
-  macrolookup /overhead/ -> overhead
-  macrolookup /of/ -> of
-  macrolookup /explicitly/ -> explicitly
-  macrolookup /passing/ -> passing
-  macrolookup /self/ -> self
-  macrolookup /to/ -> to
-  macrolookup /each/ -> each
-  macrolookup /primitive/ -> primitive
-  macrolookup /Note/ -> Note
-  macrolookup /Ws/ -> Ws
-  macrolookup /state/ -> state
-  macrolookup /is/ -> is
-  macrolookup /only/ -> only
-  macrolookup /defined/ -> defined
-  macrolookup /during/ -> during
-  macrolookup /primitive/ -> primitive
-  macrolookup /execution/ -> execution
-  macrolookup /within/ -> within
-  macrolookup /RAM/ -> RAM
-  macrolookup /W/ -> W
-  macrolookup /Between/ -> Between
-  macrolookup /loop/ -> loop
-  macrolookup /iterations/ -> iterations
-  macrolookup /W/ -> W
-  macrolookup /may/ -> may
-  macrolookup /reference/ -> reference
-  macrolookup /a/ -> a
-  macrolookup /stale/ -> stale
-  macrolookup /CFA/ -> CFA
-  macrolookup /but/ -> but
-  macrolookup /this/ -> this
-  macrolookup /is/ -> is
-  macrolookup /architecturally/ -> architecturally
-  macrolookup /sound/ -> sound
-  macrolookup /since/ -> since
-  macrolookup /W/ -> W
-  macrolookup /is/ -> is
-  macrolookup /unconditionally/ -> unconditionally
-  macrolookup /updated/ -> updated
-  macrolookup /before/ -> before
-  macrolookup /each/ -> each
-  macrolookup /primitive/ -> primitive
-  macrolookup /invocation/ -> invocation
-  macrolookup /rpush/ -> rpush
-  macrolookup /State/ -> State
-  macrolookup /IP/ -> IP
-  macrolookup /State/ -> State
-  macrolookup /IP/ -> IP
-  macrolookup /State/ -> State
-  macrolookup /W/ -> W
-  macrolookup /while/ -> while
-  macrolookup /State/ -> State
-  macrolookup /RAM/ -> RAM
-  macrolookup /State/ -> State
-  macrolookup /IP/ -> IP
-  macrolookup /State/ -> State
-  macrolookup /W/ -> W
-  macrolookup /State/ -> State
-  macrolookup /RAM/ -> RAM
-  macrolookup /State/ -> State
-  macrolookup /IP/ -> IP
-  macrolookup /State/ -> State
-  macrolookup /IP/ -> IP
-  macrolookup /State/ -> State
-  macrolookup /IP/ -> IP
-  macrolookup /State/ -> State
-  macrolookup /RAM/ -> RAM
-  macrolookup /State/ -> State
-  macrolookup /W/ -> W
-pop macro scope
-push new macro scope
-  macrolookup /clearS/ -> clearS
-  macrolookup /clearR/ -> clearR
-  macrolookup /print/ -> print
-  macrolookup /word/ -> word
-  macrolookup /print/ -> print
-  macrolookup /eol/ -> eol
-pop macro scope
-push new macro scope
-  macrolookup /found/ -> found
-  macrolookup /and/ -> and
-  macrolookup /compiling/ -> compiling
-  macrolookup /and/ -> and
-  macrolookup /immediate/ -> immediate
-  macrolookup /State/ -> State
-  macrolookup /W/ -> W
-  macrolookup /xt/ -> xt
-  macrolookup /State/ -> State
-  macrolookup /IP/ -> IP
-  macrolookup /Dummy/ -> Dummy
-  macrolookup /to/ -> to
-  macrolookup /hold/ -> hold
-  macrolookup /place/ -> place
-  macrolookup /in/ -> in
-  macrolookup /return/ -> return
-  macrolookup /stack/ -> stack
-  macrolookup /State/ -> State
-  macrolookup /RAM/ -> RAM
-  macrolookup /xt/ -> xt
-  macrolookup /Execute/ -> Execute
-  macrolookup /code/ -> code
-pop macro scope
-push new macro scope
-  macrolookup /found/ -> found
-  macrolookup /and/ -> and
-  macrolookup /not/ -> not
-  macrolookup /compiling/ -> compiling
-  macrolookup /State/ -> State
-  macrolookup /W/ -> W
-  macrolookup /xt/ -> xt
-  macrolookup /State/ -> State
-  macrolookup /IP/ -> IP
-  macrolookup /Dummy/ -> Dummy
-  macrolookup /to/ -> to
-  macrolookup /hold/ -> hold
-  macrolookup /place/ -> place
-  macrolookup /in/ -> in
-  macrolookup /return/ -> return
-  macrolookup /stack/ -> stack
-  macrolookup /State/ -> State
-  macrolookup /RAM/ -> RAM
-  macrolookup /xt/ -> xt
-  macrolookup /Execute/ -> Execute
-  macrolookup /code/ -> code
-pop macro scope
-push new macro scope
-  macrolookup /push/ -> push
-  macrolookup /toint/ -> toint
-  macrolookup /word/ -> word
-pop macro scope
-push new macro scope
-  macrolookup /push/ -> push
-  macrolookup /tofloat/ -> tofloat
-  macrolookup /word/ -> word
-pop macro scope
-push new macro scope
-  macrolookup /word/ -> word
-pop macro scope
-push new macro scope
-  macrolookup /word/ -> word
-pop macro scope
-push new macro scope
-  macrolookup /Add/ -> Add
-  macrolookup /new/ -> new
-  macrolookup /word/ -> word
-  macrolookup /to/ -> to
-  macrolookup /RAM/ -> RAM
-  macrolookup /dictionary/ -> dictionary
-  macrolookup /We/ -> We
-  macrolookup /create/ -> create
-  macrolookup /a/ -> a
-  macrolookup /word/ -> word
-  macrolookup /Forth/ -> Forth
-  macrolookup /object/ -> object
-  macrolookup /in/ -> in
-  macrolookup /RAM/ -> RAM
-  macrolookup /with/ -> with
-  macrolookup /fields/ -> fields
-  macrolookup /and/ -> and
-  macrolookup /extend/ -> extend
-  macrolookup /the/ -> the
-  macrolookup /the/ -> the
-  macrolookup /dictionary/ -> dictionary
-  macrolookup /by/ -> by
-  macrolookup /linking/ -> linking
-  macrolookup /back/ -> back
-  macrolookup /to/ -> to
-  macrolookup /the/ -> the
-  macrolookup /head/ -> head
-  macrolookup /of/ -> of
-  macrolookup /the/ -> the
-  macrolookup /dictionary/ -> dictionary
-  macrolookup /list/ -> list
-  macrolookup /x/ -> x
-  macrolookup /State/ -> State
-  macrolookup /RAM/ -> RAM
-  macrolookup /ram/ -> ram
-  macrolookup /State/ -> State
-  macrolookup /LAST/ -> LAST
-  macrolookup /LFA/ -> LFA
-  macrolookup /link/ -> link
-  macrolookup /to/ -> to
-  macrolookup /previous/ -> previous
-  macrolookup /word/ -> word
-  macrolookup /in/ -> in
-  macrolookup /dictionary/ -> dictionary
-  macrolookup /list/ -> list
-  macrolookup /ram/ -> ram
-  macrolookup /name/ -> name
-  macrolookup /NFA/ -> NFA
-  macrolookup /name/ -> name
-  macrolookup /of/ -> of
-  macrolookup /word/ -> word
-  macrolookup /ram/ -> ram
-  macrolookup /flags/ -> flags
-  macrolookup /normal/ -> normal
-  macrolookup /word/ -> word
-  macrolookup /immediate/ -> immediate
-  macrolookup /word/ -> word
-  macrolookup /ram/ -> ram
-  macrolookup /does/ -> does
-  macrolookup /CFA/ -> CFA
-  macrolookup /function/ -> function
-  macrolookup /pointer/ -> pointer
-  macrolookup /that/ -> that
-  macrolookup /points/ -> points
-  macrolookup /to/ -> to
-  macrolookup /code/ -> code
-  macrolookup /that/ -> that
-  macrolookup /executes/ -> executes
-  macrolookup /the/ -> the
-  macrolookup /word/ -> word
-  macrolookup /a/ -> a
-  macrolookup /function/ -> function
-  macrolookup /pointer/ -> pointer
-  macrolookup /is/ -> is
-  macrolookup /now/ -> now
-  macrolookup /just/ -> just
-  macrolookup /a/ -> a
-  macrolookup /string/ -> string
-  macrolookup /probably/ -> probably
-  macrolookup /should/ -> should
-  macrolookup /be/ -> be
-  macrolookup /optimized/ -> optimized
-  macrolookup /to/ -> to
-  macrolookup /be/ -> be
-  macrolookup /a/ -> a
-  macrolookup /bytecode/ -> bytecode
-  macrolookup /State/ -> State
-  macrolookup /LAST/ -> LAST
-  macrolookup /x/ -> x
-  macrolookup /LAST/ -> LAST
-  macrolookup /is/ -> is
-  macrolookup /the/ -> the
-  macrolookup /pointer/ -> pointer
-  macrolookup /to/ -> to
-  macrolookup /the/ -> the
-  macrolookup /head/ -> head
-  macrolookup /of/ -> of
-  macrolookup /the/ -> the
-  macrolookup /dictionary/ -> dictionary
-  macrolookup /list/ -> list
-  macrolookup /set/ -> set
-  macrolookup /it/ -> it
-  macrolookup /to/ -> to
-  macrolookup /point/ -> point
-  macrolookup /to/ -> to
-  macrolookup /this/ -> this
-  macrolookup /new/ -> new
-  macrolookup /word/ -> word
-pop macro scope
-push new macro scope
-  macrolookup /Compile/ -> Compile
-  macrolookup /literal/ -> literal
-  macrolookup /into/ -> into
-  macrolookup /definition/ -> definition
-  macrolookup /ram/ -> ram
-  macrolookup /literal/ -> literal
-  macrolookup /Compile/ -> Compile
-  macrolookup /address/ -> address
-  macrolookup /of/ -> of
-  macrolookup /doliteral/ -> doliteral
-  macrolookup /ram/ -> ram
-  macrolookup /pop/ -> pop
-  macrolookup /Compile/ -> Compile
-  macrolookup /literal/ -> literal
-  macrolookup /value/ -> value
-pop macro scope
-push new macro scope
-  macrolookup /return/ -> return
-  macrolookup /pop/ -> pop
-pop macro scope
-push new macro scope
-  macrolookup /Interaction/ -> Interaction
-  macrolookup /loop/ -> loop
-  macrolookup /REPL/ -> REPL
-  memomacro /blank/<-/(32)/ [object Object]
-  macrolookup /while/ -> while
-  macrolookup /input/ -> input
-  macrolookup /while/ -> while
-  macrolookup /not/ -> not
-  macrolookup /empty/ -> empty
-  macrolookup /input/ -> input
-pop macro scope
-push new macro scope
-  macrolookup /method/ -> method
-  macrolookup /for/ -> for
-  macrolookup /const/ -> const
-  memomacro /parameter/<-/State.RAM[(State.W+(1))]/ [object Object]
-  macrolookup /push/ -> push
-  macrolookup /parameter/ -> State.RAM[(State.W+(1))]
-pop macro scope
-push new macro scope
-  macrolookup /defsynonym/ -> defsynonym
-  macrolookup /parameterAddress/ -> parameterAddress
-  macrolookup /State/ -> State
-  macrolookup /RAM/ -> RAM
-  macrolookup /push/ -> push
-  macrolookup /parameterAddress/ -> parameterAddress
-pop macro scope
-push new macro scope
-  memomacro /normal/<-/(0)/ [object Object]
-  macrolookup /name/ -> name
-  macrolookup /normal/ -> (0)
-  macrolookup /docreate/ -> docreate
-pop macro scope
-push new macro scope
-  macrolookup /ram/ -> ram
-  macrolookup /value/ -> value
-pop macro scope
-push new macro scope
-  macrolookup /name/ -> name
-  macrolookup /value/ -> value
-pop macro scope
-push new macro scope
-  macrolookup /name/ -> name
-  macrolookup /cfa/ -> cfa
-  macrolookup /Find/ -> Find
-  macrolookup /CFA/ -> CFA
-  macrolookup /of/ -> of
-  macrolookup /word/ -> word
-  macrolookup /name/ -> name
-  macrolookup /deftemp/ -> deftemp
-  macrolookup /x/ -> x
-  macrolookup /State/ -> State
-  macrolookup /LAST/ -> LAST
-  macrolookup /while/ -> while
-  macrolookup /x/ -> x
-  macrolookup /print/ -> print
-  macrolookup /f/ -> f
-  macrolookup /x/ -> x
-pop macro scope
-push new macro scope
-  macrolookup /Interaction/ -> Interaction
-  macrolookup /loop/ -> loop
-  macrolookup /REPL/ -> REPL
-  memomacro /blank/<-/(32)/ [object Object]
-  macrolookup /debuginput/ -> debuginput
-  macrolookup /while/ -> while
-  macrolookup /not/ -> not
-  macrolookup /empty/ -> empty
-  macrolookup /input/ -> input
-  macrolookup /if/ -> if
-  macrolookup /print/ -> print
-  macrolookup /ok/ -> ok
-  macrolookup /eol/ -> eol
-  macrolookup /print/ -> print
-  macrolookup /State/ -> State
-  macrolookup /BUFP/ -> BUFP
-  macrolookup /print/ -> print
-  macrolookup /print/ -> print
-  macrolookup /State/ -> State
-  macrolookup /BUFF/ -> BUFF
-  macrolookup /eol/ -> eol
-pop macro scope
-push new macro scope
-  memomacro /blank/<-/(32)/ [object Object]
-  macrolookup /push/ -> push
-  macrolookup /blank/ -> (32)
-  macrolookup /deftemp/ -> deftemp
-  macrolookup /name/ -> name
-  macrolookup /pop/ -> pop
-  macrolookup /name/ -> name
-pop macro scope
-push new macro scope
-  macrolookup /a/ -> a
-  macrolookup /pop/ -> pop
-pop macro scope
-push new macro scope
-  macrolookup /a/ -> a
-  macrolookup /a/ -> a
-  macrolookup /a/ -> a
-  macrolookup /deftemp/ -> deftemp
-  macrolookup /A/ -> A
-  macrolookup /pop/ -> pop
-  macrolookup /push/ -> push
-  macrolookup /A/ -> A
-  macrolookup /push/ -> push
-  macrolookup /A/ -> A
-pop macro scope
-push new macro scope
-  macrolookup /n/ -> n
-  macrolookup /n/ -> n
-  macrolookup /deftemp/ -> deftemp
-  macrolookup /n/ -> n
-  macrolookup /pop/ -> pop
-  macrolookup /push/ -> push
-  macrolookup /n/ -> n
-pop macro scope
-push new macro scope
-  macrolookup /c/ -> c
-  macrolookup /emit/ -> emit
-  macrolookup /specified/ -> specified
-  macrolookup /character/ -> character
-  macrolookup /deftemp/ -> deftemp
-  macrolookup /c/ -> c
-  macrolookup /pop/ -> pop
-  macrolookup /printAsCharacter/ -> printAsCharacter
-  macrolookup /c/ -> c
-pop macro scope
-push new macro scope
-  macrolookup /eol/ -> eol
-pop macro scope
-push new macro scope
-  macrolookup /i/ -> i
-  macrolookup /get/ -> get
-  macrolookup /current/ -> current
-  macrolookup /loop/ -> loop
-  macrolookup /index/ -> index
-  macrolookup /from/ -> from
-  macrolookup /R/ -> R
-  macrolookup /stack/ -> stack
-  macrolookup /deftemp/ -> deftemp
-  macrolookup /i/ -> i
-  macrolookup /rtop/ -> rtop
-  macrolookup /push/ -> push
-  macrolookup /i/ -> i
-pop macro scope
-push new macro scope
-  macrolookup /j/ -> j
-  macrolookup /get/ -> get
-  macrolookup /outer/ -> outer
-  macrolookup /loop/ -> loop
-  macrolookup /index/ -> index
-  macrolookup /from/ -> from
-  macrolookup /R/ -> R
-  macrolookup /stack/ -> stack
-  macrolookup /deftemp/ -> deftemp
-  macrolookup /j/ -> j
-  macrolookup /rthird/ -> rthird
-  macrolookup /push/ -> push
-  macrolookup /j/ -> j
-pop macro scope
-push new macro scope
-  macrolookup /a/ -> a
-  macrolookup /b/ -> b
-  macrolookup /b/ -> b
-  macrolookup /a/ -> a
-  macrolookup /deftemp/ -> deftemp
-  macrolookup /B/ -> B
-  macrolookup /pop/ -> pop
-  macrolookup /deftemp/ -> deftemp
-  macrolookup /A/ -> A
-  macrolookup /pop/ -> pop
-  macrolookup /push/ -> push
-  macrolookup /B/ -> B
-  macrolookup /push/ -> push
-  macrolookup /A/ -> A
-pop macro scope
-push new macro scope
-  macrolookup /char/ -> char
-  macrolookup /string/ -> string
-  macrolookup /Read/ -> Read
-  macrolookup /in/ -> in
-  macrolookup /string/ -> string
-  macrolookup /delimited/ -> delimited
-  macrolookup /by/ -> by
-  macrolookup /char/ -> char
-  macrolookup /deftemp/ -> deftemp
-  macrolookup /wanted/ -> wanted
-  macrolookup /popchar/ -> popchar
-  macrolookup /scanfor/ -> scanfor
-  macrolookup /wanted/ -> wanted
-pop macro scope
-push new macro scope
-  macrolookup /This/ -> This
-  macrolookup /instruction/ -> instruction
-  macrolookup /appears/ -> appears
-  macrolookup /only/ -> only
-  macrolookup /inside/ -> inside
-  macrolookup /subroutine/ -> subroutine
-  macrolookup /sequences/ -> sequences
-  macrolookup /jump/ -> jump
-  macrolookup /to/ -> to
-  macrolookup /address/ -> address
-  macrolookup /in/ -> in
-  macrolookup /next/ -> next
-  macrolookup /cell/ -> cell
-  macrolookup /This/ -> This
-  macrolookup /instruction/ -> instruction
-  macrolookup /is/ -> is
-  macrolookup /inserted/ -> inserted
-  macrolookup /into/ -> into
-  macrolookup /a/ -> a
-  macrolookup /subr/ -> subr
-  macrolookup /sequence/ -> sequence
-  macrolookup /when/ -> when
-  macrolookup /compiling/ -> compiling
-  macrolookup /control/ -> control
-  macrolookup /flow/ -> flow
-  macrolookup /words/ -> words
-  macrolookup /like/ -> like
-  macrolookup /else/ -> else
-  macrolookup /see/ -> see
-  macrolookup /below/ -> below
-  macrolookup /State/ -> State
-  macrolookup /IP/ -> IP
-  macrolookup /State/ -> State
-  macrolookup /RAM/ -> RAM
-  macrolookup /State/ -> State
-  macrolookup /IP/ -> IP
-  macrolookup /normally/ -> normally
-  macrolookup /we/ -> we
-  macrolookup /just/ -> just
-  macrolookup /execute/ -> execute
-  macrolookup /an/ -> an
-  macrolookup /instruction/ -> instruction
-  macrolookup /then/ -> then
-  macrolookup /move/ -> move
-  macrolookup /the/ -> the
-  macrolookup /IP/ -> IP
-  macrolookup /sequentially/ -> sequentially
-  macrolookup /forward/ -> forward
-  macrolookup /by/ -> by
-  macrolookup /unit/ -> unit
-  macrolookup /i/ -> i
-  macrolookup /e/ -> e
-  macrolookup /IP/ -> IP
-  macrolookup /IP/ -> IP
-  macrolookup /in/ -> in
-  macrolookup /this/ -> this
-  macrolookup /case/ -> case
-  macrolookup /though/ -> though
-  macrolookup /we/ -> we
-  macrolookup /explicitly/ -> explicitly
-  macrolookup /change/ -> change
-  macrolookup /the/ -> the
-  macrolookup /IP/ -> IP
-  macrolookup /to/ -> to
-  macrolookup /some/ -> some
-  macrolookup /other/ -> other
-  macrolookup /value/ -> value
-  macrolookup /and/ -> and
-  macrolookup /don/ -> don
-  macrolookup /t/ -> t
-  macrolookup /just/ -> just
-  macrolookup /increment/ -> increment
-  macrolookup /it/ -> it
-pop macro scope
-push new macro scope
-  memomacro /blank/<-/(32)/ [object Object]
-  macrolookup /push/ -> push
-  macrolookup /blank/ -> (32)
-  macrolookup /deftemp/ -> deftemp
-  macrolookup /name/ -> name
-  macrolookup /pop/ -> pop
-  macrolookup /deftemp/ -> deftemp
-  macrolookup /value/ -> value
-  macrolookup /pop/ -> pop
-  macrolookup /name/ -> name
-  macrolookup /value/ -> value
-pop macro scope
-push new macro scope
-  macrolookup /deftemp/ -> deftemp
-  macrolookup /n/ -> n
-  macrolookup /toint/ -> toint
-  macrolookup /pop/ -> pop
-  macrolookup /deftemp/ -> deftemp
-  macrolookup /start/ -> start
-  macrolookup /toint/ -> toint
-  macrolookup /pop/ -> pop
-  macrolookup /print/ -> print
-  macrolookup /deftemp/ -> deftemp
-  macrolookup /a/ -> a
-  macrolookup /start/ -> start
-  macrolookup /while/ -> while
-  macrolookup /a/ -> a
-  macrolookup /start/ -> start
-  macrolookup /n/ -> n
-  macrolookup /State/ -> State
-  macrolookup /RAM/ -> RAM
-  macrolookup /start/ -> start
-  macrolookup /print/ -> print
-  macrolookup /a/ -> a
-  macrolookup /print/ -> print
-  macrolookup /print/ -> print
-  macrolookup /State/ -> State
-  macrolookup /RAM/ -> RAM
-  macrolookup /a/ -> a
-  macrolookup /eol/ -> eol
-  macrolookup /deftemp/ -> deftemp
-  macrolookup /a/ -> a
-  macrolookup /a/ -> a
-pop macro scope
-push new macro scope
-  macrolookup /Leave/ -> Leave
-  macrolookup /interpreter/ -> interpreter
-  macrolookup /quit/ -> quit
-pop macro scope
-push new macro scope
-  macrolookup /name/ -> name
-  macrolookup /name/ -> name
-  macrolookup /xt/ -> xt
-  macrolookup /xt/ -> xt
-  macrolookup /Search/ -> Search
-  macrolookup /for/ -> for
-  macrolookup /word/ -> word
-  macrolookup /name/ -> name
-  macrolookup /possible/ -> possible
-  macrolookup /results/ -> results
-  macrolookup /name/ -> name
-  macrolookup /if/ -> if
-  macrolookup /not/ -> not
-  macrolookup /found/ -> found
-  macrolookup /xt/ -> xt
-  macrolookup /if/ -> if
-  macrolookup /found/ -> found
-  macrolookup /and/ -> and
-  macrolookup /word/ -> word
-  macrolookup /is/ -> is
-  macrolookup /immediate/ -> immediate
-  macrolookup /xt/ -> xt
-  macrolookup /if/ -> if
-  macrolookup /found/ -> found
-  macrolookup /and/ -> and
-  macrolookup /word/ -> word
-  macrolookup /is/ -> is
-  macrolookup /normal/ -> normal
-  macrolookup /push/ -> push
-  macrolookup /deftemp/ -> deftemp
-  macrolookup /found/ -> found
-  macrolookup /stop/ -> stop
-  macrolookup /if/ -> if
-  macrolookup /found/ -> found
-  macrolookup /push/ -> push
-pop macro scope
-push new macro scope
-  macrolookup /pushNone/ -> pushNone
-pop macro scope
-push new macro scope
-  macrolookup /print/ -> print
-  macrolookup /words/ -> words
-  macrolookup /in/ -> in
-  macrolookup /dictionary/ -> dictionary
-  macrolookup /deftemp/ -> deftemp
-  macrolookup /x/ -> x
-  macrolookup /State/ -> State
-  macrolookup /LAST/ -> LAST
-  macrolookup /while/ -> while
-  macrolookup /x/ -> x
-  macrolookup /print/ -> print
-  macrolookup /State/ -> State
-  macrolookup /RAM/ -> RAM
-  macrolookup /x/ -> x
-  macrolookup /print/ -> print
-pop macro scope
-push new macro scope
-  macrolookup /invoke/ -> invoke
-  macrolookup /given/ -> given
-  macrolookup /word/ -> word
-  macrolookup /deftemp/ -> deftemp
-  macrolookup /wordAddress/ -> wordAddress
-  macrolookup /pop/ -> pop
-  macrolookup /wordAddress/ -> wordAddress
-pop macro scope
-push new macro scope
-  macrolookup /string/ -> string
-  macrolookup /Execute/ -> Execute
-  macrolookup /word/ -> word
-  macrolookup /possible/ -> possible
-  macrolookup /results/ -> results
-  macrolookup /from/ -> from
-  macrolookup /find/ -> find
-  macrolookup /name/ -> name
-  macrolookup /if/ -> if
-  macrolookup /not/ -> not
-  macrolookup /found/ -> found
-  macrolookup /xt/ -> xt
-  macrolookup /if/ -> if
-  macrolookup /found/ -> found
-  macrolookup /and/ -> and
-  macrolookup /word/ -> word
-  macrolookup /is/ -> is
-  macrolookup /immediate/ -> immediate
-  macrolookup /xt/ -> xt
-  macrolookup /if/ -> if
-  macrolookup /found/ -> found
-  macrolookup /and/ -> and
-  macrolookup /word/ -> word
-  macrolookup /is/ -> is
-  macrolookup /normal/ -> normal
-  macrolookup /deftemp/ -> deftemp
-  macrolookup /result/ -> result
-  macrolookup /pop/ -> pop
-  memomacro /foundimmediate/<-/((result=(1)))/ [object Object]
-  macrolookup /deftemp/ -> deftemp
-  macrolookup /item/ -> item
-  macrolookup /pop/ -> pop
-  memomacro /foundnormal/<-/((result=(-1)))/ [object Object]
-  memomacro /notfound/<-/((result=(0)))/ [object Object]
-  memomacro /found/<-/((foundimmediateor(foundnormal)))/ [object Object]
-  macrolookup /if/ -> if
-  macrolookup /found/ -> ((foundimmediateor(foundnormal)))
-  macrolookup /if/ -> if
-  macrolookup /incompilingstate/ -> incompilingstate
-  macrolookup /if/ -> if
-  macrolookup /foundimmediate/ -> ((result=(1)))
-  macrolookup /item/ -> item
-pop macro scope
-push new macro scope
-  macrolookup /deftempfobjaddress/ -> deftempfobjaddress
-  macrolookup /pop/ -> pop
-  macrolookup /returnState/ -> returnState
-  macrolookup /RAM/ -> RAM
-  macrolookup /fobjaddress/ -> fobjaddress
-pop macro scope
-push new macro scope
-  macrolookup /deftempfobjaddress/ -> deftempfobjaddress
-  macrolookup /pop/ -> pop
-  macrolookup /State/ -> State
-  macrolookup /RAM/ -> RAM
-  macrolookup /fobjaddress/ -> fobjaddress
-  macrolookup /v/ -> v
-pop macro scope
-push new macro scope
-  macrolookup /Executeacolon/ -> Executeacolon
-  macrolookup /definedwordusingindirectthreadedcodeinterpretation/ -> definedwordusingindirectthreadedcodeinterpretation
-  macrolookup /Thisfunctionimplementstheinnerinterpreterforthreadedcodeexecution/ -> Thisfunctionimplementstheinnerinterpreterforthreadedcodeexecution
-  macrolookup /Threadedcodewordsstoretheirdefinitionsasarraysofcodefieldaddresses/ -> Threadedcodewordsstoretheirdefinitionsasarraysofcodefieldaddresses
-  macrolookup /CFAs/ -> CFAs
-  macrolookup /intheparameterfieldarea/ -> intheparameterfieldarea
-  macrolookup /PFA/ -> PFA
-  macrolookup /immediatelyfollowingthewordheader/ -> immediatelyfollowingthewordheader
-  macrolookup /Theexecutionmodelmaintainstwocriticalregisters/ -> Theexecutionmodelmaintainstwocriticalregisters
-  macrolookup /IP/ -> IP
-  macrolookup /InstructionPointer/ -> InstructionPointer
-  macrolookup /Referencesthecurrentpositionwithinthe/ -> Referencesthecurrentpositionwithinthe
-  macrolookup /threadedcodearraybeinginterpreted/ -> threadedcodearraybeinginterpreted
-  macrolookup /Sincethreadedwordsmayinvoke/ -> Sincethreadedwordsmayinvoke
-  macrolookup /otherthreadedwords/ -> otherthreadedwords
-  macrolookup /IPmustbepreservedinareentrantmannervia/ -> IPmustbepreservedinareentrantmannervia
-  macrolookup /thereturnstackoneachinvocation/ -> thereturnstackoneachinvocation
-  macrolookup /W/ -> W
-  macrolookup /WordPointer/ -> WordPointer
-  macrolookup /ReferencestheCFAofthecurrentlyexecutingprimitive/ -> ReferencestheCFAofthecurrentlyexecutingprimitive
-  macrolookup /Thisglobalregisterservesananalogousfunctionto/ -> Thisglobalregisterservesananalogousfunctionto
-  macrolookup /self/ -> self
-  macrolookup /inobject/ -> inobject
-  macrolookup /oriented/ -> oriented
-  macrolookup /languages/ -> languages
-  macrolookup /enablingsubroutinestoaccesswordheaderfieldsthroughfixed/ -> enablingsubroutinestoaccesswordheaderfieldsthroughfixed
-  macrolookup /offsetsfromtheCFA/ -> offsetsfromtheCFA
-  macrolookup /Optimizationrationale/ -> Optimizationrationale
-  macrolookup /WispositionedtoreferencetheCFAratherthanthe/ -> WispositionedtoreferencetheCFAratherthanthe
-  macrolookup /wordheaderbase/ -> wordheaderbase
-  macrolookup /ThisdesigneliminatesoffsetarithmeticforCFAaccess/ -> ThisdesigneliminatesoffsetarithmeticforCFAaccess
-  macrolookup /the/ -> the
-  macrolookup /mostfrequentheaderoperation/ -> mostfrequentheaderoperation
-  macrolookup /atthecostofrequiringoffsetadjustments/ -> atthecostofrequiringoffsetadjustments
-  macrolookup /forotherheaderfields/ -> forotherheaderfields
-  macrolookup /NFA/ -> NFA
-  macrolookup /W/ -> W
-  macrolookup /flags/ -> flags
-  macrolookup /W/ -> W
-  macrolookup /PFA/ -> PFA
-  macrolookup /W/ -> W
-  macrolookup /Thisrepresentsa/ -> Thisrepresentsa
-  macrolookup /deliberatetrade/ -> deliberatetrade
-  macrolookup /offfavoringthecommoncase/ -> offfavoringthecommoncase
-  macrolookup /Theinnerinterpreterloopperformsthefollowingoperations/ -> Theinnerinterpreterloopperformsthefollowingoperations
-  macrolookup /FetchthenextCFAfromRAM/ -> FetchthenextCFAfromRAM
-  macrolookup /IP/ -> IP
-  macrolookup /intoW/ -> intoW
-  macrolookup /performingthefirstindirection/ -> performingthefirstindirection
-  macrolookup /IncrementIPtoadvancethroughthethreadedcodearray/ -> IncrementIPtoadvancethroughthethreadedcodearray
-  macrolookup /ExecutetheprimitiveviaRAM/ -> ExecutetheprimitiveviaRAM
-  macrolookup /W/ -> W
-  macrolookup /performingthesecondindirection/ -> performingthesecondindirection
-  macrolookup /BycachingthedereferencedCFAinW/ -> BycachingthedereferencedCFAinW
-  macrolookup /weamortizethecostofdouble/ -> weamortizethecostofdouble
-  macrolookup /indirection/ -> indirection
-  macrolookup /bothprimitiveexecutionandheaderfieldaccesswithin/ -> bothprimitiveexecutionandheaderfieldaccesswithin
-  macrolookup /subroutinesutilizethesamecachedreference/ -> subroutinesutilizethesamecachedreference
-  macrolookup /avoidingredundant/ -> avoidingredundant
-  macrolookup /dereferences/ -> dereferences
-  macrolookup /Thisisfunctionallyequivalenttoparameterpassingin/ -> Thisisfunctionallyequivalenttoparameterpassingin
-  macrolookup /object/ -> object
-  macrolookup /orientedmethodinvocation/ -> orientedmethodinvocation
-  macrolookup /buteliminatestheoverheadof/ -> buteliminatestheoverheadof
-  macrolookup /explicitlypassing/ -> explicitlypassing
-  macrolookup /self/ -> self
-  macrolookup /toeachprimitive/ -> toeachprimitive
-  macrolookup /Note/ -> Note
-  macrolookup /Wsstateisonlydefinedduringprimitiveexecution/ -> Wsstateisonlydefinedduringprimitiveexecution
-  macrolookup /withinRAM/ -> withinRAM
-  macrolookup /W/ -> W
-  macrolookup /Betweenloopiterations/ -> Betweenloopiterations
-  macrolookup /WmayreferenceastaleCFA/ -> WmayreferenceastaleCFA
-  macrolookup /butthisis/ -> butthisis
-  macrolookup /architecturallysoundsinceWisunconditionallyupdatedbeforeeach/ -> architecturallysoundsinceWisunconditionallyupdatedbeforeeach
-  macrolookup /primitiveinvocation/ -> primitiveinvocation
-  macrolookup /rpush/ -> rpush
-  macrolookup /State/ -> State
-  macrolookup /IP/ -> IP
-  macrolookup /State/ -> State
-  macrolookup /IP/ -> IP
-  macrolookup /State/ -> State
-  macrolookup /W/ -> W
-  macrolookup /while/ -> while
-  macrolookup /State/ -> State
-  macrolookup /RAM/ -> RAM
-  macrolookup /State/ -> State
-  macrolookup /IP/ -> IP
-  macrolookup /State/ -> State
-  macrolookup /W/ -> W
-  macrolookup /State/ -> State
-  macrolookup /RAM/ -> RAM
-  macrolookup /State/ -> State
-  macrolookup /IP/ -> IP
-  macrolookup /State/ -> State
-  macrolookup /IP/ -> IP
-  macrolookup /State/ -> State
-  macrolookup /IP/ -> IP
-  macrolookup /State/ -> State
-  macrolookup /RAM/ -> RAM
-  macrolookup /State/ -> State
-  macrolookup /W/ -> W
-pop macro scope
-push new macro scope
-  macrolookup /clearS/ -> clearS
-  macrolookup /clearR/ -> clearR
-  macrolookup /print/ -> print
-  macrolookup /word/ -> word
-  macrolookup /print/ -> print
-  macrolookup /eol/ -> eol
-pop macro scope
-push new macro scope
-  macrolookup /foundandcompilingandimmediate/ -> foundandcompilingandimmediate
-  macrolookup /State/ -> State
-  macrolookup /W/ -> W
-  macrolookup /xt/ -> xt
-  macrolookup /State/ -> State
-  macrolookup /IP/ -> IP
-  macrolookup /Dummytoholdplaceinreturnstack/ -> Dummytoholdplaceinreturnstack
-  macrolookup /State/ -> State
-  macrolookup /RAM/ -> RAM
-  macrolookup /xt/ -> xt
-  macrolookup /Executecode/ -> Executecode
-pop macro scope
-push new macro scope
-  macrolookup /foundandnotcompiling/ -> foundandnotcompiling
-  macrolookup /State/ -> State
-  macrolookup /W/ -> W
-  macrolookup /xt/ -> xt
-  macrolookup /State/ -> State
-  macrolookup /IP/ -> IP
-  macrolookup /Dummytoholdplaceinreturnstack/ -> Dummytoholdplaceinreturnstack
-  macrolookup /State/ -> State
-  macrolookup /RAM/ -> RAM
-  macrolookup /xt/ -> xt
-  macrolookup /Executecode/ -> Executecode
-pop macro scope
-push new macro scope
-  macrolookup /push/ -> push
-  macrolookup /toint/ -> toint
-  macrolookup /word/ -> word
-pop macro scope
-push new macro scope
-  macrolookup /push/ -> push
-  macrolookup /tofloat/ -> tofloat
-  macrolookup /word/ -> word
-pop macro scope
-push new macro scope
-  macrolookup /word/ -> word
-pop macro scope
-push new macro scope
-  macrolookup /word/ -> word
-pop macro scope
-push new macro scope
-  macrolookup /AddnewwordtoRAMdictionary/ -> AddnewwordtoRAMdictionary
-  macrolookup /Wecreateaword/ -> Wecreateaword
-  macrolookup /Forth/ -> Forth
-  macrolookup /object/ -> object
-  macrolookup /inRAMwith5fieldsandextendthe/ -> inRAMwith5fieldsandextendthe
-  macrolookup /thedictionarybylinkingbacktotheheadofthedictionarylist/ -> thedictionarybylinkingbacktotheheadofthedictionarylist
-  macrolookup /x/ -> x
-  macrolookup /State/ -> State
-  macrolookup /RAM/ -> RAM
-  macrolookup /ram/ -> ram
-  macrolookup /State/ -> State
-  macrolookup /LAST/ -> LAST
-  macrolookup /LFA/ -> LFA
-  macrolookup /linktopreviouswordindictionarylist/ -> linktopreviouswordindictionarylist
-  macrolookup /ram/ -> ram
-  macrolookup /name/ -> name
-  macrolookup /NFA/ -> NFA
-  macrolookup /nameofword/ -> nameofword
-  macrolookup /ram/ -> ram
-  macrolookup /flags/ -> flags
-  macrolookup /normalword/ -> normalword
-  macrolookup /immediateword/ -> immediateword
-  macrolookup /ram/ -> ram
-  macrolookup /does/ -> does
-  macrolookup /CFA/ -> CFA
-  macrolookup /functionpointerthatpointstocodethatexecutestheword/ -> functionpointerthatpointstocodethatexecutestheword
-  macrolookup /afunctionpointerisnowjustastring/ -> afunctionpointerisnowjustastring
-  macrolookup /probablyshouldbeoptimizedtobeabytecode/ -> probablyshouldbeoptimizedtobeabytecode
-  macrolookup /State/ -> State
-  macrolookup /LAST/ -> LAST
-  macrolookup /x/ -> x
-  macrolookup /LASTisthepointertotheheadofthedictionarylist/ -> LASTisthepointertotheheadofthedictionarylist
-  macrolookup /setittopointto/ -> setittopointto
-  macrolookup /thisnewword/ -> thisnewword
-pop macro scope
-push new macro scope
-  macrolookup /Compileliteralintodefinition/ -> Compileliteralintodefinition
-  macrolookup /ram/ -> ram
-  macrolookup /literal/ -> literal
-  macrolookup /Compileaddressofdoliteral/ -> Compileaddressofdoliteral
-  macrolookup /ram/ -> ram
-  macrolookup /pop/ -> pop
-  macrolookup /Compileliteralvalue/ -> Compileliteralvalue
-pop macro scope
-push new macro scope
-  macrolookup /return/ -> return
-  macrolookup /pop/ -> pop
-pop macro scope
-push new macro scope
-  macrolookup /Interactionloop/ -> Interactionloop
-  macrolookup /REPL/ -> REPL
-  macrolookup /while/ -> while
-  macrolookup /input/ -> input
-  macrolookup /whilenot/ -> whilenot
-  macrolookup /empty/ -> empty
-  macrolookup /input/ -> input
-pop macro scope
-push new macro scope
-  macrolookup /methodforconst/ -> methodforconst
-  macrolookup /push/ -> push
-  macrolookup /State/ -> State
-  macrolookup /RAM/ -> RAM
-  macrolookup /State/ -> State
-  macrolookup /W/ -> W
-pop macro scope
-push new macro scope
-  macrolookup /defsynonymparameterAddress/ -> defsynonymparameterAddress
-  macrolookup /State/ -> State
-  macrolookup /RAM/ -> RAM
-  macrolookup /push/ -> push
-  macrolookup /parameterAddress/ -> parameterAddress
-pop macro scope
-push new macro scope
-  macrolookup /name/ -> name
-  macrolookup /docreate/ -> docreate
-pop macro scope
-push new macro scope
-  macrolookup /ram/ -> ram
-  macrolookup /value/ -> value
-pop macro scope
-push new macro scope
-  macrolookup /name/ -> name
-  macrolookup /value/ -> value
-pop macro scope
-push new macro scope
-  macrolookup /name/ -> name
-  macrolookup /cfa/ -> cfa
-  macrolookup /FindCFAofwordname/ -> FindCFAofwordname
-  macrolookup /deftempx/ -> deftempx
-  macrolookup /State/ -> State
-  macrolookup /LAST/ -> LAST
-  macrolookup /while/ -> while
-  macrolookup /x/ -> x
-  macrolookup /print/ -> print
-  macrolookup /f/ -> f
-  macrolookup /x/ -> x
-pop macro scope
-push new macro scope
-  macrolookup /Interactionloop/ -> Interactionloop
-  macrolookup /REPL/ -> REPL
-  macrolookup /debuginput/ -> debuginput
-  macrolookup /whilenot/ -> whilenot
-  macrolookup /empty/ -> empty
-  macrolookup /input/ -> input
-  macrolookup /if/ -> if
-  macrolookup /print/ -> print
-  macrolookup /ok/ -> ok
-  macrolookup /eol/ -> eol
-  macrolookup /print/ -> print
-  macrolookup /State/ -> State
-  macrolookup /BUFP/ -> BUFP
-  macrolookup /print/ -> print
-  macrolookup /print/ -> print
-  macrolookup /State/ -> State
-  macrolookup /BUFF/ -> BUFF
-  macrolookup /eol/ -> eol
-pop macro scope
-push new macro scope
-  macrolookup /push/ -> push
-  macrolookup /deftempname/ -> deftempname
-  macrolookup /pop/ -> pop
-  macrolookup /name/ -> name
-pop macro scope
-push new macro scope
-  macrolookup /a/ -> a
-  macrolookup /pop/ -> pop
-pop macro scope
-push new macro scope
-  macrolookup /a/ -> a
-  macrolookup /aa/ -> aa
-  macrolookup /deftempA/ -> deftempA
-  macrolookup /pop/ -> pop
-  macrolookup /push/ -> push
-  macrolookup /A/ -> A
-  macrolookup /push/ -> push
-  macrolookup /A/ -> A
-pop macro scope
-push new macro scope
-  macrolookup /n/ -> n
-  macrolookup /n/ -> n
-  macrolookup /deftempn/ -> deftempn
-  macrolookup /pop/ -> pop
-  macrolookup /push/ -> push
-  macrolookup /n/ -> n
-pop macro scope
-push new macro scope
-  macrolookup /c/ -> c
-  macrolookup /emitspecifiedcharacter/ -> emitspecifiedcharacter
-  macrolookup /deftempc/ -> deftempc
-  macrolookup /pop/ -> pop
-  macrolookup /printAsCharacter/ -> printAsCharacter
-  macrolookup /c/ -> c
-pop macro scope
-push new macro scope
-  macrolookup /eol/ -> eol
-pop macro scope
-push new macro scope
-  macrolookup /i/ -> i
-  macrolookup /getcurrentloopindexfromRstack/ -> getcurrentloopindexfromRstack
-  macrolookup /deftempi/ -> deftempi
-  macrolookup /rtop/ -> rtop
-  macrolookup /push/ -> push
-  macrolookup /i/ -> i
-pop macro scope
-push new macro scope
-  macrolookup /j/ -> j
-  macrolookup /getouterloopindexfromRstack/ -> getouterloopindexfromRstack
-  macrolookup /deftempj/ -> deftempj
-  macrolookup /rthird/ -> rthird
-  macrolookup /push/ -> push
-  macrolookup /j/ -> j
-pop macro scope
-push new macro scope
-  macrolookup /ab/ -> ab
-  macrolookup /ba/ -> ba
-  macrolookup /deftempB/ -> deftempB
-  macrolookup /pop/ -> pop
-  macrolookup /deftempA/ -> deftempA
-  macrolookup /pop/ -> pop
-  macrolookup /push/ -> push
-  macrolookup /B/ -> B
-  macrolookup /push/ -> push
-  macrolookup /A/ -> A
-pop macro scope
-push new macro scope
-  macrolookup /char/ -> char
-  macrolookup /string/ -> string
-  macrolookup /Readinstringdelimitedbychar/ -> Readinstringdelimitedbychar
-  macrolookup /deftempwanted/ -> deftempwanted
-  macrolookup /popchar/ -> popchar
-  macrolookup /scanfor/ -> scanfor
-  macrolookup /wanted/ -> wanted
-pop macro scope
-push new macro scope
-  macrolookup /Thisinstructionappearsonlyinsidesubroutinesequences/ -> Thisinstructionappearsonlyinsidesubroutinesequences
-  macrolookup /jumptoaddressinnextcell/ -> jumptoaddressinnextcell
-  macrolookup /Thisinstructionisinsertedintoasubrsequencewhencompilingcontrol/ -> Thisinstructionisinsertedintoasubrsequencewhencompilingcontrol
-  macrolookup /flowwords/ -> flowwords
-  macrolookup /like/ -> like
-  macrolookup /else/ -> else
-  macrolookup /seebelow/ -> seebelow
-  macrolookup /State/ -> State
-  macrolookup /IP/ -> IP
-  macrolookup /State/ -> State
-  macrolookup /RAM/ -> RAM
-  macrolookup /State/ -> State
-  macrolookup /IP/ -> IP
-  macrolookup /normally/ -> normally
-  macrolookup /wejustexecuteaninstructionthenmovetheIPsequentiallyforwardby1unit/ -> wejustexecuteaninstructionthenmovetheIPsequentiallyforwardby1unit
-  macrolookup /i/ -> i
-  macrolookup /e/ -> e
-  macrolookup /IP/ -> IP
-  macrolookup /IP/ -> IP
-  macrolookup /inthiscase/ -> inthiscase
-  macrolookup /though/ -> though
-  macrolookup /weexplicitlychangetheIPtosomeothervalueanddon/ -> weexplicitlychangetheIPtosomeothervalueanddon
-  macrolookup /tjustincrementit/ -> tjustincrementit
-pop macro scope
-push new macro scope
-  macrolookup /push/ -> push
-  macrolookup /deftempname/ -> deftempname
-  macrolookup /pop/ -> pop
-  macrolookup /deftempvalue/ -> deftempvalue
-  macrolookup /pop/ -> pop
-  macrolookup /name/ -> name
-  macrolookup /value/ -> value
-pop macro scope
-push new macro scope
-  macrolookup /deftempn/ -> deftempn
-  macrolookup /toint/ -> toint
-  macrolookup /pop/ -> pop
-  macrolookup /deftempstart/ -> deftempstart
-  macrolookup /toint/ -> toint
-  macrolookup /pop/ -> pop
-  macrolookup /print/ -> print
-  macrolookup /deftempa/ -> deftempa
-  macrolookup /start/ -> start
-  macrolookup /while/ -> while
-  macrolookup /a/ -> a
-  macrolookup /start/ -> start
-  macrolookup /n/ -> n
-  macrolookup /State/ -> State
-  macrolookup /RAM/ -> RAM
-  macrolookup /start/ -> start
-  macrolookup /print/ -> print
-  macrolookup /a/ -> a
-  macrolookup /print/ -> print
-  macrolookup /print/ -> print
-  macrolookup /State/ -> State
-  macrolookup /RAM/ -> RAM
-  macrolookup /a/ -> a
-  macrolookup /eol/ -> eol
-  macrolookup /deftempa/ -> deftempa
-  macrolookup /a/ -> a
-pop macro scope
-push new macro scope
-  macrolookup /Leaveinterpreter/ -> Leaveinterpreter
-  macrolookup /quit/ -> quit
-pop macro scope
-push new macro scope
-  macrolookup /name/ -> name
-  macrolookup /name0/ -> name0
-  macrolookup /xt1/ -> xt1
-  macrolookup /xt/ -> xt
-  macrolookup /Searchforwordname/ -> Searchforwordname
-  macrolookup /possibleresults/ -> possibleresults
-  macrolookup /name0/ -> name0
-  macrolookup /ifnotfound/ -> ifnotfound
-  macrolookup /xt1/ -> xt1
-  macrolookup /iffoundandwordisimmediate/ -> iffoundandwordisimmediate
-  macrolookup /xt/ -> xt
-  macrolookup /iffoundandwordisnormal/ -> iffoundandwordisnormal
-  macrolookup /push/ -> push
-  macrolookup /deftempfound/ -> deftempfound
-  macrolookup /stop/ -> stop
-  macrolookup /if/ -> if
-  macrolookup /found/ -> found
-  macrolookup /push/ -> push
-pop macro scope
-push new macro scope
-  macrolookup /pushNone/ -> pushNone
-pop macro scope
-push new macro scope
-  macrolookup /printwordsindictionary/ -> printwordsindictionary
-  macrolookup /deftempx/ -> deftempx
-  macrolookup /State/ -> State
-  macrolookup /LAST/ -> LAST
-  macrolookup /while/ -> while
-  macrolookup /x/ -> x
-  macrolookup /print/ -> print
-  macrolookup /State/ -> State
-  macrolookup /RAM/ -> RAM
-  macrolookup /x/ -> x
-  macrolookup /print/ -> print
-pop macro scope
-push new macro scope
-  macrolookup /invokegivenword/ -> invokegivenword
-  macrolookup /deftempwordAddress/ -> deftempwordAddress
-  macrolookup /pop/ -> pop
-  macrolookup /wordAddress/ -> wordAddress
-pop macro scope
-push new macro scope
-  macrolookup /string/ -> string
-  macrolookup /Executeword/ -> Executeword
-  macrolookup /possibleresultsfromfind/ -> possibleresultsfromfind
-  macrolookup /name0/ -> name0
-  macrolookup /ifnotfound/ -> ifnotfound
-  macrolookup /xt1/ -> xt1
-  macrolookup /iffoundandwordisimmediate/ -> iffoundandwordisimmediate
-  macrolookup /xt/ -> xt
-  macrolookup /iffoundandwordisnormal/ -> iffoundandwordisnormal
-  macrolookup /deftempresult/ -> deftempresult
-  macrolookup /pop/ -> pop
-  macrolookup /deftempitem/ -> deftempitem
-  macrolookup /pop/ -> pop
-  macrolookup /if/ -> if
-  macrolookup /foundimmediateor/ -> foundimmediateor
-  macrolookup /foundnormal/ -> foundnormal
-  macrolookup /if/ -> if
-  macrolookup /incompilingstate/ -> incompilingstate
-  macrolookup /if/ -> if
-  macrolookup /result/ -> result
-  macrolookup /item/ -> item
-pop macro scope
+Sun Mar 29 08:44:11  2026
+ enter text
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_nl
+  exit char_nl
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_nl
+  exit char_nl
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_nl
+  exit char_nl
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_nl
+  exit char_nl
+  enter char_nl
+  exit char_nl
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_nl
+  exit char_nl
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_nl
+  exit char_nl
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_nl
+  exit char_nl
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_nl
+  exit char_nl
+  enter char_nl
+  exit char_nl
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_nl
+  exit char_nl
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_any
+  exit char_any
+  enter char_nl
+  exit char_nl
+  enter char_any
+  exit char_any
+  enter char_nl
+  exit char_nl
+ exit text
