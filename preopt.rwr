@@ -19,7 +19,6 @@
     ⎡ ⎨memomacro ‛«name»’ ‛«e»’⎬
       ‛ ⎨xcontinue⎬’
     ⎦
-  Pattern_routine [_call id] = ‛«_call»«id»’
   Pattern_name [name] = ‛⎨macrolookup ‛«name»’⎬’
   
   exprCh [c] = ‛«c»’

@@ -16,7 +16,6 @@ pretransmogrifier {
 
    Pattern =
     | "defsynonym" id "≡" PureExpression -- memomacro
-    | call id -- routine
     | id -- name
     
   exprCh = ~"{" any

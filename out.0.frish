@@ -1,0 +1,171 @@
+⎩1⎭
+  ⌈ fvget and fvset assume that the forth object (word) is a set of contiguous slots, each 1 machine word wide⎩2⎭
+    these functions use direct integer offsets to access the fields of the fojbect, whereas in higher level languages⎩3⎭
+    we'd use class fields instead - todo: fix this in the future (or not? at what point is customization better than⎩4⎭
+    generalization?) ⌉⎩5⎭
+  function fvget (name) {⎩6⎭
+      deftemp fobjaddress ⇐ %funcall _find(%pop)⎩7⎭
+      return State.RAM [fobjaddress + 1]⎩8⎭
+  }⎩9⎭
+⎩10⎭
+  function fvset (name, v) {⎩11⎭
+      deftemp fobjaddress ⇐ %funcall _find(%pop)⎩12⎭
+      defsynonym namefieldaddress ≡ fobjaddress + 1⎩13⎭
+      State.RAM [namefieldaddress] ⇐ v⎩14⎭
+  }⎩15⎭
+⎩16⎭
+⎩17⎭
+  function doword () {⎩18⎭
+  ⌈⎩19⎭
+  Execute a colon-defined word using indirect threaded code interpretation.⎩20⎭
+⎩21⎭
+  This function implements the inner interpreter for threaded code execution.⎩22⎭
+  Threaded code words store their definitions as arrays of code field addresses⎩23⎭
+  (CFAs) in the parameter field area (PFA) immediately following the word header.⎩24⎭
+⎩25⎭
+  The execution model maintains two critical registers:⎩26⎭
+⎩27⎭
+  1. IP (Instruction Pointer): References the current position within the⎩28⎭
+     threaded code array being interpreted. Since threaded words may invoke⎩29⎭
+     other threaded words, IP must be preserved in a reentrant manner via⎩30⎭
+     the return stack on each invocation.⎩31⎭
+⎩32⎭
+  2. W (Word Pointer): References the CFA of the currently executing primitive.⎩33⎭
+     This global register serves an analogous function to 'self' in object-oriented⎩34⎭
+     languages, enabling subroutines to access word header fields through fixed⎩35⎭
+     offsets from the CFA.⎩36⎭
+⎩37⎭
+  Optimization rationale: W is positioned to reference the CFA rather than the⎩38⎭
+  word header base. This design eliminates offset arithmetic for CFA access—the⎩39⎭
+  most frequent header operation—at the cost of requiring offset adjustments⎩40⎭
+  for other header fields (NFA: W-2, flags: W-1, PFA: W+1). This represents a⎩41⎭
+  deliberate trade-off favoring the common case.⎩42⎭
+⎩43⎭
+  The inner interpreter loop performs the following operations:⎩44⎭
+  - Fetch the next CFA from RAM[IP] into W (performing the first indirection)⎩45⎭
+  - Increment IP to advance through the threaded code array⎩46⎭
+  - Execute the primitive via RAM[W]() (performing the second indirection)⎩47⎭
+⎩48⎭
+  By caching the dereferenced CFA in W, we amortize the cost of double⎩49⎭
+  indirection: both primitive execution and header field access within⎩50⎭
+  subroutines utilize the same cached reference, avoiding redundant⎩51⎭
+  dereferences. This is functionally equivalent to parameter passing in⎩52⎭
+  object-oriented method invocation, but eliminates the overhead of⎩53⎭
+  explicitly passing 'self' to each primitive.⎩54⎭
+⎩55⎭
+  Note: Ws state is only defined during primitive execution (within RAM[W]()).⎩56⎭
+  Between loop iterations, W may reference a stale CFA, but this is⎩57⎭
+  architecturally sound since W is unconditionally updated before each⎩58⎭
+  primitive invocation.⎩59⎭
+  ⌉⎩60⎭
+⎩61⎭
+      %rpush (State.IP)⎩62⎭
+      State.IP ⇐ State.W + 1⎩63⎭
+      while (-1 != State.RAM[State.IP]) {⎩64⎭
+	  State.W ⇐ State.RAM[State.IP]⎩65⎭
+	  State.IP ⇐ State.IP + 1⎩66⎭
+	  ~State.RAM[State.W]⎩67⎭
+      }⎩68⎭
+      State.IP ⇐ %rpop⎩69⎭
+  }⎩70⎭
+⎩71⎭
+⎩72⎭
+  function notfound (word) {⎩73⎭
+      %clearS⎩74⎭
+      %clearR⎩75⎭
+      %print (word)⎩76⎭
+      %print ("?")⎩77⎭
+      %eol⎩78⎭
+  }⎩79⎭
+⎩80⎭
+  function exec (xt) {⎩81⎭
+      ⌈ found and compiling and immediate ⌉⎩82⎭
+      State.W ⇐ xt⎩83⎭
+      State.IP ⇐ -1  ⌈ Dummy to hold place in return stack. ⌉	⎩84⎭
+      ~State.RAM[xt]  ⌈ Execute code. ⌉⎩85⎭
+  }⎩86⎭
+⎩87⎭
+  function compile_word (xt) {⎩88⎭
+      ⌈ found and not compiling ⌉⎩89⎭
+      State.W ⇐ xt⎩90⎭
+      State.IP ⇐ -1  ⌈ Dummy to hold place in return stack. ⌉	⎩91⎭
+      ~State.RAM[xt]  ⌈ Execute code. ⌉⎩92⎭
+  }⎩93⎭
+⎩94⎭
+  function pushasinteger (word) {⎩95⎭
+      %push (%toint (word))⎩96⎭
+  }⎩97⎭
+⎩98⎭
+  function pushasfloat (word) {⎩99⎭
+      %push (%tofloat (word))⎩100⎭
+  }⎩101⎭
+⎩102⎭
+  function compileinteger (word) {⎩103⎭
+      %funcall pushasinteger(word)⎩104⎭
+      @literalize⎩105⎭
+  }⎩106⎭
+⎩107⎭
+  function compilefloat (word) {⎩108⎭
+      %funcall pushasfloat(word)⎩109⎭
+      @literalize⎩110⎭
+  }⎩111⎭
+⎩112⎭
+  function code (name, flags, does) {⎩113⎭
+      ⌈ Add new word to RAM dictionary. We create a word (Forth "object") in RAM with 5 fields and extend the⎩114⎭
+	the dictionary by linking back to the head of the dictionary list ⌉⎩115⎭
+      x ⇐ %funcall len (State.RAM)⎩116⎭
+⎩117⎭
+      %ram+ (State.LAST) ⌈ (LFA) link to previous word in dictionary list ⌉⎩118⎭
+      %ram+ (name)       ⌈ (NFA) name of word ⌉⎩119⎭
+      %ram+ (flags)      ⌈       0 = normal word, 1 = immediate word ⌉⎩120⎭
+      %ram+ (does)       ⌈ (CFA) function pointer that points to code that executes the word (a function pointer is now just a string (probably should be optimized to be a bytecode)) ⌉⎩121⎭
+⎩122⎭
+      State.LAST ⇐ x                ⌈ LAST is the pointer to the head of the dictionary list, set it to point to⎩123⎭
+					this new word ⌉⎩124⎭
+  }⎩125⎭
+⎩126⎭
+  function literalize () {⎩127⎭
+      ⌈ Compile literal into definition. ⌉⎩128⎭
+      %ram+ (%funcall _find ("(literal)"))  ⌈# Compile address of doliteral. ⌉⎩129⎭
+      %ram+ (%pop)             ⌈ # Compile literal value. ⌉⎩130⎭
+  }⎩131⎭
+⎩132⎭
+  function xinterpret () {⎩133⎭
+    @interpret⎩134⎭
+    return %pop⎩135⎭
+  }⎩136⎭
+  ⎩137⎭
+  function ok () {⎩138⎭
+      ⌈ ( --) Interaction loop -- REPL ⌉⎩139⎭
+      defsynonym blank ≡ 32⎩140⎭
+      while ⊤ {⎩141⎭
+	  %input⎩142⎭
+	  while not %empty-input {⎩143⎭
+	     %funcall xinterpret ()⎩144⎭
+	  }⎩145⎭
+      }⎩146⎭
+  }⎩147⎭
+⎩148⎭
+  function doconst () {  ⌈ method for const ⌉⎩149⎭
+      defsynonym parameter ≡ State.RAM [State.W + 1]⎩150⎭
+      %push (parameter)⎩151⎭
+  }⎩152⎭
+⎩153⎭
+⎩154⎭
+  function docreate () {⎩155⎭
+      defsynonym parameterAddress ≡ %funcall len (State.RAM) + 4⎩156⎭
+      %push (parameterAddress)⎩157⎭
+  }⎩158⎭
+  function create () {⎩159⎭
+      defsynonym xxx ≡ 0⎩160⎭
+      λcode (xxx)⎩161⎭
+  }⎩162⎭
+⎩163⎭
+  subr drop {⎩164⎭
+      ⌈ ( a -- ) ⌉⎩165⎭
+      %pop⎩166⎭
+  }⎩167⎭
+⎩168⎭
+initialize {⎩169⎭
+  λok ()⎩170⎭
+}⎩171⎭

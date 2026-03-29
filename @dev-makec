@@ -1,9 +1,14 @@
 #!/bin/bash
 target=test.frish
+export T2TVERBOSE=on
+clear
+echo
+echo "--- using ${target} --------"
+echo "in @dev-makec T2TVERBOSE=${T2TVERBOSE}"
+echo
 
 set -eE
 export dtree_tool=${HOME}/projects/dtree
-export T2TVERBOSE=on
 
 # # create xinterpret.frish from xinterpret.drawio
 # ${dtree_tool}/@make ${dtree_tool} "xinterpret" $(pwd)
@@ -13,11 +18,6 @@ export T2TVERBOSE=on
 
 # transmogrify `forthish.frish` into `forthish.py`
 ${PBP}/das2json frish.drawio
-clear
-echo
-echo "--- using ${target} --------"
-echo "in @dev-makec ${T2TVERBOSE}"
-echo
 python main.py ${target} main frish.drawio.json | ${PBP}/splitoutputs
 mv out.1.py forthish.py
 echo

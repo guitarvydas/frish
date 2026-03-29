@@ -1,9 +1,0 @@
-Error: Line 20, col 7:
-  19 |     | "defsynonym" id "≡" PureExpression -- memomacro
-> 20 |     | call id -- routine
-             ^~~~
-  21 |     | id -- name
-Rule call is not declared in grammar pretransmogrifier
-
-grammar = "pretransmogrifier
-"
