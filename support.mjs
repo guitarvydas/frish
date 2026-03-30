@@ -24,24 +24,6 @@ function pynlcomments (s) {
     return s.replace (/\n/g, '\n#')
 }
 
-let braces = [];
-let parens = [];
-function incbrace () { braces.push (linenumber); return ""; }
-function decbrace () {
-    braces.pop ();
-    return ""; 
-}
-function incparen () { parens.push (linenumber); return ""; }
-function decparen () { 
-    parens.pop ();
-    return "";
-}
-function setline (n) {
-    linenumber = n;
-    return "";
-}
-function reportbraces () {return `[${braces}]`;}
-function reportparens () {return `[${parens}]`;}
 
 class DictStack {
   constructor() {

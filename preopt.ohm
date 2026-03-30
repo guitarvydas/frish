@@ -1,3 +1,4 @@
+
 pretransmogrifier {
   code = item+
   item =
@@ -5,42 +6,30 @@ pretransmogrifier {
     | any -- other
 
   Scope =
-    | "function" id "(" (~")" #any)* ")" Block -- functionblock
-    | "subr" id  Block -- subrblock
+    | "subr" id  block -- subrblock
+    | "function" id "(" argchar* ")" block -- funcblock
 
-  Block = "{" #blockInnards "}"
+  block = "{" blockInnards+ "}"
   blockInnards =
-    | "{" blockInnards "}" blockInnards?    -- rec
+    | "{" blockInnards+ "}" blockInnards?    -- rec
     | applySyntactic<Pattern> blockInnards? -- pattern
-    | (~"}" ~applySyntactic<Pattern> any)+ blockInnards?             -- other
+    | (~"}" ~"{" ~applySyntactic<Pattern> any)+ blockInnards?             -- other
 
-   Pattern =
-    | "defsynonym" id "≡" PureExpression -- memomacro
-    | id -- name
+  Pattern =
+    | "defsynonym" id "≡" SimplePureExpression -- memomacro
     
-  exprCh = ~"{" any
   bodyCh =
     | "{" bodyCh+ "}" -- recursive
-    | ~"}" item     -- flat
+    | ~"{" ~"}" item     -- flat
 
-  PureExpression =
-    | "(" PureExpression ")" -- parenthesized
-    | ~Call PureExpressionItem -- item
-
-  PureExpressionItem =
-    | primary "[" PureExpression "]" -- indexed
-    | primary op PureExpression -- op
-    | primary -- primary
+  SimplePureExpression =
+    | "(" SimplePureExpression ")" -- parenthesized
+    | int -- int
   
-  primary = int | "State.RAM" | "State.IP" | "State.W" | "State.LAST" | "State.BUFFP" | "State.BUFF" |  id
-  op = "+" | "-" | "*" | "/" | ">=" | "<=" | "<" | ">" | "and" | "or" | "="
   int = "-"? digit+
-  name = id
   id = (letter | "_") (alnum | "_")*
-  str = "\"" (~"\"" any)* "\""
-  Call =  ("%funcall" | "@") Args
-  Args = "(" ArgInnards? ")"
-  ArgInnards =
-    | "(" ArgInnards? ")" -- rec
-    | #(~"(" ~")" any)+ -- other
+  
+  argchar = 
+    | "(" argchar* ")" argchar? -- rec
+    | (~"(" ~")" any)+ -- other
 }
