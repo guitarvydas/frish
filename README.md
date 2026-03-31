@@ -679,6 +679,7 @@ initialize {
 ```
 
 Uses a diagram to specify one routine. The diagram is `xinterpret.drawio`. [See https://github.com/guitarvydas/dtree]
+![xinterpret](xinterpret.drawio.png)
 
 The diagram is transmogrified to python using the dtree tool resulting in `xinterpret.frish`
 
