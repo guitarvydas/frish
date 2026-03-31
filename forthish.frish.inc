@@ -4,12 +4,12 @@
     we'd use class fields instead - todo: fix this in the future (or not? at what point is customization better than
     generalization?) ⌉
   function fvget (name) {
-      deftemp fobjaddress ⇐ λ_find(%pop)
+      deftemp fobjaddress ⇐ %funcall _find(%pop)
       return State.RAM [fobjaddress + 1]
   }
 
   function fvset (name, v) {
-      deftemp fobjaddress ⇐ λ_find(%pop)
+      deftemp fobjaddress ⇐ %funcall _find(%pop)
       defsynonym namefieldaddress ≡ fobjaddress + 1
       State.RAM [namefieldaddress] ⇐ v
   }
@@ -101,19 +101,19 @@
   }
 
   function compileinteger (word) {
-      λpushasinteger(word)
+      %funcall pushasinteger(word)
       @literalize
   }
 
   function compilefloat (word) {
-      λpushasfloat(word)
+      %funcall pushasfloat(word)
       @literalize
   }
 
   function code (name, flags, does) {
       ⌈ Add new word to RAM dictionary. We create a word (Forth "object") in RAM with 5 fields and extend the
 	the dictionary by linking back to the head of the dictionary list ⌉
-      x ⇐ λlen (State.RAM)
+      x ⇐ %funcall len (State.RAM)
 
       %ram+ (State.LAST) ⌈ (LFA) link to previous word in dictionary list ⌉
       %ram+ (name)       ⌈ (NFA) name of word ⌉
@@ -126,7 +126,7 @@
 
   function literalize () {
       ⌈ Compile literal into definition. ⌉
-      %ram+ (λ_find ("(literal)"))  ⌈# Compile address of doliteral. ⌉
+      %ram+ (%funcall _find ("(literal)"))  ⌈# Compile address of doliteral. ⌉
       %ram+ (%pop)             ⌈ # Compile literal value. ⌉
   }
 
@@ -141,7 +141,7 @@
       while ⊤ {
 	  %input
 	  while not %empty-input {
-	     λxinterpret ()
+	     %funcall xinterpret ()
 	  }
       }
   }
@@ -153,20 +153,20 @@
 
 
   function docreate () {
-      defsynonym parameterAddress ≡ λlen (State.RAM) + 4
+      defsynonym parameterAddress ≡ %funcall len (State.RAM) + 4
       %push (parameterAddress)
   }
   function create (name) {
       defsynonym normal ≡ 0
-      λcode (name, normal, ↪︎docreate)
+      %funcall code (name, normal, ↪︎docreate)
   }
   function comma (value) {
       %ram+ (value)
   }
 
   function fvar (name, value) {
-      λcreate (name)
-      λcomma (value)
+      %funcall create (name)
+      %funcall comma (value)
   }
 
   function _find (name) {
@@ -188,7 +188,7 @@
       defsynonym blank ≡ 32
 	  %debuginput
 	  while not %empty-input {
-	     if (λinterpret ()) {
+	     if (%funcall interpret ()) {
 		     %print (" ok")
 		     %eol
 	     }
@@ -205,7 +205,7 @@
       %push (blank)
       @word
       deftemp name ⇐ %pop
-      λcreate (name)
+      %funcall create (name)
   }
 
   subr drop {
@@ -376,7 +376,7 @@
       %push (DQ)
       @word
       if %incompilingstate {
-	  λliteralize ()
+	  %funcall literalize ()
       }
   }
 
@@ -445,7 +445,7 @@
   subr %immediate ❲if❳ { 
       ⌈ This instruction appears only inside subroutine sequences, ( f -- ) compile if test and branchFalse ⌉ 
       ⌈ Step. 1: generate conditional branch to yet-unknown target1 ⌉ 
-      deftemp branchFalseAddress ⇐ λ_find ("0branch")
+      deftemp branchFalseAddress ⇐ %funcall _find ("0branch")
       %ram+ (branchFalseAddress) ⌈ insert branch-if-false opcode (word) ⌉ 
       %rpush (%RAMnext) ⌈ target1 onto r-stack as memo for later fixup ⌉ 
       defsynonym target1 ≡ -1 
@@ -460,7 +460,7 @@
       deftemp target1 ⇐ %rpop
       State.RAM [target1] ⇐ %RAMnext
       ⌈ Step. 2: generate unconditional branch for preceding IF, creating new memo for target2 on R-stack ⌉
-      deftemp brAddress ⇐ λ_find ("branch")
+      deftemp brAddress ⇐ %funcall _find ("branch")
       %rpush (%RAMnext) ⌈ target2 address on R-stack as memo for later fixup ⌉
       defsynonym target2 ≡ -1
       %ram+ (target2) ⌈ branch target will be fixed up later ⌉
@@ -486,7 +486,7 @@
 
   subr %immediate ❲do❳ {
       ⌈ (  limit index --) Begin counted loop. ⌉
-      %ram+(λ_find("(do)"))  ⌈ Push do loop handler. ⌉
+      %ram+(%funcall _find("(do)"))  ⌈ Push do loop handler. ⌉
       %rpush(%RAMnext)           ⌈ Push address to jump back to. ⌉
   }
 
@@ -504,8 +504,8 @@
 
   subr %immediate +loop {
       ⌈ ( --) Close counted loop. ⌉
-      %ram+(λ_find("(loop)"))   ⌈ Compile in loop test. ⌉
-      %ram+(λ_find("0branch"))  ⌈ Compile in branch check. ⌉
+      %ram+(%funcall _find("(loop)"))   ⌈ Compile in loop test. ⌉
+      %ram+(%funcall _find("0branch"))  ⌈ Compile in branch check. ⌉
       %ram+(%rpop)           ⌈ Address to jump back to. ⌉
   }
 
@@ -513,8 +513,8 @@
       ⌈ (  --) Close counted loop. ⌉
       %push (1)
       @literalize                  ⌈ Default loop increment for x_loop. ⌉
-      %ram+(λ_find("(loop)"))   ⌈ Compile in loop test. ⌉
-      %ram+(λ_find("0branch"))  ⌈ Compile in branch check. ⌉
+      %ram+(%funcall _find("(loop)"))   ⌈ Compile in loop test. ⌉
+      %ram+(%funcall _find("0branch"))  ⌈ Compile in branch check. ⌉
       %ram+(%rpop)           ⌈ Address to jump back to. ⌉
   }
 
@@ -524,7 +524,7 @@
 
   subr %immediate ❲until❳ {
       ⌈ (  f --) Close indefinite loop with test. ⌉
-      %ram+(λ_find("0branch"))  ⌈ Expects result of test on stack. ⌉
+      %ram+(%funcall _find("0branch"))  ⌈ Expects result of test on stack. ⌉
       %ram+(%rpop)           ⌈ Address to jump back to. ⌉
   }
 
@@ -544,12 +544,12 @@
       deftemp name ⇐ %pop
       deftemp value ⇐ %pop
       defsynonym normal ≡ 0
-      deftemp fobj ⇐ λcode (name, normal, ↪︎doconst)
+      deftemp fobj ⇐ %funcall code (name, normal, ↪︎doconst)
       %ram+ (value)
   }
 
   subr , {
-      λcomma (%pop)
+      %funcall comma (%pop)
   }
 
   subr variable {
@@ -558,7 +558,7 @@
       @word
       deftemp name ⇐ %pop
       deftemp value ⇐ %pop
-      λfvar (name, value)    
+      %funcall fvar (name, value)    
   }
 
   subr dump {
@@ -566,7 +566,7 @@
       deftemp start ⇐ %toint (%pop)
       %print ("----------------------------------------------------------------")
       deftemp a ⇐ start
-      while (a < start + (λmin (n, (λlen (State.RAM) - start)))) {
+      while (a < start + (%funcall min (n, (%funcall len (State.RAM) - start)))) {
 	  %print (a)
 	  %print (": ")
 	  %print (State.RAM [a])
@@ -589,7 +589,7 @@
       ⌈ 3 possible results: 1. (name 0) if not found, 2. (xt 1) if found and word is immediate, 3. (xt -1) if found and word is normal ⌉
       %push (32)
       @word
-      deftemp found ⇐ λ_find(%stop)
+      deftemp found ⇐ %funcall _find(%stop)
       if (0 = found) {
 	  %push (0)
       } else {
@@ -606,7 +606,7 @@
       %push (32)
       @word
       deftemp name ⇐ %pop
-      deftemp found ⇐ λ_find(name)
+      deftemp found ⇐ %funcall _find(name)
       %push (found)
   }
 
@@ -638,7 +638,7 @@
       %push (blank)
       @word
       deftemp name ⇐ %pop
-      λcode(name, 0, doword)
+      %funcall code(name, 0, doword)
       %setCompilingState
   }
 
@@ -670,5 +670,5 @@
     
 
 initialize {
-  λok ()
+  %funcall ok ()
 }
